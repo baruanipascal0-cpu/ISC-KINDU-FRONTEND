@@ -1,1 +1,0 @@
-const s="/fac/lettres/build/",r=s.replace(/\/build\/?$/,"").replace(/\/$/,"");function e(t){return/^(https?:)?\/\//.test(t)||t.startsWith("data:")||t.startsWith("blob:")}function i(t){return t?e(t)||r&&t.startsWith(`${r}/`)?t:r&&t.startsWith("/")?`${r}${t}`:r?`${r}/${t}`:t:""}export{i as a};
