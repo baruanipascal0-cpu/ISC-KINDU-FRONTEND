@@ -1,0 +1,264 @@
+.isc-live {
+  max-width: 1200px;
+  margin: 26px auto;
+  padding: 0 18px;
+  font-family: inherit;
+}
+
+.isc-live-panel {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.isc-live-head {
+  padding: 20px 22px 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.isc-live-kicker {
+  margin: 0 0 6px;
+  color: #a3243c;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.isc-live-title {
+  margin: 0;
+  color: #0d3b75;
+  font-size: 26px;
+  line-height: 1.2;
+}
+
+.isc-live-subtitle {
+  margin: 8px 0 0;
+  color: #6b7483;
+  line-height: 1.55;
+}
+
+.isc-live-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  padding: 18px 22px 22px;
+}
+
+.isc-live-card {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.isc-live-card img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  background: #eef2f7;
+}
+
+.isc-live-card-body {
+  padding: 15px;
+  display: grid;
+  gap: 8px;
+  flex: 1;
+}
+
+.isc-live-meta {
+  color: #a3243c;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.isc-live-card-title {
+  margin: 0;
+  color: #172033;
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.isc-live-card-text {
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.55;
+  font-size: 14px;
+}
+
+.isc-live-link {
+  color: #0d3b75;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.isc-live-list {
+  display: grid;
+  gap: 12px;
+  padding: 18px 22px 22px;
+}
+
+.isc-live-list-item {
+  padding: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.isc-live-list-item h3 {
+  margin: 0 0 6px;
+  color: #172033;
+  font-size: 17px;
+}
+
+.isc-live-section-programs {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.isc-live-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px 22px 22px;
+}
+
+.isc-live-form label {
+  display: grid;
+  gap: 7px;
+  color: #334155;
+  font-weight: 700;
+}
+
+.isc-live-form label.full {
+  grid-column: 1 / -1;
+}
+
+.isc-live-form input,
+.isc-live-form textarea {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 11px 12px;
+  font: inherit;
+}
+
+.isc-live-form textarea {
+  min-height: 120px;
+}
+
+.isc-live-button {
+  width: fit-content;
+  border: 0;
+  border-radius: 8px;
+  background: #a3243c;
+  color: #fff;
+  padding: 12px 18px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.isc-live-status {
+  grid-column: 1 / -1;
+  color: #0d3b75;
+  font-weight: 700;
+}
+
+.dyn-empty {
+  grid-column: 1 / -1;
+  padding: 18px 14px;
+  color: #64748b;
+  background: #f8fafc;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+}
+
+.dyn-content {
+  padding: 0 14px 18px;
+  color: #2e3542;
+  line-height: 1.7;
+}
+
+.dyn-content p {
+  margin: 0 0 14px;
+}
+
+.dyn-link-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 11px 16px;
+  background: #0d3b75;
+  color: #fff !important;
+  text-decoration: none;
+}
+
+.isc-live-empty {
+  margin: 18px 22px 22px;
+  color: #64748b;
+  background: #f8fafc;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.isc-live-table-wrap {
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+.isc-live-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+.isc-live-table th,
+.isc-live-table td {
+  border: 1px solid rgba(13, 59, 117, 0.14);
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.isc-live-table th {
+  background: #f8fafc;
+  color: #0d3b75;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.isc-live-card-title a,
+.isc-live-list-item h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (max-width: 680px) {
+  .isc-live {
+    margin: 18px auto;
+    padding: 0 14px;
+  }
+
+  .isc-live-title {
+    font-size: 22px;
+  }
+
+  .isc-live-grid,
+  .isc-live-list,
+  .isc-live-form {
+    padding: 14px;
+  }
+
+  .isc-live-form {
+    grid-template-columns: 1fr;
+  }
+}

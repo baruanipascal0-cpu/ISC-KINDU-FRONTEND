@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="J7gDgx0LGZtDXda6u3ddkRSeAqwaUDj2bZM3HajN">
+
+    <title>Offres d&#039;emploi et opportunités - Alumni ISC KINDU</title>
+
+    <!-- Polices ISC KINDU (Bunny Fonts — pas de tracking Google) -->
+    <link rel="preconnect" href="https://fonts.bunny.net/" crossorigin>
+    <link href="https://fonts.bunny.net/css?family=cinzel:500,600,700|montserrat:400,500,600,700&amp;display=swap" rel="stylesheet" />
+
+    <!-- Bootstrap CSS -->
+    <link href="../../cdn.jsdelivr.net/npm/bootstrap%405.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Thème ISC KINDU CSS intégré -->
+    <style>
+        :root {
+            /* Charte couleurs ISC KINDU (officielle) */
+            --isc-kindu-blue: #002868;
+            --isc-kindu-light-blue: #0B85DB;
+            --isc-kindu-red: #CE111B;
+            --isc-kindu-light-red: #F04450;
+            --isc-kindu-yellow: #B07900;
+            --isc-kindu-gold-light: #E9C37E;
+            --isc-kindu-light-yellow: #FFFD91;
+            --isc-kindu-dark-blue: #001A42;
+            --isc-kindu-dark-red: #8E0D14;
+            --isc-kindu-dark-yellow: #8A6200;
+
+            /* Typographie */
+            --font-heading: 'Cinzel', Georgia, 'Times New Roman', serif;
+            --font-body: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            --heading-letter-spacing: 0.04em;
+            
+            /* Dégradés ISC KINDU */
+            --primary-gradient: linear-gradient(135deg, var(--isc-kindu-blue) 0%, var(--isc-kindu-light-blue) 100%);
+            --secondary-gradient: linear-gradient(135deg, var(--isc-kindu-dark-red) 0%, var(--isc-kindu-red) 55%, var(--isc-kindu-light-red) 100%);
+            --cta-gradient: linear-gradient(125deg, #5C0810 0%, var(--isc-kindu-dark-red) 30%, var(--isc-kindu-red) 58%, var(--isc-kindu-light-red) 100%);
+            --accent-gradient: linear-gradient(135deg, #B07900 0%, #E9C37E 100%);
+            
+            /* Ombres */
+            --card-shadow: 0 4px 15px rgba(0, 40, 104, 0.1);
+            --card-shadow-hover: 0 8px 25px rgba(0, 40, 104, 0.15);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: #f8f9fa;
+            color: var(--isc-kindu-blue);
+            line-height: 1.6;
+        }
+
+        /* Barre supérieure (Recherche / Connexion / Inscription) */
+        .top-bar {
+            background: var(--isc-kindu-dark-blue);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.8125rem;
+            position: relative;
+            z-index: 1050;
+            overflow: visible;
+        }
+
+        .top-bar .container {
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.25rem;
+            overflow: visible;
+        }
+
+        .top-bar-nav {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 0.15rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .top-bar-nav > li {
+            flex-shrink: 0;
+        }
+
+        li.top-bar-divider {
+            display: flex;
+            align-items: center;
+        }
+
+        .top-bar-nav .top-bar-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: rgba(255, 255, 255, 0.88);
+            text-decoration: none;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .top-bar-nav .top-bar-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .top-bar-nav .top-bar-link-register {
+            background: var(--accent-gradient);
+            color: var(--isc-kindu-blue) !important;
+            font-weight: 600;
+            margin-left: 0.25rem;
+        }
+
+        .top-bar-nav .top-bar-link-register:hover {
+            color: var(--isc-kindu-blue) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .top-bar-divider {
+            width: 1px;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 0 0.15rem;
+            flex-shrink: 0;
+        }
+
+        .top-bar-inner {
+            width: 100%;
+            overflow: visible;
+        }
+
+        .top-bar .dropdown {
+            position: relative;
+        }
+
+        .top-bar .dropdown-menu {
+            margin-top: 0.35rem;
+            z-index: 1060;
+            position: absolute;
+        }
+
+        .top-bar .dropdown-menu .dropdown-header {
+            color: var(--isc-kindu-blue) !important;
+            -webkit-text-fill-color: currentColor !important;
+            background: none !important;
+        }
+
+        .top-bar .top-bar-link.dropdown-toggle::after {
+            margin-left: 0.35rem;
+            vertical-align: 0.15em;
+        }
+
+        .top-bar .top-bar-icon-badge {
+            font-size: 0.65rem;
+            min-width: 1.1rem;
+            height: 1.1rem;
+            line-height: 1.1rem;
+            padding: 0 0.25rem;
+        }
+
+        .top-bar-user-name {
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Navigation principale */
+        .navbar {
+            background: var(--primary-gradient) !important;
+            box-shadow: 0 2px 10px rgba(0, 40, 104, 0.2);
+            border: none;
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-family: var(--font-heading);
+            letter-spacing: var(--heading-letter-spacing);
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            height: 120px;
+            width: auto;
+            background: white;
+            border-radius: 50%;
+            padding: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-logo:hover {
+            background: white;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar-nav .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            margin: 0 3px;
+            padding: 6px 12px !important;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-1px);
+        }
+
+        /* Styles pour les menus déroulants */
+        .dropdown-menu {
+            background: white;
+            border: none;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            margin-top: 5px;
+        }
+
+        .dropdown-item {
+            color: var(--isc-kindu-blue);
+            font-weight: 500;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 253, 145, 0.45);
+            color: var(--isc-kindu-blue);
+            transform: translateX(5px);
+        }
+
+        .dropdown-toggle::after {
+            margin-left: 8px;
+        }
+
+        /* Boutons */
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 20px;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 40, 104, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 40, 104, 0.3);
+            background: var(--primary-gradient);
+            color: white !important;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-gradient);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(206, 17, 27, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(206, 17, 27, 0.35);
+            background: var(--secondary-gradient);
+            color: white !important;
+        }
+
+        .btn-warning {
+            background: var(--accent-gradient);
+            border: none;
+            border-radius: 20px;
+            color: var(--isc-kindu-blue);
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(176, 121, 0, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(176, 121, 0, 0.35);
+            background: var(--accent-gradient);
+            color: var(--isc-kindu-blue) !important;
+        }
+
+        /* Boutons de soumission spécifiques */
+        button[type="submit"], 
+        input[type="submit"],
+        .btn-submit {
+            background: var(--primary-gradient) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 20px !important;
+            padding: 0.6rem 1.2rem !important;
+            font-weight: 600 !important;
+            box-shadow: 0 2px 8px rgba(0,51,102,0.2) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        button[type="submit"]:hover, 
+        input[type="submit"]:hover,
+        .btn-submit:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 15px rgba(0,51,102,0.3) !important;
+            background: var(--primary-gradient) !important;
+            color: white !important;
+        }
+
+        /* Boutons de formulaire */
+        .form-control + button,
+        .form-select + button {
+            margin-top: 0.5rem;
+        }
+
+        /* Cartes */
+        .card {
+            border-radius: 15px;
+            border: none;
+            background: white;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .card-header {
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            border: none;
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        /* Formulaires */
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 0.5rem 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--isc-kindu-blue);
+            box-shadow: 0 0 0 0.2rem rgba(0, 40, 104, 0.25);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--isc-kindu-blue);
+            margin-bottom: 0.25rem;
+        }
+
+        /* Badges */
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.4rem 0.6rem;
+            border-radius: 15px;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .badge-secondary {
+            background: var(--secondary-gradient);
+            color: white;
+        }
+
+        .badge-warning {
+            background: var(--accent-gradient);
+            color: var(--isc-kindu-blue);
+        }
+
+        /* Titres — Cinzel + interlettrage */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            letter-spacing: var(--heading-letter-spacing);
+            color: var(--isc-kindu-blue);
+            font-weight: 700;
+        }
+
+        .display-1, .display-2, .display-3, .display-4 {
+            font-family: var(--font-heading);
+            letter-spacing: var(--heading-letter-spacing);
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .card-title,
+        .modal-title {
+            font-family: var(--font-heading);
+            letter-spacing: var(--heading-letter-spacing);
+        }
+
+        /* Icônes */
+        .text-primary {
+            color: var(--isc-kindu-blue) !important;
+        }
+
+        .text-secondary {
+            color: var(--isc-kindu-red) !important;
+        }
+
+        .text-warning {
+            color: var(--isc-kindu-yellow) !important;
+        }
+
+        .bg-warning {
+            background: var(--accent-gradient) !important;
+            color: var(--isc-kindu-blue) !important;
+        }
+
+        .btn-outline-warning {
+            color: var(--isc-kindu-dark-yellow);
+            border-color: var(--isc-kindu-yellow);
+        }
+
+        .btn-outline-warning:hover {
+            background: var(--accent-gradient);
+            border-color: var(--isc-kindu-dark-yellow);
+            color: var(--isc-kindu-blue) !important;
+        }
+
+        .border-warning {
+            border-color: var(--isc-kindu-yellow) !important;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 2rem 0 1rem;
+        }
+
+        .footer h5,
+        .footer h6 {
+            font-family: var(--font-heading);
+            letter-spacing: var(--heading-letter-spacing);
+            background: none !important;
+            -webkit-background-clip: unset !important;
+            background-clip: unset !important;
+            -webkit-text-fill-color: currentColor !important;
+            text-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer h5 {
+            color: var(--isc-kindu-gold-light) !important;
+            font-weight: 700;
+        }
+
+        .footer h6 {
+            color: #ffffff !important;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer p,
+        .footer small {
+            color: rgba(255, 255, 255, 0.92) !important;
+        }
+
+        .footer hr {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .footer a {
+            color: rgba(255,255,255,0.8);
+            transition: all 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Sections spéciales */
+        .hero-section {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 80px 0;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-background-icons {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hero-icon {
+            position: absolute;
+            font-size: 2.5rem;
+            color: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+
+        .hero-icon:hover {
+            color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        .hero-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-section h1,
+        .hero-section .display-4 {
+            font-family: var(--font-heading);
+            letter-spacing: var(--heading-letter-spacing);
+        }
+
+        .hero-section .text-white,
+        .hero-section p {
+            color: white !important;
+        }
+
+        .hero-section .hero-title {
+            background: var(--accent-gradient) !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            color: transparent !important;
+            text-shadow: none;
+            filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.45));
+        }
+
+        .hero-logo {
+            width: 280px;
+            height: 280px;
+            max-width: min(280px, 70vw);
+            max-height: min(280px, 70vw);
+            object-fit: contain;
+            background: white;
+            border-radius: 50%;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .hero-logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            background: white;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        /* Section CTA communauté (accueil) */
+        .cta-community-section {
+            position: relative;
+            overflow: hidden;
+            background: var(--cta-gradient);
+            color: white;
+            padding: 4.5rem 0;
+        }
+
+        .cta-community-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 12% 50%, rgba(255, 255, 255, 0.14) 0%, transparent 42%),
+                radial-gradient(circle at 88% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 38%),
+                radial-gradient(ellipse at 50% 120%, rgba(0, 0, 0, 0.22) 0%, transparent 55%);
+            pointer-events: none;
+        }
+
+        .cta-community-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+        }
+
+        .cta-community-section .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-community-title {
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            text-shadow: 0 2px 24px rgba(0, 0, 0, 0.28);
+            color: white !important;
+        }
+
+        .cta-community-lead {
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+            color: rgba(255, 255, 255, 0.93) !important;
+            font-weight: 400;
+            line-height: 1.7;
+        }
+
+        .cta-community-btn {
+            padding: 0.75rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .cta-community-btn:hover {
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
+        }
+
+        .association-card-logo {
+            height: 200px;
+            width: 100%;
+            object-fit: contain;
+            padding: 1.25rem;
+            background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+            border-bottom: 1px solid rgba(0, 51, 102, 0.08);
+        }
+
+        .association-card-logo-placeholder {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #f8f9fa 0%, #eef2f7 100%);
+            color: var(--isc-kindu-blue);
+            opacity: 0.35;
+            border-bottom: 1px solid rgba(0, 51, 102, 0.08);
+        }
+
+        /* Espacement optimisé */
+        .container {
+            max-width: 1200px;
+        }
+
+        .py-5 {
+            padding-top: 2rem !important;
+            padding-bottom: 2rem !important;
+        }
+
+        .mb-5 {
+            margin-bottom: 2rem !important;
+        }
+
+        .mb-4 {
+            margin-bottom: 1.5rem !important;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .top-bar {
+                position: sticky;
+                top: 0;
+                z-index: 1050;
+            }
+
+            .top-bar .container {
+                justify-content: flex-start;
+                min-height: auto;
+                padding-top: 0.3rem;
+                padding-bottom: 0.3rem;
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+
+            .top-bar-nav {
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                width: max-content;
+                max-width: 100%;
+                overflow-x: auto;
+                overflow-y: visible;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                padding-bottom: 2px;
+            }
+
+            .top-bar-nav::-webkit-scrollbar {
+                display: none;
+            }
+
+            .top-bar-nav .top-bar-link {
+                padding: 0.35rem 0.55rem;
+                font-size: 0.75rem;
+            }
+
+            .top-bar-user-name {
+                max-width: 88px;
+            }
+
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .card {
+                border-radius: 10px;
+            }
+            
+            .py-5 {
+                padding-top: 1.5rem !important;
+                padding-bottom: 1.5rem !important;
+            }
+        }
+    </style>
+
+    <link rel="stylesheet" href="../assets/custom/alumni-publish.css">
+</head>
+<body>
+    <!-- Barre supérieure : actions rapides & compte -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-inner">
+                <ul class="top-bar-nav">
+                    <li>
+                        <a class="top-bar-link" href="search/advanced.html" title="Recherche">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                            <span>Recherche</span>
+                        </a>
+                    </li>
+
+                                            <li class="top-bar-divider d-none d-sm-block" aria-hidden="true">Texte de d&eacute;monstration &agrave; remplacer.</li>
+                        <li>
+                            <a class="top-bar-link" href="login.html">
+                                <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                                <span>Se connecter</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="top-bar-link top-bar-link-register" href="register.html">
+                                <i class="fas fa-user-plus" aria-hidden="true"></i>
+                                <span>S'inscrire</span>
+                            </a>
+                        </li>
+                                    </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation principale -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="../assets/custom/logo.jpg" 
+                     alt="ISC KINDU" 
+                     class="navbar-logo me-2">
+                Alumni ISC KINDU
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Accueil</a>
+                    </li>
+                    
+                    <!-- Le réseau avec sous-menu -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Le réseau
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="associations.html">Les associations</a></li>
+                            <li><a class="dropdown-item" href="alumni.html">Les membres</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="opportunities.html">Opportunités</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="events.html">Événements</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="news.html">Actualités</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container-fluid py-5">
+    <div class="container">
+        <!-- En-tête de la page -->
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h1 class="display-4 fw-bold text-primary mb-3">
+                    <i class="fas fa-briefcase me-3"></i>
+                    Offres d'emploi et opportunités
+                </h1>
+                <p class="lead text-muted">Texte de d&eacute;monstration &agrave; remplacer.</p>
+            </div>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="row mb-5">
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="text-primary mb-3">
+                            <i class="fas fa-briefcase fa-3x"></i>
+                        </div>
+                        <h3 class="fw-bold text-primary">0</h3>
+                        <p class="text-muted mb-0">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="text-success mb-3">
+                            <i class="fas fa-star fa-3x"></i>
+                        </div>
+                        <h3 class="fw-bold text-success">0</h3>
+                        <p class="text-muted mb-0">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="text-warning mb-3">
+                            <i class="fas fa-building fa-3x"></i>
+                        </div>
+                        <h3 class="fw-bold text-warning">0</h3>
+                        <p class="text-muted mb-0">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="text-info mb-3">
+                            <i class="fas fa-eye fa-3x"></i>
+                        </div>
+                        <h3 class="fw-bold text-info">
+                            77
+                        </h3>
+                        <p class="text-muted mb-0">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtres et recherche -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-primary text-white">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" class="form-control" id="searchOffers" placeholder="Rechercher une offre...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="filterType">
+                    <option value="">Option d&eacute;mo</option>
+                                    </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="filterLocation">
+                    <option value="">Option d&eacute;mo</option>
+                                                                <option value="demo">Option d&eacute;mo</option>
+                                    </select>
+            </div>
+        </div>
+
+        <!-- Liste des offres -->
+        <div class="row" id="offersList">
+                            <div class="col-12">
+                    <div class="text-center py-5">
+                        <i class="fas fa-briefcase fa-5x text-muted mb-4"></i>
+                        <h3 class="text-muted">Aucune offre trouvée</h3>
+                        <p class="text-muted">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                                            </div>
+                </div>
+                    </div>
+
+        <!-- Message de recherche vide -->
+        <div id="noResults" class="text-center py-5" style="display: none;">
+            <i class="fas fa-search fa-5x text-muted mb-4"></i>
+            <h3 class="text-muted">Aucun résultat trouvé</h3>
+            <p class="text-muted">Texte de d&eacute;monstration &agrave; remplacer.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchOffers');
+    const filterType = document.getElementById('filterType');
+    const filterLocation = document.getElementById('filterLocation');
+    const offerCards = document.querySelectorAll('.offer-card');
+    const noResults = document.getElementById('noResults');
+
+    function filterOffers() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedType = filterType.value;
+        const selectedLocation = filterLocation.value;
+        let visibleCount = 0;
+
+        offerCards.forEach(card => {
+            const offerTitle = card.querySelector('.card-title').textContent.toLowerCase();
+            const offerType = card.getAttribute('data-type');
+            const offerLocation = card.getAttribute('data-location');
+            
+            const matchesSearch = offerTitle.includes(searchTerm);
+            const matchesType = !selectedType || offerType === selectedType;
+            const matchesLocation = !selectedLocation || offerLocation === selectedLocation;
+            
+            if (matchesSearch && matchesType && matchesLocation) {
+                card.style.display = 'block';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Afficher/masquer le message "aucun résultat"
+        if (visibleCount === 0) {
+            noResults.style.display = 'block';
+        } else {
+            noResults.style.display = 'none';
+        }
+    }
+
+    searchInput.addEventListener('input', filterOffers);
+    filterType.addEventListener('change', filterOffers);
+    filterLocation.addEventListener('change', filterOffers);
+});
+</script>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Alumni ISC KINDU</h5>
+                    <p>Texte de d&eacute;monstration &agrave; remplacer.</p>
+                </div>
+                <div class="col-md-2">
+                    <h6>Liens rapides</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html" class="text-light">Accueil</a></li>
+                        <li><a href="about.html" class="text-light">À Propos</a></li>
+                        <li><a href="contact.html" class="text-light">Contact</a></li>
+                        <li><a href="alumni.html" class="text-light">Les membres</a></li>
+                        <li><a href="associations.html" class="text-light">Associations</a></li>
+                        <li><a href="events.html" class="text-light">Événements</a></li>
+                        <li><a href="news.html" class="text-light">Actualités</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h6>Ressources</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="opportunities.html" class="text-light">Opportunités</a></li>
+                        <li><a href="mentoring.html" class="text-light">Mentorat</a></li>
+                        <li><a href="scholarships.html" class="text-light">Bourses</a></li>
+                        <li><a href="training.html" class="text-light">Formations</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6>Réseaux sociaux</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="text-light" title="Suivez l'ISC KINDU sur Facebook">
+                            <i class="fab fa-facebook fa-lg"></i>
+                        </a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="text-light" title="Suivez l'ISC KINDU sur X (Twitter)">
+                            <i class="fab fa-twitter fa-lg"></i>
+                        </a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="text-light" title="Connectez-vous avec l'ISC KINDU sur LinkedIn">
+                            <i class="fab fa-linkedin fa-lg"></i>
+                        </a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="text-light" title="Abonnez-vous à la chaîne YouTube de l'ISC KINDU">
+                            <i class="fab fa-youtube fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-12 text-center mb-2">
+                    <small class="text-light">
+                        Pour de problème technique, veuillez contacter l'équipe technique via WhatsApp (message) : +243 853 002 565
+                    </small>
+                </div>
+                <div class="col-12 text-center">
+                    <p class="mb-0">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    <p class="mb-0">
+                        <a href="privacy-policy.html" class="text-light me-3">Politique de confidentialité</a>
+                        <a href="terms-of-use.html" class="text-light">Conditions d'utilisation</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="../../cdn.jsdelivr.net/npm/bootstrap%405.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Menus déroulants top bar : position fixed pour éviter le clipping (overflow mobile)
+        document.querySelectorAll('.top-bar [data-bs-toggle="dropdown"]').forEach(function (toggle) {
+            bootstrap.Dropdown.getOrCreateInstance(toggle, {
+                popperConfig: function (defaultConfig) {
+                    defaultConfig.strategy = 'fixed';
+                    return defaultConfig;
+                },
+            });
+        });
+
+        // Auto-hide alerts after 5 seconds (except .alert-permanent)
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert:not(.alert-permanent)');
+            alerts.forEach(function(alert) {
+                // Vérifier que l'alerte n'a pas la classe alert-permanent
+                if (!alert.classList.contains('alert-permanent')) {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }
+            });
+        }, 5000);
+    </script>
+    <script src="../assets/custom/alumni-publish.js"></script>
+
+    </body>
+
+
+</html>

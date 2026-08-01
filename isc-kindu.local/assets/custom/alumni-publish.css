@@ -1,0 +1,40 @@
+.alumni-publish-actions {
+  margin-top: 18px;
+}
+
+.alumni-publish-actions .btn {
+  border-radius: 999px;
+  font-weight: 700;
+  padding-inline: 22px;
+}
+
+.alumni-publish-modal .modal-content {
+  border: 0;
+  border-radius: 15px;
+  box-shadow: 0 20px 70px rgba(0, 40, 104, .2);
+}
+
+.alumni-publish-modal .modal-header {
+  background: linear-gradient(135deg, #002868 0%, #0B85DB 100%);
+  color: #fff;
+  border-radius: 15px 15px 0 0;
+}
+
+.alumni-publish-modal .modal-title {
+  color: #fff;
+}
+
+.alumni-local-card {
+  animation: alumniLocalCardIn .25s ease-out;
+}
+
+@keyframes alumniLocalCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

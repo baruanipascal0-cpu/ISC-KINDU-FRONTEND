@@ -1,0 +1,2816 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="J7gDgx0LGZtDXda6u3ddkRSeAqwaUDj2bZM3HajN">
+
+    <title>Liste des Alumni - Alumni ISC KINDU</title>
+
+    <!-- Polices ISC KINDU (Bunny Fonts — pas de tracking Google) -->
+    <link rel="preconnect" href="https://fonts.bunny.net/" crossorigin>
+    <link href="https://fonts.bunny.net/css?family=cinzel:500,600,700|montserrat:400,500,600,700&amp;display=swap" rel="stylesheet" />
+
+    <!-- Bootstrap CSS -->
+    <link href="../../cdn.jsdelivr.net/npm/bootstrap%405.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Thème ISC KINDU CSS intégré -->
+    <style>
+        :root {
+            /* Charte couleurs ISC KINDU (officielle) */
+            --isc-kindu-blue: #002868;
+            --isc-kindu-light-blue: #0B85DB;
+            --isc-kindu-red: #CE111B;
+            --isc-kindu-light-red: #F04450;
+            --isc-kindu-yellow: #B07900;
+            --isc-kindu-gold-light: #E9C37E;
+            --isc-kindu-light-yellow: #FFFD91;
+            --isc-kindu-dark-blue: #001A42;
+            --isc-kindu-dark-red: #8E0D14;
+            --isc-kindu-dark-yellow: #8A6200;
+
+            /* Typographie */
+            --font-heading: 'Cinzel', Georgia, 'Times New Roman', serif;
+            --font-body: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            --heading-letter-spacing: 0.04em;
+            
+            /* Dégradés ISC KINDU */
+            --primary-gradient: linear-gradient(135deg, var(--isc-kindu-blue) 0%, var(--isc-kindu-light-blue) 100%);
+            --secondary-gradient: linear-gradient(135deg, var(--isc-kindu-dark-red) 0%, var(--isc-kindu-red) 55%, var(--isc-kindu-light-red) 100%);
+            --cta-gradient: linear-gradient(125deg, #5C0810 0%, var(--isc-kindu-dark-red) 30%, var(--isc-kindu-red) 58%, var(--isc-kindu-light-red) 100%);
+            --accent-gradient: linear-gradient(135deg, #B07900 0%, #E9C37E 100%);
+            
+            /* Ombres */
+            --card-shadow: 0 4px 15px rgba(0, 40, 104, 0.1);
+            --card-shadow-hover: 0 8px 25px rgba(0, 40, 104, 0.15);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: #f8f9fa;
+            color: var(--isc-kindu-blue);
+            line-height: 1.6;
+        }
+
+        /* Barre supérieure (Recherche / Connexion / Inscription) */
+        .top-bar {
+            background: var(--isc-kindu-dark-blue);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.8125rem;
+            position: relative;
+            z-index: 1050;
+            overflow: visible;
+        }
+
+        .top-bar .container {
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.25rem;
+            overflow: visible;
+        }
+
+        .top-bar-nav {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 0.15rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .top-bar-nav > li {
+            flex-shrink: 0;
+        }
+
+        li.top-bar-divider {
+            display: flex;
+            align-items: center;
+        }
+
+        .top-bar-nav .top-bar-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: rgba(255, 255, 255, 0.88);
+            text-decoration: none;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .top-bar-nav .top-bar-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .top-bar-nav .top-bar-link-register {
+            background: var(--accent-gradient);
+            color: var(--isc-kindu-blue) !important;
+            font-weight: 600;
+            margin-left: 0.25rem;
+        }
+
+        .top-bar-nav .top-bar-link-register:hover {
+            color: var(--isc-kindu-blue) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .top-bar-divider {
+            width: 1px;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 0 0.15rem;
+            flex-shrink: 0;
+        }
+
+        .top-bar-inner {
+            width: 100%;
+            overflow: visible;
+        }
+
+        .top-bar .dropdown {
+            position: relative;
+        }
+
+        .top-bar .dropdown-menu {
+            margin-top: 0.35rem;
+            z-index: 1060;
+            position: absolute;
+        }
+
+        .top-bar .dropdown-menu .dropdown-header {
+            color: var(--isc-kindu-blue) !important;
+            -webkit-text-fill-color: currentColor !important;
+            background: none !important;
+        }
+
+        .top-bar .top-bar-link.dropdown-toggle::after {
+            margin-left: 0.35rem;
+            vertical-align: 0.15em;
+        }
+
+        .top-bar .top-bar-icon-badge {
+            font-size: 0.65rem;
+            min-width: 1.1rem;
+            height: 1.1rem;
+            line-height: 1.1rem;
+            padding: 0 0.25rem;
+        }
+
+        .top-bar-user-name {
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Navigation principale */
+        .navbar {
+            background: var(--primary-gradient) !important;
+            box-shadow: 0 2px 10px rgba(0, 40, 104, 0.2);
+            border: none;
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-family: var(--font-heading);
+            letter-spacing: var(--heading-letter-spacing);
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            height: 120px;
+            width: auto;
+            background: white;
+            border-radius: 50%;
+            padding: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-logo:hover {
+            background: white;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar-nav .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            margin: 0 3px;
+            padding: 6px 12px !important;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-1px);
+        }
+
+        /* Styles pour les menus déroulants */
+        .dropdown-menu {
+            background: white;
+            border: none;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            margin-top: 5px;
+        }
+
+        .dropdown-item {
+            color: var(--isc-kindu-blue);
+            font-weight: 500;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 253, 145, 0.45);
+            color: var(--isc-kindu-blue);
+            transform: translateX(5px);
+        }
+
+        .dropdown-toggle::after {
+            margin-left: 8px;
+        }
+
+        /* Boutons */
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 20px;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 40, 104, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 40, 104, 0.3);
+            background: var(--primary-gradient);
+            color: white !important;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-gradient);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(206, 17, 27, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(206, 17, 27, 0.35);
+            background: var(--secondary-gradient);
+            color: white !important;
+        }
+
+        .btn-warning {
+            background: var(--accent-gradient);
+            border: none;
+            border-radius: 20px;
+            color: var(--isc-kindu-blue);
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(176, 121, 0, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(176, 121, 0, 0.35);
+            background: var(--accent-gradient);
+            color: var(--isc-kindu-blue) !important;
+        }
+
+        /* Boutons de soumission spécifiques */
+        button[type="submit"], 
+        input[type="submit"],
+        .btn-submit {
+            background: var(--primary-gradient) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 20px !important;
+            padding: 0.6rem 1.2rem !important;
+            font-weight: 600 !important;
+            box-shadow: 0 2px 8px rgba(0,51,102,0.2) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        button[type="submit"]:hover, 
+        input[type="submit"]:hover,
+        .btn-submit:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 15px rgba(0,51,102,0.3) !important;
+            background: var(--primary-gradient) !important;
+            color: white !important;
+        }
+
+        /* Boutons de formulaire */
+        .form-control + button,
+        .form-select + button {
+            margin-top: 0.5rem;
+        }
+
+        /* Cartes */
+        .card {
+            border-radius: 15px;
+            border: none;
+            background: white;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .card-header {
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            border: none;
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        /* Formulaires */
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 0.5rem 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--isc-kindu-blue);
+            box-shadow: 0 0 0 0.2rem rgba(0, 40, 104, 0.25);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--isc-kindu-blue);
+            margin-bottom: 0.25rem;
+        }
+
+        /* Badges */
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.4rem 0.6rem;
+            border-radius: 15px;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .badge-secondary {
+            background: var(--secondary-gradient);
+            color: white;
+        }
+
+        .badge-warning {
+            background: var(--accent-gradient);
+            color: var(--isc-kindu-blue);
+        }
+
+        /* Titres — Cinzel + interlettrage */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            letter-spacing: var(--heading-letter-spacing);
+            color: var(--isc-kindu-blue);
+            font-weight: 700;
+        }
+
+        .display-1, .display-2, .display-3, .display-4 {
+            font-family: var(--font-heading);
+            letter-spacing: var(--heading-letter-spacing);
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .card-title,
+        .modal-title {
+            font-family: var(--font-heading);
+            letter-spacing: var(--heading-letter-spacing);
+        }
+
+        /* Icônes */
+        .text-primary {
+            color: var(--isc-kindu-blue) !important;
+        }
+
+        .text-secondary {
+            color: var(--isc-kindu-red) !important;
+        }
+
+        .text-warning {
+            color: var(--isc-kindu-yellow) !important;
+        }
+
+        .bg-warning {
+            background: var(--accent-gradient) !important;
+            color: var(--isc-kindu-blue) !important;
+        }
+
+        .btn-outline-warning {
+            color: var(--isc-kindu-dark-yellow);
+            border-color: var(--isc-kindu-yellow);
+        }
+
+        .btn-outline-warning:hover {
+            background: var(--accent-gradient);
+            border-color: var(--isc-kindu-dark-yellow);
+            color: var(--isc-kindu-blue) !important;
+        }
+
+        .border-warning {
+            border-color: var(--isc-kindu-yellow) !important;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 2rem 0 1rem;
+        }
+
+        .footer h5,
+        .footer h6 {
+            font-family: var(--font-heading);
+            letter-spacing: var(--heading-letter-spacing);
+            background: none !important;
+            -webkit-background-clip: unset !important;
+            background-clip: unset !important;
+            -webkit-text-fill-color: currentColor !important;
+            text-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer h5 {
+            color: var(--isc-kindu-gold-light) !important;
+            font-weight: 700;
+        }
+
+        .footer h6 {
+            color: #ffffff !important;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer p,
+        .footer small {
+            color: rgba(255, 255, 255, 0.92) !important;
+        }
+
+        .footer hr {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .footer a {
+            color: rgba(255,255,255,0.8);
+            transition: all 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Sections spéciales */
+        .hero-section {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 80px 0;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-background-icons {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hero-icon {
+            position: absolute;
+            font-size: 2.5rem;
+            color: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+
+        .hero-icon:hover {
+            color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        .hero-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-section h1,
+        .hero-section .display-4 {
+            font-family: var(--font-heading);
+            letter-spacing: var(--heading-letter-spacing);
+        }
+
+        .hero-section .text-white,
+        .hero-section p {
+            color: white !important;
+        }
+
+        .hero-section .hero-title {
+            background: var(--accent-gradient) !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            color: transparent !important;
+            text-shadow: none;
+            filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.45));
+        }
+
+        .hero-logo {
+            width: 280px;
+            height: 280px;
+            max-width: min(280px, 70vw);
+            max-height: min(280px, 70vw);
+            object-fit: contain;
+            background: white;
+            border-radius: 50%;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .hero-logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            background: white;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        /* Section CTA communauté (accueil) */
+        .cta-community-section {
+            position: relative;
+            overflow: hidden;
+            background: var(--cta-gradient);
+            color: white;
+            padding: 4.5rem 0;
+        }
+
+        .cta-community-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 12% 50%, rgba(255, 255, 255, 0.14) 0%, transparent 42%),
+                radial-gradient(circle at 88% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 38%),
+                radial-gradient(ellipse at 50% 120%, rgba(0, 0, 0, 0.22) 0%, transparent 55%);
+            pointer-events: none;
+        }
+
+        .cta-community-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+        }
+
+        .cta-community-section .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-community-title {
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            text-shadow: 0 2px 24px rgba(0, 0, 0, 0.28);
+            color: white !important;
+        }
+
+        .cta-community-lead {
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+            color: rgba(255, 255, 255, 0.93) !important;
+            font-weight: 400;
+            line-height: 1.7;
+        }
+
+        .cta-community-btn {
+            padding: 0.75rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .cta-community-btn:hover {
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
+        }
+
+        .association-card-logo {
+            height: 200px;
+            width: 100%;
+            object-fit: contain;
+            padding: 1.25rem;
+            background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+            border-bottom: 1px solid rgba(0, 51, 102, 0.08);
+        }
+
+        .association-card-logo-placeholder {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #f8f9fa 0%, #eef2f7 100%);
+            color: var(--isc-kindu-blue);
+            opacity: 0.35;
+            border-bottom: 1px solid rgba(0, 51, 102, 0.08);
+        }
+
+        /* Espacement optimisé */
+        .container {
+            max-width: 1200px;
+        }
+
+        .py-5 {
+            padding-top: 2rem !important;
+            padding-bottom: 2rem !important;
+        }
+
+        .mb-5 {
+            margin-bottom: 2rem !important;
+        }
+
+        .mb-4 {
+            margin-bottom: 1.5rem !important;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .top-bar {
+                position: sticky;
+                top: 0;
+                z-index: 1050;
+            }
+
+            .top-bar .container {
+                justify-content: flex-start;
+                min-height: auto;
+                padding-top: 0.3rem;
+                padding-bottom: 0.3rem;
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+
+            .top-bar-nav {
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                width: max-content;
+                max-width: 100%;
+                overflow-x: auto;
+                overflow-y: visible;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                padding-bottom: 2px;
+            }
+
+            .top-bar-nav::-webkit-scrollbar {
+                display: none;
+            }
+
+            .top-bar-nav .top-bar-link {
+                padding: 0.35rem 0.55rem;
+                font-size: 0.75rem;
+            }
+
+            .top-bar-user-name {
+                max-width: 88px;
+            }
+
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .card {
+                border-radius: 10px;
+            }
+            
+            .py-5 {
+                padding-top: 1.5rem !important;
+                padding-bottom: 1.5rem !important;
+            }
+        }
+    </style>
+
+      <link rel="stylesheet" href="../assets/custom/site-backend.css">
+</head>
+<body>
+    <!-- Barre supérieure : actions rapides & compte -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-inner">
+                <ul class="top-bar-nav">
+                    <li>
+                        <a class="top-bar-link" href="search/advanced.html" title="Recherche">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                            <span>Recherche</span>
+                        </a>
+                    </li>
+
+                                            <li class="top-bar-divider d-none d-sm-block" aria-hidden="true">Texte de d&eacute;monstration &agrave; remplacer.</li>
+                        <li>
+                            <a class="top-bar-link" href="login.html">
+                                <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                                <span>Se connecter</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="top-bar-link top-bar-link-register" href="register.html">
+                                <i class="fas fa-user-plus" aria-hidden="true"></i>
+                                <span>S'inscrire</span>
+                            </a>
+                        </li>
+                                    </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation principale -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="../assets/custom/logo.jpg" 
+                     alt="ISC KINDU" 
+                     class="navbar-logo me-2">
+                Alumni ISC KINDU
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Accueil</a>
+                    </li>
+                    
+                    <!-- Le réseau avec sous-menu -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Le réseau
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="associations.html">Les associations</a></li>
+                            <li><a class="dropdown-item" href="alumni.html">Les membres</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="opportunities.html">Opportunités</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="events.html">Événements</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="news.html">Actualités</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container py-5">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="text-center">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="fas fa-users me-3" style="color: var(--isc-kindu-blue);"></i>
+                    <span style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Nos Alumni</span>
+                </h1>
+                <p class="lead text-muted">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="row text-center">
+                            <div class="col-md-4">
+                                <div class="stat-item stat-blue">
+                                    <h3 class="fw-bold">1955</h3>
+                                    <p class="text-muted mb-0">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stat-item stat-red">
+                                    <h3 class="fw-bold">41</h3>
+                                    <p class="text-muted mb-0">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stat-item stat-yellow">
+                                    <h3 class="fw-bold">636</h3>
+                                    <p class="text-muted mb-0">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="GET" action="#" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="search" class="form-label">
+                                <i class="fas fa-search me-2" style="color: var(--isc-kindu-blue);"></i>
+                                Rechercher
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="search" 
+                                name="search" 
+                                value=""
+                                placeholder="Nom, email, profession ou faculté..."
+                            >
+                            <div class="form-text">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Recherche dans : nom, email, profession et faculté
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="faculty" class="form-label">
+                                <i class="fas fa-graduation-cap me-2" style="color: var(--isc-kindu-red);"></i>
+                                Sections
+                            </label>
+                            <select class="form-select" id="faculty" name="faculty">
+                                <option value="">Option d&eacute;mo</option>
+                                                                    <option value="-" >Option d&eacute;mo</option>
+                                                                    <option value="AGRONOMIE" >Option d&eacute;mo</option>
+                                                                    <option value="Agro" >Option d&eacute;mo</option>
+                                                                    <option value="DROIT" >Option d&eacute;mo</option>
+                                                                    <option value="DROIT (UNILU)" >Option d&eacute;mo</option>
+                                                                    <option value="DRROIT" >Option d&eacute;mo</option>
+                                                                    <option value="Droit/ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="EC.&amp;SC COMM" >Option d&eacute;mo</option>
+                                                                    <option value="ECONOMIE" >Option d&eacute;mo</option>
+                                                                    <option value="ERAIFT" >Option d&eacute;mo</option>
+                                                                    <option value="Ecole de criminologie" >Option d&eacute;mo</option>
+                                                                    <option value="Ecole de l eau" >Option d&eacute;mo</option>
+                                                                    <option value="Economie/ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Section Gestion commerciale et administrative" >Option d&eacute;mo</option>
+                                                                    <option value="Section Gestion informatique" >Option d&eacute;mo</option>
+                                                                    <option value="Section Gestion informatique" >Option d&eacute;mo</option>
+                                                                    <option value="Section Gestion informatique" >Option d&eacute;mo</option>
+                                                                    <option value="SECTION DE DEMONSTRATION" >Option d&eacute;mo</option>
+                                                                    <option value="SECTION DE DEMONSTRATION" >Option d&eacute;mo</option>
+                                                                    <option value="Section de d&eacute;monstration" >Option d&eacute;mo</option>
+                                                                    <option value="Section de d&eacute;monstration" >Option d&eacute;mo</option>
+                                                                    <option value="SECTIONS DES Gestion commerciale et administrative" >Option d&eacute;mo</option>
+                                                                    <option value="SECTIONS DES Gestion informatique" >Option d&eacute;mo</option>
+                                                                    <option value="SECTIONS DES SCIENCES SOCIALE POLITIQUES ET ADMIN" >Option d&eacute;mo</option>
+                                                                    <option value="Section Gestion informatiqueS" >Option d&eacute;mo</option>
+                                                                    <option value="FASEG" >Option d&eacute;mo</option>
+                                                                    <option value="Fac Eco" >Option d&eacute;mo</option>
+                                                                    <option value="Fac SC  ECON" >Option d&eacute;mo</option>
+                                                                    <option value="Section de d&eacute;monstration" >Option d&eacute;mo</option>
+                                                                    <option value="FacultÃ© des Gestion informatique" >Option d&eacute;mo</option>
+                                                                    <option value="Section Gestion informatique" >Option d&eacute;mo</option>
+                                                                    <option value="Sections d&#039;Agronomie" >Option d&eacute;mo</option>
+                                                                    <option value="Section Gestion informatique" >Option d&eacute;mo</option>
+                                                                    <option value="Section de d&eacute;monstration" >Option d&eacute;mo</option>
+                                                                    <option value="Sections des Communications Sociales" >Option d&eacute;mo</option>
+                                                                    <option value="Sections des Sciences" >Option d&eacute;mo</option>
+                                                                    <option value="Section de d&eacute;monstration" >Option d&eacute;mo</option>
+                                                                    <option value="ISTM" >Option d&eacute;mo</option>
+                                                                    <option value="L &amp; SC.HUM." >Option d&eacute;mo</option>
+                                                                    <option value="LETTRES" >Option d&eacute;mo</option>
+                                                                    <option value="LETTRES &amp; SC HUM" >Option d&eacute;mo</option>
+                                                                    <option value="Option d&eacute;mo" >Option d&eacute;mo</option>
+                                                                    <option value="Lovanium" >Option d&eacute;mo</option>
+                                                                    <option value="MEDECINE" >Option d&eacute;mo</option>
+                                                                    <option value="MÃ©decine" >Option d&eacute;mo</option>
+                                                                    <option value="PDT / CNECO" >Option d&eacute;mo</option>
+                                                                    <option value="PHARMACIE" >Option d&eacute;mo</option>
+                                                                    <option value="PHILO" >Option d&eacute;mo</option>
+                                                                    <option value="POLYTECH" >Option d&eacute;mo</option>
+                                                                    <option value="POLYTECHN" >Option d&eacute;mo</option>
+                                                                    <option value="Gestion informatique" >Option d&eacute;mo</option>
+                                                                    <option value="POLYTECNIQUE" >Option d&eacute;mo</option>
+                                                                    <option value="POSEC" >Option d&eacute;mo</option>
+                                                                    <option value="PSYCHO &amp; EDUC" >Option d&eacute;mo</option>
+                                                                    <option value="PSYCHO &amp; Sc Educ" >Option d&eacute;mo</option>
+                                                                    <option value="PSYCHOLOGIE" >Option d&eacute;mo</option>
+                                                                    <option value="Philo &amp; LETTRES" >Option d&eacute;mo</option>
+                                                                    <option value="Psychologue et Sciences de l&#039;Education" >Option d&eacute;mo</option>
+                                                                    <option value="PÃ©trole, gaz et Ã©nergies renouvelables" >Option d&eacute;mo</option>
+                                                                    <option value="R.I" >Option d&eacute;mo</option>
+                                                                    <option value="RD.html" >Option d&eacute;mo</option>
+                                                                    <option value="S.S.A.P" >Option d&eacute;mo</option>
+                                                                    <option value="S.S.P.A" >Option d&eacute;mo</option>
+                                                                    <option value="S.S.P.A." >Option d&eacute;mo</option>
+                                                                    <option value="S.S.PA" >Option d&eacute;mo</option>
+                                                                    <option value="S.SPA" >Option d&eacute;mo</option>
+                                                                    <option value="SC  ECONOMIQUES" >Option d&eacute;mo</option>
+                                                                    <option value="SC ECONOMIQUES" >Option d&eacute;mo</option>
+                                                                    <option value="SC POLITIQUES" >Option d&eacute;mo</option>
+                                                                    <option value="SC. ECONOMIQUES" >Option d&eacute;mo</option>
+                                                                    <option value="SC.AGRONOM" >Option d&eacute;mo</option>
+                                                                    <option value="SC.COM &amp; CONSUL" >Option d&eacute;mo</option>
+                                                                    <option value="SC.ECONOMIQUES" >Option d&eacute;mo</option>
+                                                                    <option value="SCES  ECONOMIE" >Option d&eacute;mo</option>
+                                                                    <option value="SCES Chimiques" >Option d&eacute;mo</option>
+                                                                    <option value="SCES ECOM" >Option d&eacute;mo</option>
+                                                                    <option value="SCES ECONOM" >Option d&eacute;mo</option>
+                                                                    <option value="SCIENCES" >Option d&eacute;mo</option>
+                                                                    <option value="SCIENCES Ã‰CONOMIQUES ET DE GESTION" >Option d&eacute;mo</option>
+                                                                    <option value="SCIENCES. SOCIAL." >Option d&eacute;mo</option>
+                                                                    <option value="SCIENCES/ GEOL." >Option d&eacute;mo</option>
+                                                                    <option value="SGAC /HONORAIRE" >Option d&eacute;mo</option>
+                                                                    <option value="SSAP" >Option d&eacute;mo</option>
+                                                                    <option value="SSPA" >Option d&eacute;mo</option>
+                                                                    <option value="Sces Econom." >Option d&eacute;mo</option>
+                                                                    <option value="Gestion informatique" >Option d&eacute;mo</option>
+                                                                    <option value="Option d&eacute;mo" >Option d&eacute;mo</option>
+                                                                    <option value="Sciences Ã©conomiques et gestion" >Option d&eacute;mo</option>
+                                                                    <option value="Secrétaire Général Académique honoraire de l’ISC KINDU (Décennie 80)" >Option d&eacute;mo</option>
+                                                                    <option value="THEOLOGIE" >Option d&eacute;mo</option>
+                                                                    <option value="UCC" >Option d&eacute;mo</option>
+                                                                    <option value="ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="ISC KINDU (2004)" >Option d&eacute;mo</option>
+                                                                    <option value="ISC KINDU (90)" >Option d&eacute;mo</option>
+                                                                    <option value="ISC KINDU (DEA décennie 2000)" >Option d&eacute;mo</option>
+                                                                    <option value="ISC KINDU (Décennie 90)" >Option d&eacute;mo</option>
+                                                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="profession" class="form-label">
+                                <i class="fas fa-briefcase me-2" style="color: var(--isc-kindu-yellow);"></i>
+                                Profession
+                            </label>
+                            <select class="form-select" id="profession" name="profession">
+                                <option value="">Option d&eacute;mo</option>
+                                                                    <option value="-" >Option d&eacute;mo</option>
+                                                                    <option value="1er Ministre honoraire / Sénateur" >Option d&eacute;mo</option>
+                                                                    <option value="1er Vice Président du Sénat honoraire" >Option d&eacute;mo</option>
+                                                                    <option value="1ér Docteur de l’LOVANUIM ET Membres du C .A  ALMA" >Option d&eacute;mo</option>
+                                                                    <option value="1ér Ministre et Ministre des Finances de la RDC" >Option d&eacute;mo</option>
+                                                                    <option value="A D G/ ONATRA" >Option d&eacute;mo</option>
+                                                                    <option value="ABC" >Option d&eacute;mo</option>
+                                                                    <option value="AFMED" >Option d&eacute;mo</option>
+                                                                    <option value="AGT.MKTEUR" >Option d&eacute;mo</option>
+                                                                    <option value="ANALYSTE PROGRAMMEUR" >Option d&eacute;mo</option>
+                                                                    <option value="ASSISTANT ET MANAGER DE COMPAGNIE" >Option d&eacute;mo</option>
+                                                                    <option value="AVOCAT" >Option d&eacute;mo</option>
+                                                                    <option value="AVOCAT - CEPI" >Option d&eacute;mo</option>
+                                                                    <option value="AVVOCAT" >Option d&eacute;mo</option>
+                                                                    <option value="Accompagnat. Sp" >Option d&eacute;mo</option>
+                                                                    <option value="Accounting manager" >Option d&eacute;mo</option>
+                                                                    <option value="Acteur politique" >Option d&eacute;mo</option>
+                                                                    <option value="Activiste" >Option d&eacute;mo</option>
+                                                                    <option value="Activisti environnemental" >Option d&eacute;mo</option>
+                                                                    <option value="Adminis de Soc" >Option d&eacute;mo</option>
+                                                                    <option value="Administ des Sociétés" >Option d&eacute;mo</option>
+                                                                    <option value="Administ. des Soc." >Option d&eacute;mo</option>
+                                                                    <option value="Administ. des Sociétés" >Option d&eacute;mo</option>
+                                                                    <option value="Administ.de Soc" >Option d&eacute;mo</option>
+                                                                    <option value="Administr des Sociétés" >Option d&eacute;mo</option>
+                                                                    <option value="Administrateur RVF" >Option d&eacute;mo</option>
+                                                                    <option value="Administrateur de Société" >Option d&eacute;mo</option>
+                                                                    <option value="Agent" >Option d&eacute;mo</option>
+                                                                    <option value="Agent Marketeur Dans  Une Imprimerie" >Option d&eacute;mo</option>
+                                                                    <option value="Agent Marketing" >Option d&eacute;mo</option>
+                                                                    <option value="Agent administratif" >Option d&eacute;mo</option>
+                                                                    <option value="Agent au Ministère des Finances" >Option d&eacute;mo</option>
+                                                                    <option value="Agent cabinet budget" >Option d&eacute;mo</option>
+                                                                    <option value="Agent d&#039;une agence" >Option d&eacute;mo</option>
+                                                                    <option value="Agent de Liaison" >Option d&eacute;mo</option>
+                                                                    <option value="Agent de banque" >Option d&eacute;mo</option>
+                                                                    <option value="Agent de collaboration" >Option d&eacute;mo</option>
+                                                                    <option value="Agent de l&#039;Etat" >Option d&eacute;mo</option>
+                                                                    <option value="Agent public" >Option d&eacute;mo</option>
+                                                                    <option value="Agripreneur" >Option d&eacute;mo</option>
+                                                                    <option value="Agronome" >Option d&eacute;mo</option>
+                                                                    <option value="Agronome / Humanitaire" >Option d&eacute;mo</option>
+                                                                    <option value="Amba Belgique" >Option d&eacute;mo</option>
+                                                                    <option value="Aménagiste regional" >Option d&eacute;mo</option>
+                                                                    <option value="Analyste" >Option d&eacute;mo</option>
+                                                                    <option value="Analyste SIG et Télédétection" >Option d&eacute;mo</option>
+                                                                    <option value="Analyste des données" >Option d&eacute;mo</option>
+                                                                    <option value="Analyste des risques" >Option d&eacute;mo</option>
+                                                                    <option value="Analyste en réseau et cybercurité" >Option d&eacute;mo</option>
+                                                                    <option value="Analyste-financier, Auditeur Interne et Externe, Contrôleur de Gestion et Actuaire" >Option d&eacute;mo</option>
+                                                                    <option value="Anesthésie" >Option d&eacute;mo</option>
+                                                                    <option value="Apprenant à l&#039;Lien de d&eacute;monstration (Santé et environnement 6ème cohorte)" >Option d&eacute;mo</option>
+                                                                    <option value="Archiviste" >Option d&eacute;mo</option>
+                                                                    <option value="Assistant" >Option d&eacute;mo</option>
+                                                                    <option value="Assistant Académique" >Option d&eacute;mo</option>
+                                                                    <option value="Assistant Comptable" >Option d&eacute;mo</option>
+                                                                    <option value="Assistant ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Assistant d&#039;enseignement" >Option d&eacute;mo</option>
+                                                                    <option value="Assistant de recherche" >Option d&eacute;mo</option>
+                                                                    <option value="Assistant du Directeur général chargé de presse et communication" >Option d&eacute;mo</option>
+                                                                    <option value="Assistant du premier Ministre MATATA" >Option d&eacute;mo</option>
+                                                                    <option value="Assistant en Radiologie et Imagerie Médicale" >Option d&eacute;mo</option>
+                                                                    <option value="Assistant en sciences économiques" >Option d&eacute;mo</option>
+                                                                    <option value="Assistant numérique RECTORAT" >Option d&eacute;mo</option>
+                                                                    <option value="Assistant à l&#039;enseignement au département des Lettres et Civilisation Anglaises" >Option d&eacute;mo</option>
+                                                                    <option value="Assistant à la Section Gestion commerciale et administrative" >Option d&eacute;mo</option>
+                                                                    <option value="Assistante au Programme Gouvernance et Minéraux Stratégiques" >Option d&eacute;mo</option>
+                                                                    <option value="Assistante d&#039;enseignement à l&#039;ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Associat" >Option d&eacute;mo</option>
+                                                                    <option value="Association des Ingénieur Civils" >Option d&eacute;mo</option>
+                                                                    <option value="Au chômage" >Option d&eacute;mo</option>
+                                                                    <option value="Aucun" >Option d&eacute;mo</option>
+                                                                    <option value="Aucune" >Option d&eacute;mo</option>
+                                                                    <option value="Audit informatique| Data-analyste" >Option d&eacute;mo</option>
+                                                                    <option value="Auditeur SI et Consultant en Cybersécurité" >Option d&eacute;mo</option>
+                                                                    <option value="Avocat TRIB/ GOMBE" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="Avocat et Enseignant" >Option d&eacute;mo</option>
+                                                                    <option value="Avocat et auxiliaire à l&#039;enseignement" >Option d&eacute;mo</option>
+                                                                    <option value="Avocat, Conseiller du Ministre des Mines" >Option d&eacute;mo</option>
+                                                                    <option value="Avocat, Mandataire en Mines et Carrières, Mandataire en Propriété Industrielle, Arbitre agréé" >Option d&eacute;mo</option>
+                                                                    <option value="Avocate" >Option d&eacute;mo</option>
+                                                                    <option value="BCC" >Option d&eacute;mo</option>
+                                                                    <option value="BTC/ MIN ITPR" >Option d&eacute;mo</option>
+                                                                    <option value="Banquier" >Option d&eacute;mo</option>
+                                                                    <option value="Bibliothécaire/ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Biologiste" >Option d&eacute;mo</option>
+                                                                    <option value="Biostatisticien" >Option d&eacute;mo</option>
+                                                                    <option value="Bénévole en communication" >Option d&eacute;mo</option>
+                                                                    <option value="CADRE-BCC" >Option d&eacute;mo</option>
+                                                                    <option value="CADRE-BCDC" >Option d&eacute;mo</option>
+                                                                    <option value="CADRE-MIN/PLAN" >Option d&eacute;mo</option>
+                                                                    <option value="CE.PE.TE.DE." >Option d&eacute;mo</option>
+                                                                    <option value="CENCO" >Option d&eacute;mo</option>
+                                                                    <option value="CENI" >Option d&eacute;mo</option>
+                                                                    <option value="CEO" >Option d&eacute;mo</option>
+                                                                    <option value="CEPI" >Option d&eacute;mo</option>
+                                                                    <option value="CHEF DE SERV." >Option d&eacute;mo</option>
+                                                                    <option value="CHERCHEUR" >Option d&eacute;mo</option>
+                                                                    <option value="CHIRURGIEN DENTISTE" >Option d&eacute;mo</option>
+                                                                    <option value="CHMA/ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="CHef d&#039;unité Backend Development" >Option d&eacute;mo</option>
+                                                                    <option value="CONSULT- INDEP" >Option d&eacute;mo</option>
+                                                                    <option value="CONSULTANT" >Option d&eacute;mo</option>
+                                                                    <option value="CONSULTANT-IND" >Option d&eacute;mo</option>
+                                                                    <option value="COOPERATION" >Option d&eacute;mo</option>
+                                                                    <option value="CSP" >Option d&eacute;mo</option>
+                                                                    <option value="CT  AnesthésieRéanimation" >Option d&eacute;mo</option>
+                                                                    <option value="Cabinet LUKOMBE/Commission OHADA-Ministère de Justice" >Option d&eacute;mo</option>
+                                                                    <option value="Cadre comptable chez LMC Sa" >Option d&eacute;mo</option>
+                                                                    <option value="Cadre à la Caisse Nationale de Sécurité Sociale (CNSS)" >Option d&eacute;mo</option>
+                                                                    <option value="Cadre à la Presidence" >Option d&eacute;mo</option>
+                                                                    <option value="Caissière" >Option d&eacute;mo</option>
+                                                                    <option value="Cardiologue" >Option d&eacute;mo</option>
+                                                                    <option value="Charge de Communication de la Présidence" >Option d&eacute;mo</option>
+                                                                    <option value="Charge des Projets de la Banque mondiale" >Option d&eacute;mo</option>
+                                                                    <option value="Chargé d&#039;études" >Option d&eacute;mo</option>
+                                                                    <option value="Chargé de Suivi et Evaluation" >Option d&eacute;mo</option>
+                                                                    <option value="Chargé de projet" >Option d&eacute;mo</option>
+                                                                    <option value="Chargé de projets numériques Aufrancophonie" >Option d&eacute;mo</option>
+                                                                    <option value="Chargé des Operations de CENI" >Option d&eacute;mo</option>
+                                                                    <option value="Chargée de Communication" >Option d&eacute;mo</option>
+                                                                    <option value="Chargée planification, Direction commerciale" >Option d&eacute;mo</option>
+                                                                    <option value="Chef d&#039;agence de voyage" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de Bureau" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de Bureau Surveillance et Investigations à la Coordination Provinciale du Service National de l&#039;Epidémio-Surveillance/Division Provinciale de Pêche et Élevage du Kongo Central" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de Bureau au SNRS(Ministères  des Affaires Sociales)." >Option d&eacute;mo</option>
+                                                                    <option value="Chef de DPT" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de Dept" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de Division Contenus Numériques" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de Div /UNILU" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de SCE" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de Section Routes et Chef de Projet d’Infrastructures Routières" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de Service" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de Travaux / Enseignant et Médecin Dentiste" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de Travaux/ Enseignante" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de bureau au ministère des finances" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de département Géni Civil Gestion informatique" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de département Génie Civil" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de travaux" >Option d&eacute;mo</option>
+                                                                    <option value="Chef de travaux /Enseignant" >Option d&eacute;mo</option>
+                                                                    <option value="Chef des AD" >Option d&eacute;mo</option>
+                                                                    <option value="Chef. de Dept ad" >Option d&eacute;mo</option>
+                                                                    <option value="Cheffe de Travaux à la Sections des Gestion informatique" >Option d&eacute;mo</option>
+                                                                    <option value="Chercher en méthode quantitative" >Option d&eacute;mo</option>
+                                                                    <option value="Chercheur au CREEUK" >Option d&eacute;mo</option>
+                                                                    <option value="Chercheur en Education Policy and English Studies" >Option d&eacute;mo</option>
+                                                                    <option value="Chercheur et apprenant au DEA en Biologie moléculaire, régulation de l&#039;ARN chez T.brucei" >Option d&eacute;mo</option>
+                                                                    <option value="Chercheur et auteur de livres" >Option d&eacute;mo</option>
+                                                                    <option value="Chercheur, formatrice et coach en entrepreneuriat" >Option d&eacute;mo</option>
+                                                                    <option value="Chirurgien" >Option d&eacute;mo</option>
+                                                                    <option value="Chômeur" >Option d&eacute;mo</option>
+                                                                    <option value="Collège des doyens de l’ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Commerçant" >Option d&eacute;mo</option>
+                                                                    <option value="Commissaire Spéciale de la Province de MONGALA" >Option d&eacute;mo</option>
+                                                                    <option value="Commissaire Spéciale de la Province du Nord UBANGI" >Option d&eacute;mo</option>
+                                                                    <option value="Communications Officer" >Option d&eacute;mo</option>
+                                                                    <option value="Comptabilité et finance" >Option d&eacute;mo</option>
+                                                                    <option value="Comptable" >Option d&eacute;mo</option>
+                                                                    <option value="Comptable  à l&#039;Intendance Générale de l&#039;Esu" >Option d&eacute;mo</option>
+                                                                    <option value="Comptable et analyste de comptes clients" >Option d&eacute;mo</option>
+                                                                    <option value="Conseil Scientifique du Ministre de l’ESU" >Option d&eacute;mo</option>
+                                                                    <option value="Conseiller Principal en Charge du College Economie, Finance et Budget à la Primature" >Option d&eacute;mo</option>
+                                                                    <option value="Conseiller du Gouverneur à la BCC" >Option d&eacute;mo</option>
+                                                                    <option value="Conseiller en prévention Médecin du travail" >Option d&eacute;mo</option>
+                                                                    <option value="Conseiller juridique" >Option d&eacute;mo</option>
+                                                                    <option value="Conseiller principal du chef de l’Etat en charge du collège des hydrocarbures" >Option d&eacute;mo</option>
+                                                                    <option value="Conseillère en assurances" >Option d&eacute;mo</option>
+                                                                    <option value="Conseillé administratif" >Option d&eacute;mo</option>
+                                                                    <option value="Conseillé juridique" >Option d&eacute;mo</option>
+                                                                    <option value="Consultant Environnemental" >Option d&eacute;mo</option>
+                                                                    <option value="Consultant Ingénieur Civil" >Option d&eacute;mo</option>
+                                                                    <option value="Consultant Logistique Admin &amp; Opérations" >Option d&eacute;mo</option>
+                                                                    <option value="Consultant Senior en Sauvegarde Environnementale et Sociale" >Option d&eacute;mo</option>
+                                                                    <option value="Consultant en Environnement" >Option d&eacute;mo</option>
+                                                                    <option value="Consultant en comptabilité" >Option d&eacute;mo</option>
+                                                                    <option value="Contrôleur de Gestion" >Option d&eacute;mo</option>
+                                                                    <option value="Contrôleur interne" >Option d&eacute;mo</option>
+                                                                    <option value="Coopérant volontaire chargé de l&#039;entrepreneuriat et développement des entreprises" >Option d&eacute;mo</option>
+                                                                    <option value="Coordinateur Technique des Véhicules Industriels VI et Véhicules Particuliers VP" >Option d&eacute;mo</option>
+                                                                    <option value="Coordon. Du COREF" >Option d&eacute;mo</option>
+                                                                    <option value="Coordonateur et enentrepreneur" >Option d&eacute;mo</option>
+                                                                    <option value="Coordonatrice technique de projet / Doctorante" >Option d&eacute;mo</option>
+                                                                    <option value="Coordonnateur centre de capture passeport biomÃ©trique/INA" >Option d&eacute;mo</option>
+                                                                    <option value="Corps scientifique" >Option d&eacute;mo</option>
+                                                                    <option value="Criminologue et Enseignant" >Option d&eacute;mo</option>
+                                                                    <option value="Cuisinier" >Option d&eacute;mo</option>
+                                                                    <option value="Célibataire" >Option d&eacute;mo</option>
+                                                                    <option value="D.G BCC" >Option d&eacute;mo</option>
+                                                                    <option value="D.G/BCC" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="DAF/Dirkin" >Option d&eacute;mo</option>
+                                                                    <option value="DAFA/DKN" >Option d&eacute;mo</option>
+                                                                    <option value="DG. DEGERAD et DIRECAB 1ér Ministre MATATA" >Option d&eacute;mo</option>
+                                                                    <option value="DGI" >Option d&eacute;mo</option>
+                                                                    <option value="DGSS/FARDC" >Option d&eacute;mo</option>
+                                                                    <option value="DICAS/DIRKIN" >Option d&eacute;mo</option>
+                                                                    <option value="DIPA/" >Option d&eacute;mo</option>
+                                                                    <option value="DIR.SNCC" >Option d&eacute;mo</option>
+                                                                    <option value="DIRCAB/ MINESU" >Option d&eacute;mo</option>
+                                                                    <option value="DIRECABA Adj  1er Ministre MATATA et dans Cabinet du Ministre du Plan actuel" >Option d&eacute;mo</option>
+                                                                    <option value="DIRECTEUR DES OPERATIONS" >Option d&eacute;mo</option>
+                                                                    <option value="Data Manager" >Option d&eacute;mo</option>
+                                                                    <option value="Data Science" >Option d&eacute;mo</option>
+                                                                    <option value="Data Scientist en santé" >Option d&eacute;mo</option>
+                                                                    <option value="Data analyste" >Option d&eacute;mo</option>
+                                                                    <option value="Delivey Channel Officer" >Option d&eacute;mo</option>
+                                                                    <option value="Dep. Pro. BAS-CO" >Option d&eacute;mo</option>
+                                                                    <option value="Designer" >Option d&eacute;mo</option>
+                                                                    <option value="Developer" >Option d&eacute;mo</option>
+                                                                    <option value="Devops" >Option d&eacute;mo</option>
+                                                                    <option value="Dir." >Option d&eacute;mo</option>
+                                                                    <option value="Dircab du Président C. A .U" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur Au CPCC Et Com aux Comptes à l’OCC" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur Général ELIOS" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur Général de DELMEC" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur Général de TRANSCO honorai" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur Général du BCECO" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur Ressources Humaines et qualité" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur administratif et financier" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur d&#039;Études" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur de Cabinet du Chef de l’ETAT honoraire / Cadre du FCC" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur de Ressource Humaine de la Société AITEL" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur des Opération de la CENI depuis 2005" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur des operations et maintenance" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur du SPU /ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur général" >Option d&eacute;mo</option>
+                                                                    <option value="Directrice Générale" >Option d&eacute;mo</option>
+                                                                    <option value="Directrice de Production (REGIDESO)" >Option d&eacute;mo</option>
+                                                                    <option value="Directrice de l’Investing In People ASBL" >Option d&eacute;mo</option>
+                                                                    <option value="Dirigeant d’entreprise" >Option d&eacute;mo</option>
+                                                                    <option value="Docteur en Medecine" >Option d&eacute;mo</option>
+                                                                    <option value="Docteur en Gestion informatique" >Option d&eacute;mo</option>
+                                                                    <option value="Doctoral Researcher" >Option d&eacute;mo</option>
+                                                                    <option value="Doctorant" >Option d&eacute;mo</option>
+                                                                    <option value="Doctorant FASEG" >Option d&eacute;mo</option>
+                                                                    <option value="Doctorant en Science politique" >Option d&eacute;mo</option>
+                                                                    <option value="Douanier" >Option d&eacute;mo</option>
+                                                                    <option value="Doyenne de la Section Gestion commerciale et administrative" >Option d&eacute;mo</option>
+                                                                    <option value="Doyenne honoraire de la Section Gestion commerciale et administrative" >Option d&eacute;mo</option>
+                                                                    <option value="Droit" >Option d&eacute;mo</option>
+                                                                    <option value="Députe National" >Option d&eacute;mo</option>
+                                                                    <option value="Députe National et 2émépersonnalité du PPRD actuel Ministre de l’Intérieur" >Option d&eacute;mo</option>
+                                                                    <option value="Député Nat. Président de la Commission des Hydrocarbures à l’Assemblée Nationale" >Option d&eacute;mo</option>
+                                                                    <option value="Député National hon/ SG Adm" >Option d&eacute;mo</option>
+                                                                    <option value="Développeur" >Option d&eacute;mo</option>
+                                                                    <option value="Développeur full-stack" >Option d&eacute;mo</option>
+                                                                    <option value="Développeur informatique" >Option d&eacute;mo</option>
+                                                                    <option value="Développeur web" >Option d&eacute;mo</option>
+                                                                    <option value="ECONOMISTE INDEP" >Option d&eacute;mo</option>
+                                                                    <option value="EMPLOYE -BANQUE" >Option d&eacute;mo</option>
+                                                                    <option value="ENSEGNANT" >Option d&eacute;mo</option>
+                                                                    <option value="ENSEIGNANT/CANADA" >Option d&eacute;mo</option>
+                                                                    <option value="EXP." >Option d&eacute;mo</option>
+                                                                    <option value="EXPERT" >Option d&eacute;mo</option>
+                                                                    <option value="EXPERT EN DATA SCIENCE ET BUSINESS ANALYTICS" >Option d&eacute;mo</option>
+                                                                    <option value="Ecologiste" >Option d&eacute;mo</option>
+                                                                    <option value="Employé" >Option d&eacute;mo</option>
+                                                                    <option value="Employée" >Option d&eacute;mo</option>
+                                                                    <option value="Encodeur" >Option d&eacute;mo</option>
+                                                                    <option value="Engineer and Researcher" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignant" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignant (Assistant de premier mandat)/Fonctionnaire de l&#039;état" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignant (Assistant)" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignant - chercheur" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignant -Chercheur" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignant / rechercheur" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignant Chercheur/Médecin Physique et de Réadaptation" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignant acad&eacute;mique" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignant chercheur" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignant et Chercheur" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignant et médecin" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignant-Cheecheue et Avocat" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignant-chercheur" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignant/Médecin" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignant/chercheur" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignante" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignante( assistante)" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignante/ Assistante" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignement" >Option d&eacute;mo</option>
+                                                                    <option value="Enseignement et recherche" >Option d&eacute;mo</option>
+                                                                    <option value="Entrepreneur" >Option d&eacute;mo</option>
+                                                                    <option value="Entrepreneure" >Option d&eacute;mo</option>
+                                                                    <option value="Environnementaliste" >Option d&eacute;mo</option>
+                                                                    <option value="Environnementaliste et Expert en gestion et recyclage des déchets plastiques et biodégradable" >Option d&eacute;mo</option>
+                                                                    <option value="Environnementaliste et Forestier" >Option d&eacute;mo</option>
+                                                                    <option value="Environnementaliste, Candidat Assistant/ ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Epidemiologie, Biostatistics et modelisation" >Option d&eacute;mo</option>
+                                                                    <option value="Epidemiologiste" >Option d&eacute;mo</option>
+                                                                    <option value="Etudiant" >Option d&eacute;mo</option>
+                                                                    <option value="Expert Environnementale" >Option d&eacute;mo</option>
+                                                                    <option value="Expert Suivi et Évaluation" >Option d&eacute;mo</option>
+                                                                    <option value="Expert a la cellule suivi et evaluation" >Option d&eacute;mo</option>
+                                                                    <option value="Expert bureau d&#039;études" >Option d&eacute;mo</option>
+                                                                    <option value="Expert comptable" >Option d&eacute;mo</option>
+                                                                    <option value="Expert en Droit Parlementaire" >Option d&eacute;mo</option>
+                                                                    <option value="Expert en SIG" >Option d&eacute;mo</option>
+                                                                    <option value="Expert en cyber security" >Option d&eacute;mo</option>
+                                                                    <option value="Expert en environnement et aménagement du territoire" >Option d&eacute;mo</option>
+                                                                    <option value="Expert-comptable" >Option d&eacute;mo</option>
+                                                                    <option value="Experte en matière de l’environnement" >Option d&eacute;mo</option>
+                                                                    <option value="FINCA-RDC" >Option d&eacute;mo</option>
+                                                                    <option value="FONCT/FINANCES" >Option d&eacute;mo</option>
+                                                                    <option value="FONCTIONNAIRE" >Option d&eacute;mo</option>
+                                                                    <option value="FPI" >Option d&eacute;mo</option>
+                                                                    <option value="Financier" >Option d&eacute;mo</option>
+                                                                    <option value="Fonctionaire" >Option d&eacute;mo</option>
+                                                                    <option value="Fonctionnaire Principal charge&#039; de la Science, la Technologie et l&#039;Innovation" >Option d&eacute;mo</option>
+                                                                    <option value="Fonctionnaire d&#039;État." >Option d&eacute;mo</option>
+                                                                    <option value="Fonctionnaire de l&#039;Ã©tat" >Option d&eacute;mo</option>
+                                                                    <option value="Fonctionnaire de l&#039;État" >Option d&eacute;mo</option>
+                                                                    <option value="Fonctionnaire de l’Etat" >Option d&eacute;mo</option>
+                                                                    <option value="Fonctionnaire et Enseignant-chercheur" >Option d&eacute;mo</option>
+                                                                    <option value="Formation" >Option d&eacute;mo</option>
+                                                                    <option value="G.P/ BCC" >Option d&eacute;mo</option>
+                                                                    <option value="GOUV BANQUE  C.C" >Option d&eacute;mo</option>
+                                                                    <option value="GOUVERNEUR  BANQUE  C.C honoraire" >Option d&eacute;mo</option>
+                                                                    <option value="Gestionnaire" >Option d&eacute;mo</option>
+                                                                    <option value="Gestionnaire Financier" >Option d&eacute;mo</option>
+                                                                    <option value="Gestionnaire Forestier" >Option d&eacute;mo</option>
+                                                                    <option value="Gestionnaire de données" >Option d&eacute;mo</option>
+                                                                    <option value="Gestionnaire des Projets et Assistant MEAL" >Option d&eacute;mo</option>
+                                                                    <option value="Gestionnaire des comptes fiscaux" >Option d&eacute;mo</option>
+                                                                    <option value="Gestionnaire des ressources humaines" >Option d&eacute;mo</option>
+                                                                    <option value="Gestionnaire et Manager FIB ( BCDC)" >Option d&eacute;mo</option>
+                                                                    <option value="Gouv honoraire BCC" >Option d&eacute;mo</option>
+                                                                    <option value="Gouverneur du Kassaï hon / Sénateur" >Option d&eacute;mo</option>
+                                                                    <option value="Gynécologue-Obstétricien" >Option d&eacute;mo</option>
+                                                                    <option value="Général de FARDC et Médecin Légiste" >Option d&eacute;mo</option>
+                                                                    <option value="Géologue" >Option d&eacute;mo</option>
+                                                                    <option value="Géologue minier" >Option d&eacute;mo</option>
+                                                                    <option value="Gérant station service Petro sil" >Option d&eacute;mo</option>
+                                                                    <option value="Gériatre" >Option d&eacute;mo</option>
+                                                                    <option value="HR Supervisor" >Option d&eacute;mo</option>
+                                                                    <option value="Haut fonctionnaire" >Option d&eacute;mo</option>
+                                                                    <option value="Head of School activation programme" >Option d&eacute;mo</option>
+                                                                    <option value="Humanitaire" >Option d&eacute;mo</option>
+                                                                    <option value="Hummanitaire" >Option d&eacute;mo</option>
+                                                                    <option value="Hydraulicien" >Option d&eacute;mo</option>
+                                                                    <option value="I.G. Chef d service Adjoint à l’IGF" >Option d&eacute;mo</option>
+                                                                    <option value="IB MYP MATH TEACHER" >Option d&eacute;mo</option>
+                                                                    <option value="IGC" >Option d&eacute;mo</option>
+                                                                    <option value="INDEPENDANT" >Option d&eacute;mo</option>
+                                                                    <option value="INDEPENDANT-ULK" >Option d&eacute;mo</option>
+                                                                    <option value="INDEPENDANTE" >Option d&eacute;mo</option>
+                                                                    <option value="INFORMEL" >Option d&eacute;mo</option>
+                                                                    <option value="INGENIEURIE" >Option d&eacute;mo</option>
+                                                                    <option value="INSPECTEUR" >Option d&eacute;mo</option>
+                                                                    <option value="INST.CONFORT" >Option d&eacute;mo</option>
+                                                                    <option value="ISTM" >Option d&eacute;mo</option>
+                                                                    <option value="IT Commercial Manager" >Option d&eacute;mo</option>
+                                                                    <option value="IT Engineering Manager" >Option d&eacute;mo</option>
+                                                                    <option value="IT Project Manager" >Option d&eacute;mo</option>
+                                                                    <option value="IT Project manager &amp; Business Development" >Option d&eacute;mo</option>
+                                                                    <option value="IT RECTEUR ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="IT support" >Option d&eacute;mo</option>
+                                                                    <option value="Informaticien" >Option d&eacute;mo</option>
+                                                                    <option value="Informaticien Devellopeur" >Option d&eacute;mo</option>
+                                                                    <option value="Informaticien Fonctionnaire de l&#039;état" >Option d&eacute;mo</option>
+                                                                    <option value="IngÃ©nieur en Exploration et Enseignant-chercheur" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur Agro-forestier" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur Agronome" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur Agronome Hydrologue" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur Civil" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur Civil Mécanicien" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur Civil Électricien" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur Civil Électronicien" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur Digitalisation" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur Génie Electrique" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur Informaticien" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur Informaticien Développeur" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur Réseaux et Cybersécurité" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur SIG" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur agroalimentaire" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur chimiste" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur civil des constructions" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur civil génie informatique" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur d&#039;études et exécution" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur en Génie Civil" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieur en informatique" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieure" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieure Civile Electricienne" >Option d&eacute;mo</option>
+                                                                    <option value="Ingénieure environnementaliste" >Option d&eacute;mo</option>
+                                                                    <option value="Inspecteur Principal" >Option d&eacute;mo</option>
+                                                                    <option value="Inspecteur Radiologique" >Option d&eacute;mo</option>
+                                                                    <option value="Inspecteur de police judiciaire" >Option d&eacute;mo</option>
+                                                                    <option value="Inspecteur de santé national" >Option d&eacute;mo</option>
+                                                                    <option value="Inspecteur des mines" >Option d&eacute;mo</option>
+                                                                    <option value="Inspecteur du travail" >Option d&eacute;mo</option>
+                                                                    <option value="Inspecteur urbain /Matadi" >Option d&eacute;mo</option>
+                                                                    <option value="Inspecteur vétérinaire dans la commune de Mont Ngafula" >Option d&eacute;mo</option>
+                                                                    <option value="Interne en neuropsychiatrie et master student en génétique" >Option d&eacute;mo</option>
+                                                                    <option value="Intervenant psychosocial" >Option d&eacute;mo</option>
+                                                                    <option value="Ir Forestier" >Option d&eacute;mo</option>
+                                                                    <option value="Ir réseau" >Option d&eacute;mo</option>
+                                                                    <option value="Ir. Agronome" >Option d&eacute;mo</option>
+                                                                    <option value="It" >Option d&eacute;mo</option>
+                                                                    <option value="JOURNALISTE" >Option d&eacute;mo</option>
+                                                                    <option value="Jouraliste" >Option d&eacute;mo</option>
+                                                                    <option value="Journaliste a la radio campus" >Option d&eacute;mo</option>
+                                                                    <option value="Juge cour constitutionnelle hon / Conseil d’Etat RD.Congo" >Option d&eacute;mo</option>
+                                                                    <option value="Juriste" >Option d&eacute;mo</option>
+                                                                    <option value="LASSAL" >Option d&eacute;mo</option>
+                                                                    <option value="LD/DI" >Option d&eacute;mo</option>
+                                                                    <option value="Lecturer" >Option d&eacute;mo</option>
+                                                                    <option value="Libéral" >Option d&eacute;mo</option>
+                                                                    <option value="Libérale" >Option d&eacute;mo</option>
+                                                                    <option value="Licencié" >Option d&eacute;mo</option>
+                                                                    <option value="Licenciée" >Option d&eacute;mo</option>
+                                                                    <option value="Licenciée en environnement" >Option d&eacute;mo</option>
+                                                                    <option value="MAGISTRATURE" >Option d&eacute;mo</option>
+                                                                    <option value="MANDATAIRE" >Option d&eacute;mo</option>
+                                                                    <option value="MEDECIN" >Option d&eacute;mo</option>
+                                                                    <option value="MEDECIN /ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="MEDECIN PEDIATRE" >Option d&eacute;mo</option>
+                                                                    <option value="MEDECIN SPECIALISTE" >Option d&eacute;mo</option>
+                                                                    <option value="MEDECIN/ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="MEDECINE" >Option d&eacute;mo</option>
+                                                                    <option value="MEDICAL LAB SUPPLY CHAIN MANAGER CHEMONICS USAID" >Option d&eacute;mo</option>
+                                                                    <option value="MIN./PLAN" >Option d&eacute;mo</option>
+                                                                    <option value="Magistrat" >Option d&eacute;mo</option>
+                                                                    <option value="Manager" >Option d&eacute;mo</option>
+                                                                    <option value="Manager Electronic Solutions" >Option d&eacute;mo</option>
+                                                                    <option value="Manager en Innovation et Scientist en Microbiologie, Infectiologie et Immunologie" >Option d&eacute;mo</option>
+                                                                    <option value="Master en science agronomiques" >Option d&eacute;mo</option>
+                                                                    <option value="Medecin Biologiste" >Option d&eacute;mo</option>
+                                                                    <option value="Medecin et chercheur" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="Medical Doctor" >Option d&eacute;mo</option>
+                                                                    <option value="Medical Officer" >Option d&eacute;mo</option>
+                                                                    <option value="Membre Fondateur, d’Honneur et Trésorier du   C.A de l’ALMA" >Option d&eacute;mo</option>
+                                                                    <option value="Militaire" >Option d&eacute;mo</option>
+                                                                    <option value="Ministre Délégué aux finances honoraire DG FPI" >Option d&eacute;mo</option>
+                                                                    <option value="Ministre actuel des ITPR de la RDC honoraire" >Option d&eacute;mo</option>
+                                                                    <option value="Ministre de Commerce Extérieur" >Option d&eacute;mo</option>
+                                                                    <option value="Ministre de l’ESU" >Option d&eacute;mo</option>
+                                                                    <option value="Ministre d’Etat au Budget honoraire et Ministre de la Fonction publique / Députe National" >Option d&eacute;mo</option>
+                                                                    <option value="Ministre hon de l’ESU / Députe National" >Option d&eacute;mo</option>
+                                                                    <option value="Ministre honoraire de Défense National" >Option d&eacute;mo</option>
+                                                                    <option value="Ministre honoraire de l’ESU" >Option d&eacute;mo</option>
+                                                                    <option value="Ministre honoraire de l’économie et commerce Député Nat" >Option d&eacute;mo</option>
+                                                                    <option value="MÉDECIN ( GYNÉCOLOGUE - OBSTÉTRICIEN)" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin Dermatologue" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin Directeur des Lien de d&eacute;monstration honoraire" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin Enseignant" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin Epidémiologiste" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin Généraliste" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin Parasitologue" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin Pathologiste" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin Physique et de Réadaptation/Financier (ENF)" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin Retraité" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin Spécialiste en Santé Publique (ENSA)" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin anesthésiste et réanimateur" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin anesthésiste reanimateur" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin biologiste/microbiologie/mycobactéries/tuberculose" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin chef de zone" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin chercheur" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin de Santé Publique" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin dentiste traitant" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin dentiste/ Assistant" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin du programme" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin et enseignant" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin physique" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin physique et de réadaptation" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin radiologue" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin santé publique" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin spécialiste en Santé Publique, Chef d&#039;entreprises" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin spécialiste en médecine intensive réanimation" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin spécialiste en santé publique" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin stagiaire" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin traitant" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin vétérinaire" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin vétérinaire - Assistant à l&#039;Institut" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin vétérinaire de la Faune sauvage" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin,  enseignant" >Option d&eacute;mo</option>
+                                                                    <option value="Médecin/Mph" >Option d&eacute;mo</option>
+                                                                    <option value="Ménagère" >Option d&eacute;mo</option>
+                                                                    <option value="Neurochirurgien" >Option d&eacute;mo</option>
+                                                                    <option value="OCC" >Option d&eacute;mo</option>
+                                                                    <option value="OPEC" >Option d&eacute;mo</option>
+                                                                    <option value="Orthopédiste" >Option d&eacute;mo</option>
+                                                                    <option value="PHARMACIENNE" >Option d&eacute;mo</option>
+                                                                    <option value="Pas de profession" >Option d&eacute;mo</option>
+                                                                    <option value="Pas de profession actuellement" >Option d&eacute;mo</option>
+                                                                    <option value="Pas encore" >Option d&eacute;mo</option>
+                                                                    <option value="Pharmacie" >Option d&eacute;mo</option>
+                                                                    <option value="Pharmacien" >Option d&eacute;mo</option>
+                                                                    <option value="Physicienne" >Option d&eacute;mo</option>
+                                                                    <option value="Point Focal Projets et Programmes. Chargée d’études" >Option d&eacute;mo</option>
+                                                                    <option value="Point focal de la foresterie communautaire de Buloloma au Nord Kivu" >Option d&eacute;mo</option>
+                                                                    <option value="Pr  ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Pr  d’Institut" >Option d&eacute;mo</option>
+                                                                    <option value="Pr d’Institut" >Option d&eacute;mo</option>
+                                                                    <option value="Presidente" >Option d&eacute;mo</option>
+                                                                    <option value="Principal" >Option d&eacute;mo</option>
+                                                                    <option value="Prof.  ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Prof. ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Prof. ISC KINDU / APUKIN" >Option d&eacute;mo</option>
+                                                                    <option value="Prof.ISC KINDU Facult Lettre/ Historien" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="Professionnel dans l&#039;ingénierie environnementale" >Option d&eacute;mo</option>
+                                                                    <option value="Programme officer et chef de bureau" >Option d&eacute;mo</option>
+                                                                    <option value="Project Manager" >Option d&eacute;mo</option>
+                                                                    <option value="Project manager practitioner" >Option d&eacute;mo</option>
+                                                                    <option value="Pr / ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Prés  ASS . NAT" >Option d&eacute;mo</option>
+                                                                    <option value="Prés. CALCC" >Option d&eacute;mo</option>
+                                                                    <option value="Présidence de la République" >Option d&eacute;mo</option>
+                                                                    <option value="Président AFMED" >Option d&eacute;mo</option>
+                                                                    <option value="Président AMI" >Option d&eacute;mo</option>
+                                                                    <option value="Président APUKIN" >Option d&eacute;mo</option>
+                                                                    <option value="Président C.A.U" >Option d&eacute;mo</option>
+                                                                    <option value="Président ECOFIN/Sénat honoraire" >Option d&eacute;mo</option>
+                                                                    <option value="Président Exécutif d’ALMA honoraire" >Option d&eacute;mo</option>
+                                                                    <option value="Président Foreco" >Option d&eacute;mo</option>
+                                                                    <option value="Président Foreco et Conseil à l’Assemblé National" >Option d&eacute;mo</option>
+                                                                    <option value="Président MPC/ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Président de (CA) Conseil d’Administration et membre d’honneur de l’ALMA" >Option d&eacute;mo</option>
+                                                                    <option value="Président de MPC" >Option d&eacute;mo</option>
+                                                                    <option value="Président de la .Assemblée Nationale RD.Congo" >Option d&eacute;mo</option>
+                                                                    <option value="Président de la Cours des Comptes de la RDC" >Option d&eacute;mo</option>
+                                                                    <option value="Président de la FEC" >Option d&eacute;mo</option>
+                                                                    <option value="Président de l’Ensemble National" >Option d&eacute;mo</option>
+                                                                    <option value="Président des Anciens étudiants Camerounais de ISC KINDU au Cameroun" >Option d&eacute;mo</option>
+                                                                    <option value="Président du Senat RD.Congo" >Option d&eacute;mo</option>
+                                                                    <option value="Président honoraire de la CENCO" >Option d&eacute;mo</option>
+                                                                    <option value="Président honoraire de la CENI" >Option d&eacute;mo</option>
+                                                                    <option value="Président honoraire du Senat" >Option d&eacute;mo</option>
+                                                                    <option value="Présidente de la Communauté Congolaise d’Iowa/USA" >Option d&eacute;mo</option>
+                                                                    <option value="Psychologue clinicienne" >Option d&eacute;mo</option>
+                                                                    <option value="Psychologue de l&#039;Education" >Option d&eacute;mo</option>
+                                                                    <option value="Psychologue, Programme National de Santé mentale" >Option d&eacute;mo</option>
+                                                                    <option value="Public Health Practitioner" >Option d&eacute;mo</option>
+                                                                    <option value="Questeur du Senat RDC hon / Députe Nationale" >Option d&eacute;mo</option>
+                                                                    <option value="RETRAITE BCC" >Option d&eacute;mo</option>
+                                                                    <option value="RETRAITE FONCT PUB" >Option d&eacute;mo</option>
+                                                                    <option value="RTL Operations" >Option d&eacute;mo</option>
+                                                                    <option value="Rapporteur Adjoint Commission ECOFIN/Sénat" >Option d&eacute;mo</option>
+                                                                    <option value="Record manager" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur général  Honoraire de l’ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur général  UCC" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur général ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="demo" >Option d&eacute;mo</option>
+                                                                    <option value="Directeur général honoraire  de l’ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Repr Ambassades de Belgique auprès des Association en RD.Congo" >Option d&eacute;mo</option>
+                                                                    <option value="Représentant Résident RDC" >Option d&eacute;mo</option>
+                                                                    <option value="Représentant des Anciens Science d’ Agronomique" >Option d&eacute;mo</option>
+                                                                    <option value="Représentent Génération KABILA" >Option d&eacute;mo</option>
+                                                                    <option value="Researcher and Embassy agent" >Option d&eacute;mo</option>
+                                                                    <option value="Responsable Administratif" >Option d&eacute;mo</option>
+                                                                    <option value="Responsable Administratif et Informatique" >Option d&eacute;mo</option>
+                                                                    <option value="Responsable de production" >Option d&eacute;mo</option>
+                                                                    <option value="Responsable média" >Option d&eacute;mo</option>
+                                                                    <option value="Retraité" >Option d&eacute;mo</option>
+                                                                    <option value="SAF" >Option d&eacute;mo</option>
+                                                                    <option value="SAFA" >Option d&eacute;mo</option>
+                                                                    <option value="SC COM" >Option d&eacute;mo</option>
+                                                                    <option value="SCE  ECH" >Option d&eacute;mo</option>
+                                                                    <option value="SCTP (ONATRA)" >Option d&eacute;mo</option>
+                                                                    <option value="SERVICE TECH" >Option d&eacute;mo</option>
+                                                                    <option value="SG Académique de l’ISC KINDU honoraire" >Option d&eacute;mo</option>
+                                                                    <option value="SG Adm HON ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="SG Administratif de l’ISC KINDU honoraire" >Option d&eacute;mo</option>
+                                                                    <option value="SG de l’ALMA Senior Manager  Chef du B  CMA" >Option d&eacute;mo</option>
+                                                                    <option value="SG à la Recherche" >Option d&eacute;mo</option>
+                                                                    <option value="SG.Academique" >Option d&eacute;mo</option>
+                                                                    <option value="SG.Administratif" >Option d&eacute;mo</option>
+                                                                    <option value="SG/ESU" >Option d&eacute;mo</option>
+                                                                    <option value="SOFIDE" >Option d&eacute;mo</option>
+                                                                    <option value="SPU /ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Sans emploi" >Option d&eacute;mo</option>
+                                                                    <option value="Scientifique" >Option d&eacute;mo</option>
+                                                                    <option value="Sec. Gén. A l’I.G.F." >Option d&eacute;mo</option>
+                                                                    <option value="Sec. Gén. Académique honoraire de l’ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Secrétaire" >Option d&eacute;mo</option>
+                                                                    <option value="Secrétaire C.A de l’ALMA" >Option d&eacute;mo</option>
+                                                                    <option value="Secrétaire Exécutif UAFMDK" >Option d&eacute;mo</option>
+                                                                    <option value="Secrétaire Général du PPRD et Ambassadeur honoraire de la RDC auprès du BENELUX" >Option d&eacute;mo</option>
+                                                                    <option value="Secrétaire administrative" >Option d&eacute;mo</option>
+                                                                    <option value="Secrétaire de Direction" >Option d&eacute;mo</option>
+                                                                    <option value="Secrétaire de Direction à la Direction de la Communication de l&#039;ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="Secrétaire de conseil d’Administration des Instituts du Congo" >Option d&eacute;mo</option>
+                                                                    <option value="Secrétaire de l&#039;association" >Option d&eacute;mo</option>
+                                                                    <option value="Secrétaire du Ministre" >Option d&eacute;mo</option>
+                                                                    <option value="Secrétaire et caissière" >Option d&eacute;mo</option>
+                                                                    <option value="Secrétaire général" >Option d&eacute;mo</option>
+                                                                    <option value="Secrétaire permanent   C.A.U" >Option d&eacute;mo</option>
+                                                                    <option value="Seignor Accountant" >Option d&eacute;mo</option>
+                                                                    <option value="Sociologue" >Option d&eacute;mo</option>
+                                                                    <option value="Spécialiste en marketing digital" >Option d&eacute;mo</option>
+                                                                    <option value="Spécialiste santé et protection sociale" >Option d&eacute;mo</option>
+                                                                    <option value="Stagiaire" >Option d&eacute;mo</option>
+                                                                    <option value="Stagiaire professionnel" >Option d&eacute;mo</option>
+                                                                    <option value="Sénateur" >Option d&eacute;mo</option>
+                                                                    <option value="Sénateur honoraire" >Option d&eacute;mo</option>
+                                                                    <option value="Technicien de Recherche" >Option d&eacute;mo</option>
+                                                                    <option value="U.L.K." >Option d&eacute;mo</option>
+                                                                    <option value="ISC KINDU" >Option d&eacute;mo</option>
+                                                                    <option value="UPN" >Option d&eacute;mo</option>
+                                                                    <option value="VODACOM" >Option d&eacute;mo</option>
+                                                                    <option value="Vice Ministre honoraire des Finances" >Option d&eacute;mo</option>
+                                                                    <option value="Vice premier Ministre au Budget Honoraire, DG ONATRA" >Option d&eacute;mo</option>
+                                                                    <option value="ZAP" >Option d&eacute;mo</option>
+                                                                    <option value="_" >Option d&eacute;mo</option>
+                                                                    <option value="chef d agence franchise orange/barumbu" >Option d&eacute;mo</option>
+                                                                    <option value="chirurgien-dentiste" >Option d&eacute;mo</option>
+                                                                    <option value="enseignante acad&eacute;mique" >Option d&eacute;mo</option>
+                                                                    <option value="medecin dentiste" >Option d&eacute;mo</option>
+                                                                    <option value="mÃ©decin" >Option d&eacute;mo</option>
+                                                                    <option value="vétérinaire" >Option d&eacute;mo</option>
+                                                                    <option value="wetshondo" >Option d&eacute;mo</option>
+                                                                    <option value="À la recherche de l&#039;emploi" >Option d&eacute;mo</option>
+                                                                    <option value="Économiste" >Option d&eacute;mo</option>
+                                                                    <option value="Économiste et Entrepreneur" >Option d&eacute;mo</option>
+                                                                    <option value="Étudiante" >Option d&eacute;mo</option>
+                                                                    <option value="étudiant en master" >Option d&eacute;mo</option>
+                                                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">&nbsp;</label>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-filter me-2"></i>
+                                    Filtrer
+                                </button>
+                                                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alumni Grid -->
+    <div class="row">
+                <div class="col-lg-4 col-md-6 mb-3 alumni-item" style="animation-delay: 0s;">
+            <div class="card alumni-card h-100 shadow-sm">
+                <div class="card-body text-center p-3">
+                    <!-- Photo -->
+                    <div class="alumni-photo mb-2">
+                                                                            <div class="photo-placeholder">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                                            </div>
+                    
+                    <!-- Name -->
+                    <h6 class="card-title fw-bold mb-2" style="color: var(--isc-kindu-blue);">
+                        +243991494763
+                    </h6>
+                    
+                    <!-- Faculty -->
+                    <div class="mb-2">
+                        <span class="badge badge-faculty">
+                            <i class="fas fa-graduation-cap me-1"></i>
+                            Section Gestion commerciale et administrative
+                        </span>
+                    </div>
+                    
+                    <!-- Profession -->
+                    <div class="mb-2">
+                        <p class="text-muted mb-1 small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                        <p class="profession-text small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                    
+                    <!-- Location -->
+                                        <div class="mb-2">
+                        <small class="text-muted">
+                            <i class="fas fa-map-marker-alt me-1" style="color: var(--isc-kindu-red);"></i>
+                            République Démocratique du Congo
+                        </small>
+                    </div>
+                                        
+                    <!-- View Profile Button -->
+                    <a href="alumni/1078.html" class="btn btn-profile btn-sm">
+                        <i class="fas fa-eye me-2"></i>
+                        Voir le profil
+                    </a>
+                </div>
+            </div>
+        </div>
+                <div class="col-lg-4 col-md-6 mb-3 alumni-item" style="animation-delay: 0.1s;">
+            <div class="card alumni-card h-100 shadow-sm">
+                <div class="card-body text-center p-3">
+                    <!-- Photo -->
+                    <div class="alumni-photo mb-2">
+                                                                            <div class="photo-placeholder">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                                            </div>
+                    
+                    <!-- Name -->
+                    <h6 class="card-title fw-bold mb-2" style="color: var(--isc-kindu-blue);">
+                        ABDULU ZADIA Fatuma
+                    </h6>
+                    
+                    <!-- Faculty -->
+                    <div class="mb-2">
+                        <span class="badge badge-faculty">
+                            <i class="fas fa-graduation-cap me-1"></i>
+                            Non renseigné
+                        </span>
+                    </div>
+                    
+                    <!-- Profession -->
+                    <div class="mb-2">
+                        <p class="text-muted mb-1 small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                        <p class="profession-text small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                    
+                    <!-- Location -->
+                                        
+                    <!-- View Profile Button -->
+                    <a href="alumni/1507.html" class="btn btn-profile btn-sm">
+                        <i class="fas fa-eye me-2"></i>
+                        Voir le profil
+                    </a>
+                </div>
+            </div>
+        </div>
+                <div class="col-lg-4 col-md-6 mb-3 alumni-item" style="animation-delay: 0.2s;">
+            <div class="card alumni-card h-100 shadow-sm">
+                <div class="card-body text-center p-3">
+                    <!-- Photo -->
+                    <div class="alumni-photo mb-2">
+                                                                            <div class="photo-placeholder">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                                            </div>
+                    
+                    <!-- Name -->
+                    <h6 class="card-title fw-bold mb-2" style="color: var(--isc-kindu-blue);">
+                        ABEL MANKAKA
+                    </h6>
+                    
+                    <!-- Faculty -->
+                    <div class="mb-2">
+                        <span class="badge badge-faculty">
+                            <i class="fas fa-graduation-cap me-1"></i>
+                            Sections des Sciences
+                        </span>
+                    </div>
+                    
+                    <!-- Profession -->
+                    <div class="mb-2">
+                        <p class="text-muted mb-1 small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                        <p class="profession-text small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                    
+                    <!-- Location -->
+                                        <div class="mb-2">
+                        <small class="text-muted">
+                            <i class="fas fa-map-marker-alt me-1" style="color: var(--isc-kindu-red);"></i>
+                            République Démocratique du Congo
+                        </small>
+                    </div>
+                                        
+                    <!-- View Profile Button -->
+                    <a href="alumni/1470.html" class="btn btn-profile btn-sm">
+                        <i class="fas fa-eye me-2"></i>
+                        Voir le profil
+                    </a>
+                </div>
+            </div>
+        </div>
+                <div class="col-lg-4 col-md-6 mb-3 alumni-item" style="animation-delay: 0.3s;">
+            <div class="card alumni-card h-100 shadow-sm">
+                <div class="card-body text-center p-3">
+                    <!-- Photo -->
+                    <div class="alumni-photo mb-2">
+                                                                            <div class="photo-placeholder">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                                            </div>
+                    
+                    <!-- Name -->
+                    <h6 class="card-title fw-bold mb-2" style="color: var(--isc-kindu-blue);">
+                        Adelbert Emmanuel NKAIMANA
+                    </h6>
+                    
+                    <!-- Faculty -->
+                    <div class="mb-2">
+                        <span class="badge badge-faculty">
+                            <i class="fas fa-graduation-cap me-1"></i>
+                            Section Gestion commerciale et administrative
+                        </span>
+                    </div>
+                    
+                    <!-- Profession -->
+                    <div class="mb-2">
+                        <p class="text-muted mb-1 small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                        <p class="profession-text small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                    
+                    <!-- Location -->
+                                        <div class="mb-2">
+                        <small class="text-muted">
+                            <i class="fas fa-map-marker-alt me-1" style="color: var(--isc-kindu-red);"></i>
+                            République Démocratique du Congo
+                        </small>
+                    </div>
+                                        
+                    <!-- View Profile Button -->
+                    <a href="alumni/1924.html" class="btn btn-profile btn-sm">
+                        <i class="fas fa-eye me-2"></i>
+                        Voir le profil
+                    </a>
+                </div>
+            </div>
+        </div>
+                <div class="col-lg-4 col-md-6 mb-3 alumni-item" style="animation-delay: 0.4s;">
+            <div class="card alumni-card h-100 shadow-sm">
+                <div class="card-body text-center p-3">
+                    <!-- Photo -->
+                    <div class="alumni-photo mb-2">
+                                                                            <div class="photo-placeholder">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                                            </div>
+                    
+                    <!-- Name -->
+                    <h6 class="card-title fw-bold mb-2" style="color: var(--isc-kindu-blue);">
+                        AFOMBOLO AFALOOKO Henriques
+                    </h6>
+                    
+                    <!-- Faculty -->
+                    <div class="mb-2">
+                        <span class="badge badge-faculty">
+                            <i class="fas fa-graduation-cap me-1"></i>
+                            Non renseigné
+                        </span>
+                    </div>
+                    
+                    <!-- Profession -->
+                    <div class="mb-2">
+                        <p class="text-muted mb-1 small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                        <p class="profession-text small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                    
+                    <!-- Location -->
+                                        
+                    <!-- View Profile Button -->
+                    <a href="alumni/1732.html" class="btn btn-profile btn-sm">
+                        <i class="fas fa-eye me-2"></i>
+                        Voir le profil
+                    </a>
+                </div>
+            </div>
+        </div>
+                <div class="col-lg-4 col-md-6 mb-3 alumni-item" style="animation-delay: 0.5s;">
+            <div class="card alumni-card h-100 shadow-sm">
+                <div class="card-body text-center p-3">
+                    <!-- Photo -->
+                    <div class="alumni-photo mb-2">
+                                                                            <div class="photo-placeholder">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                                            </div>
+                    
+                    <!-- Name -->
+                    <h6 class="card-title fw-bold mb-2" style="color: var(--isc-kindu-blue);">
+                        AGANZE NAMEGABE Ghislain
+                    </h6>
+                    
+                    <!-- Faculty -->
+                    <div class="mb-2">
+                        <span class="badge badge-faculty">
+                            <i class="fas fa-graduation-cap me-1"></i>
+                            Section Gestion informatique
+                        </span>
+                    </div>
+                    
+                    <!-- Profession -->
+                    <div class="mb-2">
+                        <p class="text-muted mb-1 small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                        <p class="profession-text small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                    
+                    <!-- Location -->
+                                        <div class="mb-2">
+                        <small class="text-muted">
+                            <i class="fas fa-map-marker-alt me-1" style="color: var(--isc-kindu-red);"></i>
+                            République Démocratique du Congo
+                        </small>
+                    </div>
+                                        
+                    <!-- View Profile Button -->
+                    <a href="alumni/732.html" class="btn btn-profile btn-sm">
+                        <i class="fas fa-eye me-2"></i>
+                        Voir le profil
+                    </a>
+                </div>
+            </div>
+        </div>
+                <div class="col-lg-4 col-md-6 mb-3 alumni-item" style="animation-delay: 0.6s;">
+            <div class="card alumni-card h-100 shadow-sm">
+                <div class="card-body text-center p-3">
+                    <!-- Photo -->
+                    <div class="alumni-photo mb-2">
+                                                                            <div class="photo-placeholder">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                                            </div>
+                    
+                    <!-- Name -->
+                    <h6 class="card-title fw-bold mb-2" style="color: var(--isc-kindu-blue);">
+                        AGIBA   WIDIA
+                    </h6>
+                    
+                    <!-- Faculty -->
+                    <div class="mb-2">
+                        <span class="badge badge-faculty">
+                            <i class="fas fa-graduation-cap me-1"></i>
+                            ECONOMIE
+                        </span>
+                    </div>
+                    
+                    <!-- Profession -->
+                    <div class="mb-2">
+                        <p class="text-muted mb-1 small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                        <p class="profession-text small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                    
+                    <!-- Location -->
+                                        
+                    <!-- View Profile Button -->
+                    <a href="alumni/149.html" class="btn btn-profile btn-sm">
+                        <i class="fas fa-eye me-2"></i>
+                        Voir le profil
+                    </a>
+                </div>
+            </div>
+        </div>
+                <div class="col-lg-4 col-md-6 mb-3 alumni-item" style="animation-delay: 0.7s;">
+            <div class="card alumni-card h-100 shadow-sm">
+                <div class="card-body text-center p-3">
+                    <!-- Photo -->
+                    <div class="alumni-photo mb-2">
+                                                                            <div class="photo-placeholder">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                                            </div>
+                    
+                    <!-- Name -->
+                    <h6 class="card-title fw-bold mb-2" style="color: var(--isc-kindu-blue);">
+                        Agolo Monza marlin
+                    </h6>
+                    
+                    <!-- Faculty -->
+                    <div class="mb-2">
+                        <span class="badge badge-faculty">
+                            <i class="fas fa-graduation-cap me-1"></i>
+                            Non renseigné
+                        </span>
+                    </div>
+                    
+                    <!-- Profession -->
+                    <div class="mb-2">
+                        <p class="text-muted mb-1 small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                        <p class="profession-text small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                    
+                    <!-- Location -->
+                                        
+                    <!-- View Profile Button -->
+                    <a href="alumni/710.html" class="btn btn-profile btn-sm">
+                        <i class="fas fa-eye me-2"></i>
+                        Voir le profil
+                    </a>
+                </div>
+            </div>
+        </div>
+                <div class="col-lg-4 col-md-6 mb-3 alumni-item" style="animation-delay: 0.8s;">
+            <div class="card alumni-card h-100 shadow-sm">
+                <div class="card-body text-center p-3">
+                    <!-- Photo -->
+                    <div class="alumni-photo mb-2">
+                                                                            <div class="photo-placeholder">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                                            </div>
+                    
+                    <!-- Name -->
+                    <h6 class="card-title fw-bold mb-2" style="color: var(--isc-kindu-blue);">
+                        AHUKA  MBOMBO V.
+                    </h6>
+                    
+                    <!-- Faculty -->
+                    <div class="mb-2">
+                        <span class="badge badge-faculty">
+                            <i class="fas fa-graduation-cap me-1"></i>Gestion informatique</span>
+                    </div>
+                    
+                    <!-- Profession -->
+                    <div class="mb-2">
+                        <p class="text-muted mb-1 small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                        <p class="profession-text small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                    
+                    <!-- Location -->
+                                        
+                    <!-- View Profile Button -->
+                    <a href="alumni/150.html" class="btn btn-profile btn-sm">
+                        <i class="fas fa-eye me-2"></i>
+                        Voir le profil
+                    </a>
+                </div>
+            </div>
+        </div>
+                <div class="col-lg-4 col-md-6 mb-3 alumni-item" style="animation-delay: 0.9s;">
+            <div class="card alumni-card h-100 shadow-sm">
+                <div class="card-body text-center p-3">
+                    <!-- Photo -->
+                    <div class="alumni-photo mb-2">
+                                                                            <div class="photo-placeholder">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                                            </div>
+                    
+                    <!-- Name -->
+                    <h6 class="card-title fw-bold mb-2" style="color: var(--isc-kindu-blue);">
+                        Aimé Cécsaire Tonokumu Besinene
+                    </h6>
+                    
+                    <!-- Faculty -->
+                    <div class="mb-2">
+                        <span class="badge badge-faculty">
+                            <i class="fas fa-graduation-cap me-1"></i>
+                            Non renseigné
+                        </span>
+                    </div>
+                    
+                    <!-- Profession -->
+                    <div class="mb-2">
+                        <p class="text-muted mb-1 small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                        <p class="profession-text small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                    
+                    <!-- Location -->
+                                        
+                    <!-- View Profile Button -->
+                    <a href="alumni/1130.html" class="btn btn-profile btn-sm">
+                        <i class="fas fa-eye me-2"></i>
+                        Voir le profil
+                    </a>
+                </div>
+            </div>
+        </div>
+                <div class="col-lg-4 col-md-6 mb-3 alumni-item" style="animation-delay: 1s;">
+            <div class="card alumni-card h-100 shadow-sm">
+                <div class="card-body text-center p-3">
+                    <!-- Photo -->
+                    <div class="alumni-photo mb-2">
+                                                                            <div class="photo-placeholder">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                                            </div>
+                    
+                    <!-- Name -->
+                    <h6 class="card-title fw-bold mb-2" style="color: var(--isc-kindu-blue);">
+                        Ajirenge Baseme Caleb
+                    </h6>
+                    
+                    <!-- Faculty -->
+                    <div class="mb-2">
+                        <span class="badge badge-faculty">
+                            <i class="fas fa-graduation-cap me-1"></i>
+                            Non renseigné
+                        </span>
+                    </div>
+                    
+                    <!-- Profession -->
+                    <div class="mb-2">
+                        <p class="text-muted mb-1 small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                        <p class="profession-text small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                    
+                    <!-- Location -->
+                                        <div class="mb-2">
+                        <small class="text-muted">
+                            <i class="fas fa-map-marker-alt me-1" style="color: var(--isc-kindu-red);"></i>
+                            République Démocratique du Congo
+                        </small>
+                    </div>
+                                        
+                    <!-- View Profile Button -->
+                    <a href="alumni/737.html" class="btn btn-profile btn-sm">
+                        <i class="fas fa-eye me-2"></i>
+                        Voir le profil
+                    </a>
+                </div>
+            </div>
+        </div>
+                <div class="col-lg-4 col-md-6 mb-3 alumni-item" style="animation-delay: 1.1s;">
+            <div class="card alumni-card h-100 shadow-sm">
+                <div class="card-body text-center p-3">
+                    <!-- Photo -->
+                    <div class="alumni-photo mb-2">
+                                                                            <div class="photo-placeholder">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                                            </div>
+                    
+                    <!-- Name -->
+                    <h6 class="card-title fw-bold mb-2" style="color: var(--isc-kindu-blue);">
+                        AKAMBA MATONDO DALTON
+                    </h6>
+                    
+                    <!-- Faculty -->
+                    <div class="mb-2">
+                        <span class="badge badge-faculty">
+                            <i class="fas fa-graduation-cap me-1"></i>
+                            Section Gestion informatique
+                        </span>
+                    </div>
+                    
+                    <!-- Profession -->
+                    <div class="mb-2">
+                        <p class="text-muted mb-1 small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                        <p class="profession-text small">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    </div>
+                    
+                    <!-- Location -->
+                                        <div class="mb-2">
+                        <small class="text-muted">
+                            <i class="fas fa-map-marker-alt me-1" style="color: var(--isc-kindu-red);"></i>
+                            République Démocratique du Congo
+                        </small>
+                    </div>
+                                        
+                    <!-- View Profile Button -->
+                    <a href="alumni/605.html" class="btn btn-profile btn-sm">
+                        <i class="fas fa-eye me-2"></i>
+                        Voir le profil
+                    </a>
+                </div>
+            </div>
+        </div>
+            </div>
+
+    <!-- Pagination -->
+        <div class="row mt-5">
+        <div class="col-12">
+            <nav aria-label="Pagination des alumni">
+                <ul class="pagination justify-content-center">
+                    
+                                            <li class="page-item active">
+                            <a class="page-link" href="index2679.html?page=1">1</a>
+                        </li>
+                                            <li class="page-item ">
+                            <a class="page-link" href="index4658.html?page=2">2</a>
+                        </li>
+                                            <li class="page-item ">
+                            <a class="page-link" href="index9ba9.html?page=3">3</a>
+                        </li>
+                    
+                                            <li class="page-item">
+                            <a class="page-link" href="index4658.html?page=2">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                                    </ul>
+            </nav>
+        </div>
+    </div>
+    
+    <!-- Results info -->
+    <div class="row mt-3">
+        <div class="col-12 text-center">
+            <p class="text-muted">Texte de d&eacute;monstration &agrave; remplacer.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+:root {
+    /* Charte couleurs ISC KINDU (officielle) */
+    --isc-kindu-blue: #002868;
+    --isc-kindu-light-blue: #0B85DB;
+    --isc-kindu-red: #CE111B;
+    --isc-kindu-light-red: #F04450;
+    --isc-kindu-yellow: #B07900;
+    --isc-kindu-gold-light: #E9C37E;
+    --isc-kindu-light-yellow: #FFFD91;
+    --isc-kindu-dark-blue: #001A42;
+    --isc-kindu-dark-red: #8E0D14;
+    --isc-kindu-dark-yellow: #8A6200;
+    
+    /* Dégradés ISC KINDU */
+    --primary-gradient: linear-gradient(135deg, var(--isc-kindu-blue) 0%, var(--isc-kindu-light-blue) 100%);
+    --secondary-gradient: linear-gradient(135deg, var(--isc-kindu-dark-red) 0%, var(--isc-kindu-red) 55%, var(--isc-kindu-light-red) 100%);
+    --cta-gradient: linear-gradient(125deg, #5C0810 0%, var(--isc-kindu-dark-red) 30%, var(--isc-kindu-red) 58%, var(--isc-kindu-light-red) 100%);
+    --accent-gradient: linear-gradient(135deg, #B07900 0%, #E9C37E 100%);
+    --success-gradient: linear-gradient(135deg, var(--isc-kindu-blue) 0%, var(--isc-kindu-light-blue) 100%);
+    
+    /* Ombres */
+    --card-shadow: 0 10px 30px rgba(0, 40, 104, 0.1);
+    --card-shadow-hover: 0 20px 40px rgba(0, 40, 104, 0.15);
+}
+
+.alumni-card {
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    position: relative;
+}
+
+.alumni-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-gradient);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.alumni-card:hover::before {
+    transform: scaleX(1);
+}
+
+.alumni-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.alumni-photo {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.alumni-photo img {
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+    background: linear-gradient(white, white) padding-box,
+                var(--primary-gradient) border-box;
+}
+
+.alumni-photo:hover img {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.photo-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    border: 3px solid white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.photo-placeholder:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.photo-placeholder i {
+    color: white;
+}
+
+.profession-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 0;
+    min-height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.3;
+}
+
+.stat-item {
+    padding: 1.5rem;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--primary-gradient);
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.stat-item h3 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.stat-blue h3 {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-red h3 {
+    background: var(--secondary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-yellow h3 {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-blue::before {
+    background: var(--primary-gradient);
+}
+
+.stat-red::before {
+    background: var(--secondary-gradient);
+}
+
+.stat-yellow::before {
+    background: var(--accent-gradient);
+}
+
+.card-title {
+    font-size: 1rem;
+    line-height: 1.2;
+}
+
+.badge {
+    font-size: 0.7rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 20px;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.badge-faculty {
+    background: var(--primary-gradient);
+    color: white;
+}
+
+.badge-faculty:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,51,102,0.3);
+}
+
+.pagination .page-link {
+    border-radius: 15px;
+    margin: 0 3px;
+    border: none;
+    color: #6c757d;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.pagination .page-item.active .page-link {
+    background: var(--primary-gradient);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.pagination .page-link:hover {
+    background: var(--primary-gradient);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.form-control,
+.form-select {
+    border-radius: 15px;
+    border: 2px solid #e9ecef;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: transparent;
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+}
+
+.form-control:focus::placeholder,
+.form-select:focus::placeholder {
+    color: rgba(255,255,255,0.8);
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    border: none;
+    border-radius: 25px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+.btn-outline-primary {
+    border: 2px solid;
+    border-image: var(--primary-gradient) 1;
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-gradient);
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+.btn-profile {
+    background: var(--secondary-gradient);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(200, 16, 46, 0.25);
+}
+
+.btn-profile:hover {
+    background: var(--secondary-gradient);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(200, 16, 46, 0.35);
+}
+
+.btn-clear {
+    background: var(--accent-gradient);
+    border: none;
+    border-radius: 20px;
+    color: var(--isc-kindu-blue);
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(212, 175, 55, 0.25);
+}
+
+.btn-clear:hover {
+    background: var(--accent-gradient);
+    color: var(--isc-kindu-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+}
+
+/* Animations d'entrée */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alumni-item {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+}
+
+/* Animation du titre principal */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.display-4 {
+    animation: slideInDown 0.8s ease-out;
+}
+
+/* Animation des statistiques */
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.stat-item {
+    animation: countUp 0.6s ease-out;
+}
+
+/* Animation du formulaire de recherche */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card.shadow-sm {
+    animation: slideInUp 0.6s ease-out 0.2s both;
+}
+
+/* Effet de pulsation pour les badges */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.badge {
+    animation: pulse 2s infinite;
+}
+
+/* Amélioration du header */
+.display-4 {
+    font-weight: 800;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* État vide amélioré */
+.empty-state {
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 25px;
+    padding: 3rem 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.empty-icon {
+    animation: pulse 2s infinite;
+}
+
+/* Effet de chargement */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Amélioration des cartes de filtre */
+.card.shadow-sm {
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 20px;
+    border: none;
+}
+
+/* Effet de survol pour les cartes de filtre */
+.card.shadow-sm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+/* Amélioration du texte de profession */
+.profession-text {
+    background: linear-gradient(145deg, var(--isc-kindu-light-yellow) 0%, #f5ebd3 100%);
+    padding: 0.5rem;
+    border-radius: 10px;
+    border-left: 3px solid var(--isc-kindu-yellow);
+    color: var(--isc-kindu-blue);
+    font-weight: 500;
+}
+</style>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Alumni ISC KINDU</h5>
+                    <p>Texte de d&eacute;monstration &agrave; remplacer.</p>
+                </div>
+                <div class="col-md-2">
+                    <h6>Liens rapides</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html" class="text-light">Accueil</a></li>
+                        <li><a href="about.html" class="text-light">À Propos</a></li>
+                        <li><a href="contact.html" class="text-light">Contact</a></li>
+                        <li><a href="alumni.html" class="text-light">Les membres</a></li>
+                        <li><a href="associations.html" class="text-light">Associations</a></li>
+                        <li><a href="events.html" class="text-light">Événements</a></li>
+                        <li><a href="news.html" class="text-light">Actualités</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h6>Ressources</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="opportunities.html" class="text-light">Opportunités</a></li>
+                        <li><a href="mentoring.html" class="text-light">Mentorat</a></li>
+                        <li><a href="scholarships.html" class="text-light">Bourses</a></li>
+                        <li><a href="training.html" class="text-light">Formations</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6>Réseaux sociaux</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="text-light" title="Suivez l'ISC KINDU sur Facebook">
+                            <i class="fab fa-facebook fa-lg"></i>
+                        </a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="text-light" title="Suivez l'ISC KINDU sur X (Twitter)">
+                            <i class="fab fa-twitter fa-lg"></i>
+                        </a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="text-light" title="Connectez-vous avec l'ISC KINDU sur LinkedIn">
+                            <i class="fab fa-linkedin fa-lg"></i>
+                        </a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="text-light" title="Abonnez-vous à la chaîne YouTube de l'ISC KINDU">
+                            <i class="fab fa-youtube fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-12 text-center mb-2">
+                    <small class="text-light">
+                        Pour de problème technique, veuillez contacter l'équipe technique via WhatsApp (message) : +243 853 002 565
+                    </small>
+                </div>
+                <div class="col-12 text-center">
+                    <p class="mb-0">Texte de d&eacute;monstration &agrave; remplacer.</p>
+                    <p class="mb-0">
+                        <a href="privacy-policy.html" class="text-light me-3">Politique de confidentialité</a>
+                        <a href="terms-of-use.html" class="text-light">Conditions d'utilisation</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="../../cdn.jsdelivr.net/npm/bootstrap%405.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Menus déroulants top bar : position fixed pour éviter le clipping (overflow mobile)
+        document.querySelectorAll('.top-bar [data-bs-toggle="dropdown"]').forEach(function (toggle) {
+            bootstrap.Dropdown.getOrCreateInstance(toggle, {
+                popperConfig: function (defaultConfig) {
+                    defaultConfig.strategy = 'fixed';
+                    return defaultConfig;
+                },
+            });
+        });
+
+        // Auto-hide alerts after 5 seconds (except .alert-permanent)
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert:not(.alert-permanent)');
+            alerts.forEach(function(alert) {
+                // Vérifier que l'alerte n'a pas la classe alert-permanent
+                if (!alert.classList.contains('alert-permanent')) {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }
+            });
+        }, 5000);
+    </script>
+
+      <script src="../assets/custom/backend-api.js"></script>
+  <script src="../assets/custom/site-backend.js"></script>
+</body>
+
+
+</html>

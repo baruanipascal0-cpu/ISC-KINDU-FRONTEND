@@ -1,0 +1,73 @@
+{
+  "baseUrl": "/api",
+  "modules": {
+    "site": {
+      "settings": "GET /api/site/settings",
+      "menus": "GET /api/site/menus",
+      "blocks": "GET /api/site/blocks",
+      "blocksByGroup": "GET /api/site/blocks/{group}",
+      "pages": "GET /api/pages",
+      "pageDetail": "GET /api/pages/{slug}",
+      "media": "GET /api/media"
+    },
+    "home": {
+      "slides": "GET /api/home/slides",
+      "cards": "GET /api/home/cards",
+      "statistics": "GET /api/home/statistics"
+    },
+    "sections": {
+      "list": "GET /api/sections",
+      "detail": "GET /api/sections/{slug}",
+      "programs": "GET /api/programs"
+    },
+    "news": {
+      "categories": "GET /api/news/categories",
+      "list": "GET /api/news",
+      "detail": "GET /api/news/{slug}"
+    },
+    "publications": {
+      "list": "GET /api/publications",
+      "detail": "GET /api/publications/{slug}"
+    },
+    "graduations": {
+      "list": "GET /api/graduation-lists",
+      "detail": "GET /api/graduation-lists/{slug}"
+    },
+    "events": {
+      "list": "GET /api/events",
+      "detail": "GET /api/events/{slug}"
+    },
+    "auth": {
+      "register": "POST /api/auth/register",
+      "login": "POST /api/auth/login",
+      "me": "GET /api/auth/me",
+      "logout": "POST /api/auth/logout"
+    },
+    "admissions": {
+      "create": "POST /api/inscriptions",
+      "current": "GET /api/inscriptions/current",
+      "updateCurrent": "PUT|PATCH /api/inscriptions/current",
+      "status": "GET /api/inscriptions/status"
+    },
+    "student": {
+      "dashboard": "GET /api/student/dashboard",
+      "payments": "GET /api/student/payments",
+      "paymentProof": "POST /api/student/payments/proof",
+      "documents": "GET|POST /api/student/documents",
+      "comments": "GET|POST /api/student/comments",
+      "notifications": "GET /api/student/notifications"
+    },
+    "contact": {
+      "messages": "POST /api/contact/messages",
+      "newsletter": "POST /api/newsletter"
+    },
+    "admin": {
+      "overview": "GET /api/admin/overview",
+      "users": "GET /api/admin/users",
+      "admissions": "GET /api/admin/admissions",
+      "admissionStatus": "PATCH /api/admin/admissions/{application}/status",
+      "content": "GET /api/admin/content",
+      "audit": "GET /api/admin/audit"
+    }
+  }
+}
