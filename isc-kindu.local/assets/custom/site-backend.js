@@ -9,7 +9,6 @@
   normalizeSiteLinks();
   hideRemovedLinks();
   removeDeadSiteLinks();
-  stripLegacyContent();
   hydrateSiteSettings();
   boot();
 
@@ -165,12 +164,7 @@
 
   function renderHomeSlides(items) {
     var root = document.getElementById("slider");
-    if (!root) return;
-    if (!items || !items.length) {
-      root.style.display = "none";
-      return;
-    }
-    root.style.display = "";
+    if (!root || !items || !items.length) return;
 
     var slides = root.querySelector(".slides");
     var dots = root.querySelector(".dots");
@@ -201,11 +195,7 @@
 
   function renderHomeNews(items) {
     var gridEl = document.querySelector(".section-news .news-grid");
-    if (!gridEl) return;
-    if (!items || !items.length) {
-      gridEl.innerHTML = '<div class="dyn-empty">Aucune actualite publiee pour le moment.</div>';
-      return;
-    }
+    if (!gridEl || !items || !items.length) return;
 
     gridEl.innerHTML = items.slice(0, 5).map(function (item, index) {
       return homeNewsCard(item, index);
@@ -285,12 +275,10 @@
   }
 
   function renderHomeEvent(event) {
+    if (!event) return;
+
     var card = document.querySelector(".section-events .event-card");
     if (!card) return;
-    if (!event) {
-      card.innerHTML = '<h2 class="event-title">Evenements a venir</h2><p class="isc-live-empty">Aucun evenement publie pour le moment.</p>';
-      return;
-    }
 
     var date = event.starts_at ? new Date(event.starts_at) : null;
     var day = card.querySelector(".event-day");
@@ -310,15 +298,7 @@
   }
 
   function renderHomeCarousel(root, items, kind) {
-    if (!root) return;
-    if (!items || !items.length) {
-      var emptyTrack = root.querySelector(".revue-carousel-track");
-      var emptyDots = root.querySelector(".revue-carousel-dots");
-      if (emptyTrack) emptyTrack.innerHTML = '<div class="dyn-empty">Aucun contenu publie pour le moment.</div>';
-      if (emptyDots) emptyDots.innerHTML = "";
-      root.classList.add("revue-carousel--single");
-      return;
-    }
+    if (!root || !items || !items.length) return;
     var track = root.querySelector(".revue-carousel-track");
     var dots = root.querySelector(".revue-carousel-dots");
     if (!track || !dots) return;
@@ -407,7 +387,6 @@
       var body = '<section class="section section-dyn"><div class="dyn-head"><h1>' + escapeHtml(title) + '</h1></div>';
       if (page) body += pageInline(page);
       if (publications.length) body += '<div class="isc-live-list">' + publications.map(publicationItem).join("") + '</div>';
-      if (!page && !publications.length) body += '<p class="isc-live-empty">Aucun contenu publie pour le moment.</p>';
       body += '</section>';
 
       if (!replacePageCard(body)) {
@@ -885,9 +864,10 @@
         href.indexOf("activites-du-sgad") !== -1 ||
         href.indexOf("activites-de-l-ab") !== -1 ||
         href.indexOf("/en/") !== -1 ||
+        href.indexOf("en/") === 0 ||
         href === "en.html" ||
         href === "/en.html" ||
-        text.indexOf("plan strat") !== -1 ||
+        text.indexOf("plan strategique de l") !== -1 ||
         text.indexOf("futuris") !== -1 ||
         text.indexOf("fcoi") !== -1
       ) {
@@ -926,76 +906,6 @@
       topLinks.appendChild(item);
     } else {
       topLinks.appendChild(link);
-    }
-  }
-
-  function stripLegacyContent() {
-    if (pagePath.indexOf("/alumni/") !== -1 || document.querySelector("#admissionPortal")) return;
-
-    var module = resolveModule();
-    var genericPage = !module ? resolveGenericPage() : null;
-    var titles = {
-      news: "Toutes les actualites de l ISC KINDU",
-      sections: "Sections et filieres ISC KINDU",
-      publications: "Publications",
-      diplomas: "Diplomes",
-      memoriam: "In memoriam",
-      library: "Bibliotheques",
-      researchCenters: "Centre et Institut de recherche",
-      theses: "Nos theses",
-      resources: "Ressources",
-      plan: "Plan strategique"
-    };
-
-    if (module === "home") {
-      clearHomeLegacyBlocks();
-      return;
-    }
-
-    if (module === "contact") return;
-
-    var title = titles[module] || (genericPage && genericPage.title);
-    if (!title) return;
-
-    replacePageCard(emptySection(title));
-    clearSidebarPlaceholders();
-  }
-
-  function emptySection(title) {
-    return '<section class="section section-dyn"><div class="dyn-head"><h1>' + escapeHtml(title) +
-      '</h1></div><div class="dyn-grid"><div class="dyn-empty">Aucun contenu publie pour le moment.</div></div></section>';
-  }
-
-  function clearSidebarPlaceholders() {
-    document.querySelectorAll(".widget-voir-aussi, .widget-fcoi-cta").forEach(function (node) {
-      node.remove();
-    });
-
-    document.querySelectorAll(".widget-posts-recents ul, .widget-agenda ul").forEach(function (list) {
-      list.innerHTML = '<li class="isc-live-empty">Aucun contenu publie pour le moment.</li>';
-    });
-  }
-
-  function clearHomeLegacyBlocks() {
-    var slider = document.getElementById("slider");
-    if (slider) slider.style.display = "none";
-
-    var newsGrid = document.querySelector(".section-news .news-grid");
-    if (newsGrid) newsGrid.innerHTML = '<div class="dyn-empty">Aucune actualite publiee pour le moment.</div>';
-
-    ["#revueCollineCarousel", "#innovProCarousel"].forEach(function (selector) {
-      var root = document.querySelector(selector);
-      if (!root) return;
-      var track = root.querySelector(".revue-carousel-track");
-      var dots = root.querySelector(".revue-carousel-dots");
-      if (track) track.innerHTML = '<div class="dyn-empty">Aucun contenu publie pour le moment.</div>';
-      if (dots) dots.innerHTML = "";
-      root.classList.add("revue-carousel--single");
-    });
-
-    var eventCard = document.querySelector(".section-events .event-card");
-    if (eventCard) {
-      eventCard.innerHTML = '<h2 class="event-title">Evenements a venir</h2><p class="isc-live-empty">Aucun evenement publie pour le moment.</p>';
     }
   }
 
