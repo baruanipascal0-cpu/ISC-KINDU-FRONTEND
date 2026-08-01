@@ -55,6 +55,16 @@
   display: flex;
   flex-direction: column;
   min-height: 100%;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.isc-live-card:hover,
+.isc-live-card:focus {
+  border-color: rgba(13, 59, 117, .24);
+  box-shadow: 0 14px 30px rgba(13, 59, 117, .12);
+  transform: translateY(-2px);
+  outline: none;
 }
 
 .isc-live-card img {
@@ -202,6 +212,31 @@
   text-decoration: none;
 }
 
+.isc-back-row {
+  margin: 0;
+  padding: 16px 14px 0;
+}
+
+.isc-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #0d3b75;
+  font-weight: 800;
+  text-decoration: none;
+  border: 1px solid rgba(13, 59, 117, .18);
+  border-radius: 8px;
+  padding: 9px 12px;
+  background: #fff;
+}
+
+.isc-back-link:hover,
+.isc-back-link:focus {
+  background: #0d3b75;
+  color: #fff;
+  outline: none;
+}
+
 .isc-live-empty {
   margin: 18px 22px 22px;
   color: #64748b;
@@ -242,6 +277,19 @@
   text-decoration: none;
 }
 
+.dyn-card[data-isc-card-url] {
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.dyn-card[data-isc-card-url]:hover,
+.dyn-card[data-isc-card-url]:focus {
+  border-color: rgba(13, 59, 117, .24);
+  box-shadow: 0 14px 30px rgba(13, 59, 117, .12);
+  transform: translateY(-2px);
+  outline: none;
+}
+
 @media (max-width: 680px) {
   .isc-live {
     margin: 18px auto;
@@ -260,5 +308,22 @@
 
   .isc-live-form {
     grid-template-columns: 1fr;
+  }
+
+  .isc-live-card img {
+    height: 150px;
+  }
+
+  .isc-live-table {
+    min-width: 620px;
+  }
+
+  .isc-back-row {
+    padding-top: 12px;
+  }
+
+  .isc-back-link {
+    width: 100%;
+    justify-content: center;
   }
 }

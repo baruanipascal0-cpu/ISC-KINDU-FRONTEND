@@ -4,11 +4,13 @@
   var pagePath = window.location.pathname.replace(/\\/g, "/").toLowerCase();
   var parts = pagePath.split("/").filter(Boolean);
   var fileName = parts[parts.length - 1] || "index.html";
+  var searchParams = new URLSearchParams(window.location.search || "");
 
   ensureAdminLink();
   normalizeSiteLinks();
   hideRemovedLinks();
   removeDeadSiteLinks();
+  enableCardNavigation();
   hydrateSiteSettings();
   boot();
 
@@ -46,6 +48,26 @@
   }
 
   function resolveDetail() {
+    var querySlug = searchParams.get("slug");
+    var queryKind = (searchParams.get("type") || searchParams.get("kind") || "").toLowerCase();
+    var eventSlug = searchParams.get("event");
+
+    if ((fileName === "actualites.html" || fileName === "news.html") && eventSlug) {
+      return { kind: "event", slug: eventSlug };
+    }
+
+    if ((fileName === "actualites.html" || fileName === "news.html") && querySlug) {
+      return { kind: queryKind === "event" ? "event" : "news", slug: querySlug };
+    }
+
+    if ((fileName === "articles.html" || fileName === "publications.html") && querySlug) {
+      return { kind: "publication", slug: querySlug };
+    }
+
+    if (fileName === "diplomes.html" && querySlug) {
+      return { kind: "graduation", slug: querySlug };
+    }
+
     if (parts[0] === "actualites" && parts[1]) return { kind: "news", slug: parts[1] };
     if (parts[0] === "publications" && parts[1]) return { kind: "publication", slug: parts[1] };
     if (parts[0] === "evenements" && parts[1]) return { kind: "event", slug: parts[1] };
@@ -202,7 +224,7 @@
     }).join("");
 
     var viewAll = document.querySelector(".news-view-all a");
-    if (viewAll) viewAll.href = "/actualites.html";
+    if (viewAll) viewAll.href = publicUrl("/actualites.html");
   }
 
   function renderHomeStats(stats) {
@@ -234,7 +256,7 @@
       var card = cards[index];
       var title = card.querySelector(".cta-card-title");
       var desc = card.querySelector(".cta-card-desc");
-      card.href = item.url || item.link_url || "#";
+      card.href = publicUrl(item.url || item.link_url || "#");
       if (title) title.textContent = item.title || "Titre";
       if (desc) desc.textContent = item.summary || item.subtitle || item.body || "";
     });
@@ -246,7 +268,7 @@
 
     var colors = ["blue", "gold", "red", "green", "yellow", "orange"];
     gridEl.innerHTML = sections.map(function (section, index) {
-      return '<a class="fac-item" href="/facultes-et-entites.html"><div class="fac-chip ' + colors[index % colors.length] + '"></div><div class="fac-name">' +
+      return '<a class="fac-item" href="' + escapeAttr(publicUrl("/facultes-et-entites.html")) + '"><div class="fac-chip ' + colors[index % colors.length] + '"></div><div class="fac-name">' +
         escapeHtml(section.name || "Section") + '</div><div class="fac-arrow">&rsaquo;</div></a>';
     }).join("");
   }
@@ -257,7 +279,7 @@
 
     var colors = ["blue", "gold", "red", "green", "yellow", "orange"];
     gridEl.innerHTML = items.map(function (item, index) {
-      return '<a class="ent-item" href="' + escapeAttr(item.link_url || "#") + '"><div class="ent-chip ' + colors[index % colors.length] + '"></div><div class="ent-name">' +
+      return '<a class="ent-item" href="' + escapeAttr(publicUrl(item.link_url || "#")) + '"><div class="ent-chip ' + colors[index % colors.length] + '"></div><div class="ent-name">' +
         escapeHtml(item.title || "Service") + '</div><div class="ent-arrow">&rsaquo;</div></a>';
     }).join("");
   }
@@ -445,7 +467,7 @@
   function renderMissingDetail(title, backUrl) {
     replacePageCard('<section class="section section-dyn article-dyn"><div class="dyn-head"><h1 class="article-title">' +
       escapeHtml(title) + '</h1></div><div class="dyn-content"><p>Ce contenu n est pas disponible.</p><a class="dyn-link" href="' +
-      escapeAttr(backUrl) + '">Retour</a></div></section>');
+      escapeAttr(publicUrl(backUrl)) + '">&larr; Retour</a></div></section>');
   }
 
   function renderContact() {
@@ -526,16 +548,18 @@
     var date = formatDate(item.published_at || item.starts_at);
     var body = item.body || item.description || item.excerpt || "";
     var back = kind === "publication" ? "/articles.html" : "/actualites.html";
+    var backLabel = kind === "publication" ? "Retour aux publications" : (kind === "event" ? "Retour aux evenements" : "Retour aux actualites");
     var file = kind === "publication" && item.file_url
       ? '<p><a class="dyn-link dyn-link-button" href="' + escapeAttr(item.file_url) + '" target="_blank" rel="noopener">Ouvrir le document</a></p>'
       : "";
 
     return '<section class="section section-dyn article-dyn">' +
+      '<p class="isc-back-row"><a class="isc-back-link" href="' + escapeAttr(publicUrl(back)) + '"><span aria-hidden="true">&larr;</span> ' + escapeHtml(backLabel) + '</a></p>' +
       '<div class="dyn-head"><div class="article-meta">' + escapeHtml(meta + (date ? " - " + date : "")) + '</div>' +
       '<h1 class="article-title">' + escapeHtml(item.title || "Contenu") + '</h1></div>' +
-      (item.image_url ? '<div class="article-featured-image"><img src="' + escapeAttr(item.image_url) + '" alt=""></div>' : '') +
+      (item.image_url ? '<div class="article-featured-image"><img src="' + escapeAttr(publicUrl(item.image_url)) + '" alt=""></div>' : '') +
       '<div class="dyn-content content-body">' + bodyToHtml(body) + file +
-      '<p><a class="dyn-link" href="' + escapeAttr(back) + '">Retour</a></p></div></section>';
+      '</div></section>';
   }
 
   function dynCard(item, kind, index) {
@@ -544,7 +568,7 @@
     var meta = item.category || item.type || formatDate(item.published_at || item.starts_at);
     var excerpt = item.excerpt || item.description || item.body || "";
 
-    return '<article class="dyn-card">' +
+    return '<article class="dyn-card" data-isc-card-url="' + escapeAttr(link) + '" role="link" tabindex="0">' +
       '<a class="dyn-thumb" href="' + escapeAttr(link) + '"><img src="' + escapeAttr(image) + '" alt="ISC KINDU"></a>' +
       '<div class="dyn-date">' + escapeHtml(formatDate(item.published_at || item.starts_at)) + '</div>' +
       '<div class="dyn-title"><a href="' + escapeAttr(link) + '">' + escapeHtml(item.title || "Titre") + '</a></div>' +
@@ -628,7 +652,7 @@
         escapeHtml(graduate.percentage || "") + '</td><td>' + escapeHtml(graduate.mention || "") + '</td></tr>';
     }).join("");
 
-    return '<article class="dyn-content"><p><a class="dyn-link" href="/diplomes.html">&larr; Retour aux diplomes</a></p>' +
+    return '<article class="dyn-content"><p><a class="isc-back-link" href="' + escapeAttr(publicUrl("/diplomes.html")) + '">&larr; Retour aux diplomes</a></p>' +
       '<h1>' + escapeHtml(item.title || "Liste de diplomes") + '</h1>' +
       '<p class="isc-live-meta">' + escapeHtml(meta || "ISC KINDU") + '</p>' +
       '<div class="isc-live-table-wrap"><table class="isc-live-table"><thead><tr><th>Numero</th><th>Matricule</th><th>Nom</th><th>Postnom</th><th>Prenom</th><th>Sexe</th><th>%</th><th>Mention</th></tr></thead><tbody>' +
@@ -649,7 +673,7 @@
     var meta = item.category || item.type || item.published_at || "";
     var link = detailUrl(item, kind || "news");
 
-    return '<article class="isc-live-card">' +
+    return '<article class="isc-live-card" data-isc-card-url="' + escapeAttr(link) + '" role="link" tabindex="0">' +
       '<a href="' + escapeAttr(link) + '"><img src="' + escapeAttr(image) + '" alt=""></a>' +
       '<div class="isc-live-card-body">' +
       (meta ? '<div class="isc-live-meta">' + escapeHtml(formatMeta(meta)) + '</div>' : '') +
@@ -772,14 +796,33 @@
 
   function detailUrl(item, kind) {
     if (item && item.url) return item.url;
-    if (kind === "publication") return "/publications/" + encodeURIComponent(item.slug || "");
-    if (kind === "event") return "/evenements/" + encodeURIComponent(item.slug || "");
-    if (kind === "graduation") return "/diplomes/" + encodeURIComponent(item.slug || "");
-    return "/actualites/" + encodeURIComponent(item.slug || "");
+    var slug = item && item.slug ? encodeURIComponent(item.slug) : "";
+    if (kind === "publication") return publicUrl(slug ? "/articles.html?slug=" + slug : "/articles.html");
+    if (kind === "event") return publicUrl(slug ? "/actualites.html?event=" + slug : "/actualites.html");
+    if (kind === "graduation") return publicUrl(slug ? "/diplomes.html?slug=" + slug : "/diplomes.html");
+    return publicUrl(slug ? "/actualites.html?slug=" + slug : "/actualites.html");
   }
 
   function imageOf(item, index) {
-    return item.image_url || item.file_url || "/assets/custom/photo-" + (((index || 0) % 9) + 1) + ".jpg";
+    return publicUrl(item.image_url || item.file_url || "/assets/custom/photo-" + (((index || 0) % 9) + 1) + ".jpg");
+  }
+
+  function publicUrl(path) {
+    if (!path) return "#";
+    if (/^(https?:|mailto:|tel:|#|javascript:|data:|blob:)/i.test(path)) return path;
+    if (window.location.protocol !== "file:") return path;
+    if (path.charAt(0) !== "/") return path;
+    return fileRootPrefix() + path.replace(/^\/+/, "");
+  }
+
+  function fileRootPrefix() {
+    var marker = "/isc-kindu.local/";
+    var pathname = window.location.pathname.replace(/\\/g, "/").toLowerCase();
+    var start = pathname.lastIndexOf(marker);
+    var relative = start >= 0 ? pathname.slice(start + marker.length) : pathname.replace(/^\/+/, "");
+    var segments = relative.split("/").filter(Boolean);
+    if (segments.length && segments[segments.length - 1].indexOf(".") !== -1) segments.pop();
+    return segments.map(function () { return ".."; }).join("/") + (segments.length ? "/" : "");
   }
 
   function settled(result, fallback) {
@@ -832,10 +875,10 @@
   }
 
   function normalizeSiteLinks() {
-    document.querySelectorAll('a[href="publications.html"]').forEach(function (link) { link.href = "/articles.html"; });
-    document.querySelectorAll('a[href="les-revues.html"]').forEach(function (link) { link.href = "/articles.html"; });
-    document.querySelectorAll('a[href="conseil-de-faculte.html"]').forEach(function (link) { link.href = "/conseil-de-section.html"; });
-    document.querySelectorAll(".news-view-all a").forEach(function (link) { link.href = "/actualites.html"; });
+    document.querySelectorAll('a[href="publications.html"]').forEach(function (link) { link.href = publicUrl("/articles.html"); });
+    document.querySelectorAll('a[href="les-revues.html"]').forEach(function (link) { link.href = publicUrl("/articles.html"); });
+    document.querySelectorAll('a[href="conseil-de-faculte.html"]').forEach(function (link) { link.href = publicUrl("/conseil-de-section.html"); });
+    document.querySelectorAll(".news-view-all a").forEach(function (link) { link.href = publicUrl("/actualites.html"); });
     setHrefByText(["presentation de l'isc kindu", "presentation de l’isc kindu", "présentation de l'isc kindu", "présentation de l’isc kindu"], "/presentation-de-lisc-kindu.html");
     setHrefByText(["conseil administration", "conseil d'administration", "conseil d’administration", "conseil de l'institut", "conseil de l’institut"], "/conseil-administration.html");
     setHrefByText(["directeur general", "directeur général"], "/directeur-general.html");
@@ -849,7 +892,7 @@
     document.querySelectorAll('a[href="#"], a[href=""]').forEach(function (link) {
       var text = (link.textContent || "").trim().toLowerCase();
       if (patterns.some(function (pattern) { return text.indexOf(pattern) !== -1; })) {
-        link.href = href;
+        link.href = publicUrl(href);
       }
     });
   }
@@ -859,6 +902,9 @@
       var href = (link.getAttribute("href") || "").toLowerCase();
       var text = (link.textContent || "").toLowerCase();
       if (
+        text.trim() === "activités" ||
+        text.trim() === "activites" ||
+        text.indexOf("activit") !== -1 ||
         href.indexOf("activites-du-sgac") !== -1 ||
         href.indexOf("activites-du-sgr") !== -1 ||
         href.indexOf("activites-du-sgad") !== -1 ||
@@ -887,6 +933,24 @@
 
       var item = link.closest("li, .nav-item, .footer-link-item") || link;
       item.style.display = "none";
+    });
+  }
+
+  function enableCardNavigation() {
+    document.addEventListener("click", function (event) {
+      var card = event.target.closest("[data-isc-card-url]");
+      if (!card || event.target.closest("a, button, input, select, textarea, label")) return;
+      var href = card.getAttribute("data-isc-card-url");
+      if (href && href !== "#") window.location.href = href;
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      var card = event.target.closest("[data-isc-card-url]");
+      if (!card) return;
+      event.preventDefault();
+      var href = card.getAttribute("data-isc-card-url");
+      if (href && href !== "#") window.location.href = href;
     });
   }
 
