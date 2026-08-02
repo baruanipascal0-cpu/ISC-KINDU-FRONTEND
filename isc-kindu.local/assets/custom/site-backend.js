@@ -963,13 +963,15 @@
     var link = document.createElement("a");
     link.href = adminUrl;
     link.textContent = "Admin";
+    link.title = "Espace administrateur";
+    link.setAttribute("aria-label", "Ouvrir l'espace administrateur");
     link.setAttribute("data-isc-admin-link", "true");
     if (topLinks.tagName && topLinks.tagName.toLowerCase() === "ul") {
       var item = document.createElement("li");
       item.appendChild(link);
-      topLinks.appendChild(item);
+      topLinks.insertBefore(item, topLinks.firstChild);
     } else {
-      topLinks.appendChild(link);
+      topLinks.insertBefore(link, topLinks.firstChild);
     }
   }
 

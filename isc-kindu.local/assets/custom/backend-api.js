@@ -1,8 +1,17 @@
 (function () {
-  var explicitOrigin = (window.ISC_BACKEND_ORIGIN || "").replace(/\/$/, "");
-  var isHttp = /^https?:$/.test(window.location.protocol);
-  var localFileOrigin = isHttp ? "" : "http://127.0.0.1:8000";
-  var backendOrigin = explicitOrigin || localFileOrigin;
+  var currentScript = document.currentScript;
+  var metaOrigin = document.querySelector('meta[name="isc-backend-origin"]');
+  var productionOrigin = "https://isc-kindu-backend.onrender.com";
+  var explicitOrigin = (
+    window.ISC_BACKEND_ORIGIN ||
+    window.ISC_KINDU_BACKEND_URL ||
+    (currentScript && currentScript.getAttribute("data-backend-origin")) ||
+    (metaOrigin && metaOrigin.getAttribute("content")) ||
+    storedOrigin() ||
+    productionOrigin ||
+    ""
+  ).replace(/\/$/, "");
+  var backendOrigin = explicitOrigin || productionOrigin;
   var displayOrigin = backendOrigin || window.location.origin;
   var apiBase = backendOrigin ? backendOrigin + "/api" : "/api";
   var adminBase = backendOrigin || "";
@@ -29,4 +38,12 @@
   document.querySelectorAll("[data-api-endpoint]").forEach(function (node) {
     node.setAttribute("data-api-prepared", "true");
   });
+
+  function storedOrigin() {
+    try {
+      return window.localStorage.getItem("ISC_BACKEND_ORIGIN") || "";
+    } catch (error) {
+      return "";
+    }
+  }
 })();

@@ -290,6 +290,20 @@
   outline: none;
 }
 
+.top-links a[data-isc-admin-link] {
+  background: #f4b400 !important;
+  border-color: rgba(255, 255, 255, 0.42) !important;
+  color: #092648 !important;
+  font-weight: 900 !important;
+}
+
+.top-links a[data-isc-admin-link]:hover,
+.top-links a[data-isc-admin-link]:focus {
+  background: #ffd15a !important;
+  color: #092648 !important;
+  outline: none;
+}
+
 @media (max-width: 680px) {
   .isc-live {
     margin: 18px auto;
@@ -325,5 +339,11 @@
   .isc-back-link {
     width: 100%;
     justify-content: center;
+  }
+
+  .top-links a[data-isc-admin-link] {
+    flex-basis: 100%;
+    justify-content: center;
+    text-align: center;
   }
 }
