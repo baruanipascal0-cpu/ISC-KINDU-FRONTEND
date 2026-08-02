@@ -189,11 +189,16 @@
     if (!root || !items || !items.length) return;
 
     var slides = root.querySelector(".slides");
+    var sideSlides = root.querySelector(".side-slides");
     var dots = root.querySelector(".dots");
     var titles = root.querySelector(".slider-titles");
     if (!slides || !dots || !titles) return;
 
-    slides.innerHTML = items.slice(0, 4).map(function (item, index) {
+    var mainItems = items.slice(0, 4);
+    var sideItems = items.slice(1, 5);
+    if (!sideItems.length) sideItems = mainItems;
+
+    slides.innerHTML = mainItems.map(function (item, index) {
       var link = detailUrl(item, "news");
       return '<div class="slide' + (index === 0 ? ' active' : '') + '">' +
         '<div class="slide-bg"><img src="' + escapeAttr(imageOf(item, index)) + '" alt="ISC KINDU"></div>' +
@@ -203,11 +208,20 @@
         '</div>';
     }).join("");
 
-    dots.innerHTML = items.slice(0, 4).map(function (_, index) {
+    if (sideSlides) {
+      sideSlides.innerHTML = sideItems.map(function (item, index) {
+        return '<div class="side-slide' + (index === 0 ? ' active' : '') + '">' +
+          '<img src="' + escapeAttr(imageOf(item, index + 1)) + '" alt="ISC KINDU">' +
+          '<div class="side-caption">' + escapeHtml(item.title || "ISC KINDU") + '</div>' +
+          '</div>';
+      }).join("");
+    }
+
+    dots.innerHTML = mainItems.map(function (_, index) {
       return '<div class="dot' + (index === 0 ? ' active' : '') + '" data-slide="' + index + '"></div>';
     }).join("");
 
-    titles.innerHTML = items.slice(0, 4).map(function (item, index) {
+    titles.innerHTML = mainItems.map(function (item, index) {
       return '<div class="slider-titles-item' + (index === 0 ? ' active' : '') + '" data-slide="' + index + '">' +
         escapeHtml(item.title || "Actualite") + '</div>';
     }).join("");
@@ -717,6 +731,7 @@
 
   function initBackendSlider(root) {
     var slides = Array.from(root.querySelectorAll(".slide"));
+    var sideSlides = Array.from(root.querySelectorAll(".side-slide"));
     var dots = Array.from(root.querySelectorAll(".dot"));
     var titles = Array.from(root.querySelectorAll(".slider-titles-item"));
     var prev = root.querySelector(".slider-arrow.prev");
@@ -729,6 +744,11 @@
       slides.forEach(function (slide, key) {
         slide.classList.toggle("active", key === index);
         slide.style.opacity = key === index ? "1" : "0";
+      });
+      sideSlides.forEach(function (slide, key) {
+        var active = key === (index % sideSlides.length);
+        slide.classList.toggle("active", active);
+        slide.style.opacity = active ? "1" : "0";
       });
       dots.forEach(function (dot, key) { dot.classList.toggle("active", key === index); });
       titles.forEach(function (title, key) { title.classList.toggle("active", key === index); });
