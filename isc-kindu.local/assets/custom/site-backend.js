@@ -8,8 +8,10 @@
 
   ensureAdminLink();
   normalizeSiteLinks();
+  hydrateStaticHomeLinks();
   hideRemovedLinks();
   removeDeadSiteLinks();
+  ensureMobileNavigation();
   enableCardNavigation();
   hydrateSiteSettings();
   boot();
@@ -210,10 +212,11 @@
 
     if (sideSlides) {
       sideSlides.innerHTML = sideItems.map(function (item, index) {
-        return '<div class="side-slide' + (index === 0 ? ' active' : '') + '">' +
+        var link = detailUrl(item, "news");
+        return '<a class="side-slide' + (index === 0 ? ' active' : '') + '" href="' + escapeAttr(link) + '">' +
           '<img src="' + escapeAttr(imageOf(item, index + 1)) + '" alt="ISC KINDU">' +
           '<div class="side-caption">' + escapeHtml(item.title || "ISC KINDU") + '</div>' +
-          '</div>';
+          '</a>';
       }).join("");
     }
 
@@ -246,10 +249,10 @@
     if (!cards.length) return;
 
     var values = [
-      ["Sections", stats.sections],
-      ["Filieres", stats.programs],
-      ["Actualites", stats.news],
-      ["Publications", stats.publications]
+      ["Sections", stats.sections, "/facultes-et-entites.html"],
+      ["Filieres", stats.programs, "/facultes-et-entites.html"],
+      ["Actualites", stats.news, "/actualites.html"],
+      ["Publications", stats.publications, "/articles.html"]
     ];
 
     values.forEach(function (item, index) {
@@ -259,6 +262,7 @@
       var label = card.querySelector(".stat-label");
       if (value) value.textContent = item[1] == null ? "0" : String(item[1]);
       if (label) label.textContent = item[0];
+      makeCardLink(card, item[2]);
     });
   }
 
@@ -270,7 +274,7 @@
       var card = cards[index];
       var title = card.querySelector(".cta-card-title");
       var desc = card.querySelector(".cta-card-desc");
-      card.href = publicUrl(item.url || item.link_url || "#");
+      card.href = meaningfulUrl(item.url || item.link_url, index === 0 ? "/inscriptions.html" : "/diplomes.html");
       if (title) title.textContent = item.title || "Titre";
       if (desc) desc.textContent = item.summary || item.subtitle || item.body || "";
     });
@@ -282,7 +286,7 @@
 
     var colors = ["blue", "gold", "red", "green", "yellow", "orange"];
     gridEl.innerHTML = sections.map(function (section, index) {
-      return '<a class="fac-item" href="' + escapeAttr(publicUrl("/facultes-et-entites.html")) + '"><div class="fac-chip ' + colors[index % colors.length] + '"></div><div class="fac-name">' +
+      return '<a class="fac-item" href="' + escapeAttr(sectionUrl(section)) + '"><div class="fac-chip ' + colors[index % colors.length] + '"></div><div class="fac-name">' +
         escapeHtml(section.name || "Section") + '</div><div class="fac-arrow">&rsaquo;</div></a>';
     }).join("");
   }
@@ -293,7 +297,7 @@
 
     var colors = ["blue", "gold", "red", "green", "yellow", "orange"];
     gridEl.innerHTML = items.map(function (item, index) {
-      return '<a class="ent-item" href="' + escapeAttr(publicUrl(item.link_url || "#")) + '"><div class="ent-chip ' + colors[index % colors.length] + '"></div><div class="ent-name">' +
+      return '<a class="ent-item" href="' + escapeAttr(meaningfulUrl(item.link_url || item.url, "/contact.html")) + '"><div class="ent-chip ' + colors[index % colors.length] + '"></div><div class="ent-name">' +
         escapeHtml(item.title || "Service") + '</div><div class="ent-arrow">&rsaquo;</div></a>';
     }).join("");
   }
@@ -371,11 +375,15 @@
   function renderSections() {
     request("/sections")
       .then(function (sections) {
-        var body = '<section class="section section-dyn"><div class="dyn-head"><h1>Sections et filieres ISC KINDU</h1></div>' +
-          '<div class="isc-live-list">' + sections.map(sectionItem).join("") + '</div></section>';
+        var selected = searchParams.get("section");
+        var visibleSections = selected ? sections.filter(function (section) { return sectionMatches(section, selected); }) : sections;
+        var title = selected && visibleSections.length ? visibleSections[0].name : "Sections et filieres ISC KINDU";
+        var list = visibleSections.length ? visibleSections : sections;
+        var body = '<section class="section section-dyn"><div class="dyn-head"><h1>' + escapeHtml(title) + '</h1></div>' +
+          '<div class="isc-live-list">' + list.map(sectionItem).join("") + '</div></section>';
 
         if (!replacePageCard(body)) {
-          insertPanel(panel("Sections et filieres ISC", "Liste maintenue dans le backend.", '<div class="isc-live-list">' + sections.map(sectionItem).join("") + '</div>'), true);
+          insertPanel(panel(title, "Liste maintenue dans le backend.", '<div class="isc-live-list">' + list.map(sectionItem).join("") + '</div>'), true);
         }
       })
       .catch(silent);
@@ -598,6 +606,7 @@
       '<div class="news-meta">' + escapeHtml(item.category || formatDate(item.published_at)) + '</div>' +
       '<div class="news-title">' + escapeHtml(item.title || "Actualite") + '</div>' +
       (index === 0 ? '<div class="news-title" style="font-weight:400;font-size:14px;line-height:1.5;color:#1f2530;">' + escapeHtml(strip(item.excerpt || item.body || "").slice(0, 160)) + '</div>' : '') +
+      '<span class="news-more">Lire la suite</span>' +
       '</a></article>';
   }
 
@@ -605,8 +614,9 @@
     var programs = (section.programs || []).map(function (program) {
       return '<li>' + escapeHtml(program.name) + ' <span class="muted">' + escapeHtml(program.cycle || "") + '</span></li>';
     }).join("");
+    var link = sectionUrl(section);
 
-    return '<article class="isc-live-list-item"><h3>' + escapeHtml(section.name) + '</h3>' +
+    return '<article class="isc-live-list-item" data-isc-card-url="' + escapeAttr(link) + '" role="link" tabindex="0"><h3><a href="' + escapeAttr(link) + '">' + escapeHtml(section.name) + '</a></h3>' +
       '<p class="isc-live-card-text">' + escapeHtml(section.description || "") + '</p>' +
       '<ul class="isc-live-section-programs">' + programs + '</ul></article>';
   }
@@ -823,6 +833,109 @@
     return publicUrl(slug ? "/actualites.html?slug=" + slug : "/actualites.html");
   }
 
+  function meaningfulUrl(url, fallback) {
+    var value = String(url || "").trim();
+    if (!value || value === "#" || value === "http://#" || value === "https:///#" || value === "javascript:void(0)") {
+      return publicUrl(fallback || "/index.html");
+    }
+    return publicUrl(value);
+  }
+
+  function makeCardLink(element, href) {
+    if (!element) return;
+    var url = meaningfulUrl(href, "/index.html");
+    if (element.tagName && element.tagName.toLowerCase() === "a") {
+      element.href = url;
+      return;
+    }
+    element.setAttribute("data-isc-card-url", url);
+    element.setAttribute("role", "link");
+    element.setAttribute("tabindex", "0");
+  }
+
+  function hydrateStaticHomeLinks() {
+    var statLinks = ["/facultes-et-entites.html", "/facultes-et-entites.html", "/actualites.html", "/articles.html"];
+    document.querySelectorAll(".section-stats .stat-card").forEach(function (card, index) {
+      makeCardLink(card, statLinks[index] || "/index.html");
+    });
+
+    document.querySelectorAll(".stats-links .link-btn").forEach(function (link) {
+      var text = (link.textContent || "").toLowerCase();
+      var href = text.indexOf("bibli") !== -1 ? "/bibliotheques.html" : (text.indexOf("service") !== -1 ? "/contact.html" : "/facultes-et-entites.html");
+      link.href = meaningfulUrl(link.getAttribute("href"), href);
+    });
+
+    document.querySelectorAll("#slider .slide h3 a, #slider .slide-cta").forEach(function (link) {
+      link.href = meaningfulUrl(link.getAttribute("href"), "/actualites.html");
+    });
+    document.querySelectorAll("#slider .side-slide").forEach(function (slide) {
+      makeCardLink(slide, "/actualites.html");
+    });
+
+    var ctaDefaults = ["/inscriptions.html", "/diplomes.html"];
+    document.querySelectorAll(".section-cta .cta-card").forEach(function (link, index) {
+      link.href = meaningfulUrl(link.getAttribute("href"), ctaDefaults[index] || "/inscriptions.html");
+    });
+
+    document.querySelectorAll(".section-news .news-link").forEach(function (link) {
+      link.href = meaningfulUrl(link.getAttribute("href"), "/actualites.html");
+      if (!link.querySelector(".news-more")) {
+        var more = document.createElement("span");
+        more.className = "news-more";
+        more.textContent = "Lire la suite";
+        link.appendChild(more);
+      }
+    });
+
+    document.querySelectorAll("#revueCollineCarousel a").forEach(function (link) {
+      link.href = meaningfulUrl(link.getAttribute("href"), "/articles.html");
+    });
+    document.querySelectorAll("#innovProCarousel a").forEach(function (link) {
+      link.href = meaningfulUrl(link.getAttribute("href"), "/actualites.html");
+    });
+    document.querySelectorAll(".section-events .event-body a").forEach(function (link) {
+      link.href = meaningfulUrl(link.getAttribute("href"), "/actualites.html");
+    });
+    document.querySelectorAll(".oipr-cta").forEach(function (link) {
+      link.href = meaningfulUrl(link.getAttribute("href"), "/presentation-de-lisc-kindu.html");
+    });
+    document.querySelectorAll(".section-alumni .alumni-card").forEach(function (card) {
+      makeCardLink(card, "/alumni/index.html");
+    });
+    document.querySelectorAll(".section-faculties .fac-item").forEach(function (card) {
+      makeCardLink(card, "/facultes-et-entites.html");
+    });
+    document.querySelectorAll(".section-entities .ent-item").forEach(function (card) {
+      makeCardLink(card, "/contact.html");
+    });
+  }
+
+  function sectionUrl(section) {
+    var slug = itemSlug(section);
+    return publicUrl("/facultes-et-entites.html" + (slug ? "?section=" + encodeURIComponent(slug) : ""));
+  }
+
+  function sectionMatches(section, selected) {
+    var target = slugify(selected);
+    if (!target) return false;
+    return [section.slug, section.code, section.name, section.title].some(function (value) {
+      return slugify(value) === target;
+    });
+  }
+
+  function itemSlug(item) {
+    return item && (item.slug || item.code || slugify(item.name || item.title || ""));
+  }
+
+  function slugify(value) {
+    return strip(value)
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  }
+
   function imageOf(item, index) {
     return publicUrl(item.image_url || item.file_url || "/assets/custom/photo-" + (((index || 0) % 9) + 1) + ".jpg");
   }
@@ -971,6 +1084,77 @@
       event.preventDefault();
       var href = card.getAttribute("data-isc-card-url");
       if (href && href !== "#") window.location.href = href;
+    });
+  }
+
+  function ensureMobileNavigation() {
+    var row = document.querySelector(".navbar .row");
+    var navMain = document.querySelector(".nav-main");
+    if (!row || !navMain) return;
+
+    var button = row.querySelector(".mobile-menu-toggle");
+    var created = false;
+    if (!button) {
+      button = document.createElement("button");
+      button.className = "mobile-menu-toggle";
+      button.type = "button";
+      button.innerHTML = '<span></span><span></span><span></span><span class="sr-only">Menu</span>';
+      button.setAttribute("data-isc-created-mobile-toggle", "true");
+      row.insertBefore(button, row.firstChild);
+      created = true;
+    }
+
+    button.setAttribute("aria-label", "Ouvrir le menu");
+    button.setAttribute("aria-expanded", "false");
+    syncMobileUtilityLinks(navMain);
+
+    if (created || button.hasAttribute("data-isc-created-mobile-toggle")) {
+      bindMobileMenu(button);
+    }
+  }
+
+  function syncMobileUtilityLinks(navMain) {
+    var topLinks = document.querySelector(".top-links");
+    if (!topLinks || !navMain) return;
+
+    var utilities = navMain.querySelector(".nav-mobile-utilities");
+    if (!utilities) {
+      utilities = document.createElement("div");
+      utilities.className = "nav-mobile-utilities";
+      navMain.insertBefore(utilities, navMain.firstChild);
+    }
+
+    utilities.innerHTML = "";
+    topLinks.querySelectorAll("a").forEach(function (link) {
+      var holder = link.closest("li") || link;
+      if (holder.style && holder.style.display === "none") return;
+      var clone = link.cloneNode(true);
+      clone.removeAttribute("id");
+      utilities.appendChild(clone);
+    });
+  }
+
+  function bindMobileMenu(button) {
+    if (!button || button.hasAttribute("data-isc-mobile-bound")) return;
+    button.setAttribute("data-isc-mobile-bound", "true");
+
+    function setOpen(open) {
+      document.body.classList.toggle("mobile-menu-open", open);
+      button.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+
+    button.addEventListener("click", function (event) {
+      event.preventDefault();
+      setOpen(!document.body.classList.contains("mobile-menu-open"));
+    });
+
+    document.addEventListener("click", function (event) {
+      if (event.target.closest(".navbar")) return;
+      setOpen(false);
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") setOpen(false);
     });
   }
 
