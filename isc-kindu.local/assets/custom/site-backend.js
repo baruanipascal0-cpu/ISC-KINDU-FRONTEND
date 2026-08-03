@@ -5,6 +5,62 @@
   var parts = pagePath.split("/").filter(Boolean);
   var fileName = parts[parts.length - 1] || "index.html";
   var searchParams = new URLSearchParams(window.location.search || "");
+  var pageDefaults = {
+    "presentation-de-lisc-kindu": {
+      title: "Presentation de l ISC KINDU",
+      excerpt: "Identite, mission et organisation generale de l Institut Superieur de Commerce de Kindu.",
+      body: "L ISC KINDU presente ici son histoire, sa mission de formation et sa contribution au developpement du Maniema.\n\nCette page peut etre enrichie depuis l espace administrateur avec les informations officielles de l institution.",
+      image_url: "/assets/custom/photo-1.jpg"
+    },
+    "conseil-administration": {
+      title: "Conseil d administration",
+      excerpt: "Instance d orientation et de suivi de la gouvernance institutionnelle.",
+      body: "Le conseil d administration accompagne les grandes orientations de l ISC KINDU et veille a la bonne gouvernance de l institution.\n\nLes decisions, attributions et informations officielles peuvent etre completees depuis l espace administrateur.",
+      image_url: "/assets/custom/photo-2.jpg"
+    },
+    "directeur-general": {
+      title: "Le Directeur General",
+      excerpt: "Autorite chargee de la direction et de la coordination generale de l ISC KINDU.",
+      body: "Le Directeur General assure la conduite institutionnelle, academique et administrative de l ISC KINDU.\n\nCette page est prevue pour presenter le mot, le profil et les informations officielles de la direction generale.",
+      image_url: "/assets/custom/photo-3.jpg"
+    },
+    "comite-de-gestion": {
+      title: "Comite de gestion",
+      excerpt: "Equipe responsable de la gestion quotidienne de l institution.",
+      body: "Le comite de gestion coordonne les services academiques, administratifs, financiers et scientifiques de l ISC KINDU.\n\nLes membres, fonctions et communiques officiels peuvent etre mis a jour dans le backend.",
+      image_url: "/assets/custom/photo-4.jpg"
+    },
+    "conseil-de-section": {
+      title: "Conseil de section",
+      excerpt: "Cadre d organisation pedagogique et scientifique des sections.",
+      body: "Le conseil de section suit l organisation des enseignements, l encadrement des etudiants et la qualite academique dans chaque section.\n\nCette page donne un espace autonome aux informations propres aux sections.",
+      image_url: "/assets/custom/photo-5.jpg"
+    },
+    "conseil-de-departement": {
+      title: "Conseil de departement",
+      excerpt: "Cadre de coordination des departements et des filieres.",
+      body: "Le conseil de departement accompagne les activites pedagogiques, les programmes et l encadrement scientifique des filieres.\n\nLes informations propres a chaque departement peuvent etre completees depuis l admin.",
+      image_url: "/assets/custom/photo-6.jpg"
+    },
+    "textes-legaux-et-reglementaires-de-lesu": {
+      title: "Textes legaux et reglementaires de l ESU",
+      excerpt: "Documents de reference pour le fonctionnement academique et administratif.",
+      body: "Cette page regroupe les textes, reglements et references utiles au fonctionnement de l enseignement superieur et universitaire.\n\nLes documents officiels peuvent etre ajoutes comme publications ou liens depuis le backend.",
+      image_url: "/assets/custom/photo-7.jpg"
+    },
+    "membre-comite-gestion": {
+      title: "Membre du comite de gestion",
+      excerpt: "Presentation des responsables membres du comite de gestion.",
+      body: "Cette page presente les membres du comite de gestion, leurs fonctions et les informations institutionnelles associees.\n\nElle reste modifiable depuis l espace administrateur pour garder les donnees a jour.",
+      image_url: "/assets/custom/photo-8.jpg"
+    },
+    "plan-strategique": {
+      title: "Plan strategique",
+      excerpt: "Orientations prioritaires pour le developpement de l ISC KINDU.",
+      body: "Le plan strategique presente les axes de developpement de l ISC KINDU: qualite academique, recherche, gouvernance, numerisation et ouverture au milieu professionnel.\n\nLes objectifs, activites et documents de reference peuvent etre completes depuis le backend.",
+      image_url: "/assets/custom/photo-9.jpg"
+    }
+  };
 
   ensureAdminLink();
   normalizeSiteLinks();
@@ -107,6 +163,7 @@
       "conseil-de-departement.html": ["conseil-de-departement", "Conseil de departement"],
       "textes-legaux-et-reglementaires-de-lesu.html": ["textes-legaux-et-reglementaires-de-lesu", "Textes legaux et reglement de l ESU"],
       "membre-comite-gestion.html": ["membre-comite-gestion", "Membre du comite de gestion"],
+      "plan-strategique.html": ["plan-strategique", "Plan strategique"],
       "bibliotheques.html": ["bibliotheques", "Bibliotheques"],
       "comment-reussir-ses-etudes.html": ["comment-reussir-ses-etudes", "Comment reussir ses etudes"],
       "centre-et-instituts-de-recherche.html": ["centre-et-instituts-de-recherche", "Centre et Institut de recherche"],
@@ -442,13 +499,16 @@
 
   function renderPageOnly(slug, title) {
     request("/pages/" + encodeURIComponent(slug))
+      .catch(function () { return null; })
       .then(function (page) {
-        var body = '<section class="section section-dyn"><div class="dyn-head"><h1>' + escapeHtml(title) + '</h1></div>' + pageInline(page) + '</section>';
+        page = pageWithDefaults(page, slug, title);
+        var displayTitle = page.title || title || "ISC KINDU";
+        document.title = displayTitle + " | ISC KINDU";
+        var body = '<section class="section section-dyn"><div class="dyn-head"><h1>' + escapeHtml(displayTitle) + '</h1></div>' + pageInline(page) + '</section>';
         if (!replacePageCard(body)) {
-          insertPanel(panel(title, "Contenu gere depuis le backend.", pageBlock(page)), true);
+          insertPanel(panel(displayTitle, "Contenu gere depuis le backend.", pageBlock(page)), true);
         }
-      })
-      .catch(silent);
+      });
   }
 
   function renderNewsDetail(slug) {
@@ -648,9 +708,37 @@
       '</article>';
   }
 
+  function pageWithDefaults(page, slug, title) {
+    var fallback = pageDefaults[slug] || {};
+    var payload = page || {};
+
+    return {
+      title: placeholderText(payload.title) ? (fallback.title || title || payload.title) : payload.title,
+      excerpt: placeholderText(payload.excerpt) ? (fallback.excerpt || "") : payload.excerpt,
+      body: placeholderText(payload.body) ? (fallback.body || "") : payload.body,
+      image_url: placeholderImage(payload.image_url) ? (fallback.image_url || payload.image_url) : payload.image_url
+    };
+  }
+
+  function placeholderText(value) {
+    var text = strip(value).toLowerCase();
+    return !text ||
+      text === "a completer." ||
+      text === "a completer" ||
+      text === "contenu a completer depuis l espace administrateur." ||
+      text === "page institutionnelle a completer si elle est necessaire." ||
+      text === "information isc kindu" ||
+      text.indexOf("information a completer") !== -1;
+  }
+
+  function placeholderImage(value) {
+    var path = String(value || "").trim();
+    return !path || path === "/images/site/photo-1.jpg" || path.indexOf("/images/site/photo-1.jpg") !== -1;
+  }
+
   function pageInline(page) {
     return '<div class="dyn-content content-body">' +
-      (page.image_url ? '<p><img src="' + escapeAttr(page.image_url) + '" alt="" style="max-width:100%;border-radius:12px;"></p>' : '') +
+      (page.image_url ? '<p><img src="' + escapeAttr(publicUrl(page.image_url)) + '" alt="" style="max-width:100%;border-radius:12px;"></p>' : '') +
       (page.excerpt ? '<p class="lead">' + escapeHtml(page.excerpt) + '</p>' : '') +
       bodyToHtml(page.body || "") + '</div>';
   }
@@ -1074,13 +1162,14 @@
     setHrefForText(["ressources"], "/ressources.html");
     document.querySelectorAll('a[href="conseil-de-faculte.html"]').forEach(function (link) { link.href = publicUrl("/conseil-de-section.html"); });
     document.querySelectorAll(".news-view-all a").forEach(function (link) { link.href = publicUrl("/actualites.html"); });
-    setHrefByText(["presentation de l'isc kindu", "presentation de l’isc kindu", "présentation de l'isc kindu", "présentation de l’isc kindu"], "/presentation-de-lisc-kindu.html");
+    setHrefByText(["presentation de l'isc kindu", "presentation de l’isc kindu", "présentation de l'isc kindu", "présentation de l’isc kindu", "prÃ©sentation de l"], "/presentation-de-lisc-kindu.html");
     setHrefByText(["conseil administration", "conseil d'administration", "conseil d’administration", "conseil de l'institut", "conseil de l’institut"], "/conseil-administration.html");
-    setHrefByText(["directeur general", "directeur général"], "/directeur-general.html");
+    setHrefByText(["directeur general", "directeur général", "directeur g"], "/directeur-general.html");
     setHrefByText(["conseil de section"], "/conseil-de-section.html");
     setHrefByText(["conseil de departement", "conseil de département"], "/conseil-de-departement.html");
     setHrefByText(["textes legaux", "textes légaux"], "/textes-legaux-et-reglementaires-de-lesu.html");
     setHrefByText(["membre comite de gestion", "membre comité de gestion"], "/membre-comite-gestion.html");
+    setHrefByText(["plan strategique", "plan stratégique", "plan strat"], "/plan-strategique.html");
   }
 
   function setHrefByText(patterns, href) {
