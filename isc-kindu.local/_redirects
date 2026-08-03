@@ -1,0 +1,4 @@
+/actualites/* /actualites.html 200
+/evenements/* /actualites.html 200
+/publications/* /articles.html 200
+/diplomes/* /diplomes.html 200
