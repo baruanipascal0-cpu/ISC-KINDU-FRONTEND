@@ -108,6 +108,14 @@
   text-decoration: none;
 }
 
+.isc-live-file-note {
+  display: block;
+  margin-top: 6px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 .isc-live-list {
   display: grid;
   gap: 12px;

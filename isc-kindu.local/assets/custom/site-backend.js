@@ -9,6 +9,7 @@
   ensureAdminLink();
   normalizeSiteLinks();
   hydrateStaticHomeLinks();
+  hydrateStaticListLinks();
   hideRemovedLinks();
   removeDeadSiteLinks();
   ensureMobileNavigation();
@@ -62,7 +63,7 @@
       return { kind: queryKind === "event" ? "event" : "news", slug: querySlug };
     }
 
-    if ((fileName === "articles.html" || fileName === "publications.html") && querySlug) {
+    if (isPublicationPage(fileName) && querySlug) {
       return { kind: "publication", slug: querySlug };
     }
 
@@ -424,13 +425,13 @@
   function renderPageWithPublications(slug, title, type) {
     Promise.all([
       request("/pages/" + encodeURIComponent(slug)).catch(function () { return null; }),
-      request("/publications?per_page=12&type=" + encodeURIComponent(type)).catch(function () { return []; })
+      request("/publications?per_page=50&type=" + encodeURIComponent(type)).catch(function () { return []; })
     ]).then(function (results) {
       var page = results[0];
       var publications = results[1] || [];
       var body = '<section class="section section-dyn"><div class="dyn-head"><h1>' + escapeHtml(title) + '</h1></div>';
       if (page) body += pageInline(page);
-      if (publications.length) body += '<div class="isc-live-list">' + publications.map(publicationItem).join("") + '</div>';
+      if (publications.length) body += '<div class="isc-live-list">' + publications.map(function (item) { return publicationItem(item, currentPublicationPage()); }).join("") + '</div>';
       body += '</section>';
 
       if (!replacePageCard(body)) {
@@ -569,7 +570,7 @@
     var meta = item.category || item.type || item.location || "ISC KINDU";
     var date = formatDate(item.published_at || item.starts_at);
     var body = item.body || item.description || item.excerpt || "";
-    var back = kind === "publication" ? "/articles.html" : "/actualites.html";
+    var back = kind === "publication" ? currentPublicationPage() : "/actualites.html";
     var backLabel = kind === "publication" ? "Retour aux publications" : (kind === "event" ? "Retour aux evenements" : "Retour aux actualites");
     var file = kind === "publication" && item.file_url
       ? '<p><a class="dyn-link dyn-link-button" href="' + escapeAttr(item.file_url) + '" target="_blank" rel="noopener">Ouvrir le document</a></p>'
@@ -621,13 +622,14 @@
       '<ul class="isc-live-section-programs">' + programs + '</ul></article>';
   }
 
-  function publicationItem(item) {
-    var link = item.file_url ? '<a class="isc-live-link" href="' + escapeAttr(item.file_url) + '" target="_blank" rel="noopener">Ouvrir le document</a>' : '<a class="isc-live-link" href="' + escapeAttr(detailUrl(item, "publication")) + '">Voir la fiche</a>';
+  function publicationItem(item, page) {
+    var detail = publicationDetailUrl(item, page);
+    var file = item.file_url ? '<span class="isc-live-file-note">Document disponible dans la page detail.</span>' : '';
     return '<article class="isc-live-list-item">' +
-      '<h3><a href="' + escapeAttr(detailUrl(item, "publication")) + '">' + escapeHtml(item.title || "Publication") + '</a></h3>' +
+      '<h3><a href="' + escapeAttr(detail) + '">' + escapeHtml(item.title || "Publication") + '</a></h3>' +
       '<p class="isc-live-meta">' + escapeHtml(item.type || "Document") + '</p>' +
       '<p class="isc-live-card-text">' + escapeHtml(strip(item.description || "").slice(0, 260)) + '</p>' +
-      link + '</article>';
+      '<a class="isc-live-link" href="' + escapeAttr(detail) + '">Lire le detail</a>' + file + '</article>';
   }
 
   function graduationListItem(item) {
@@ -827,10 +829,43 @@
   function detailUrl(item, kind) {
     if (item && item.url) return item.url;
     var slug = item && item.slug ? encodeURIComponent(item.slug) : "";
-    if (kind === "publication") return publicUrl(slug ? "/articles.html?slug=" + slug : "/articles.html");
+    if (kind === "publication") return publicationDetailUrl(item);
     if (kind === "event") return publicUrl(slug ? "/actualites.html?event=" + slug : "/actualites.html");
     if (kind === "graduation") return publicUrl(slug ? "/diplomes.html?slug=" + slug : "/diplomes.html");
     return publicUrl(slug ? "/actualites.html?slug=" + slug : "/actualites.html");
+  }
+
+  function publicationDetailUrl(item, page) {
+    var slug = item && item.slug ? encodeURIComponent(item.slug) : "";
+    var base = page || publicationListPageFor(item) || currentPublicationPage();
+    return publicUrl(slug ? base + "?slug=" + slug : base);
+  }
+
+  function publicationListPageFor(item) {
+    var type = String((item && item.type) || "").toLowerCase();
+    if (type.indexOf("ressource") !== -1) return "/ressources.html";
+    if (type.indexOf("bibli") !== -1) return "/bibliotheques.html";
+    if (type.indexOf("these") !== -1 || type.indexOf("thèse") !== -1) return "/nos-theses.html";
+    if (type.indexOf("centre") !== -1) return "/centre-et-instituts-de-recherche.html";
+    if (type.indexOf("memoriam") !== -1) return "/in-memoriam.html";
+    return null;
+  }
+
+  function currentPublicationPage() {
+    if (isPublicationPage(fileName)) return "/" + fileName;
+    return "/articles.html";
+  }
+
+  function isPublicationPage(name) {
+    return [
+      "articles.html",
+      "publications.html",
+      "ressources.html",
+      "bibliotheques.html",
+      "nos-theses.html",
+      "centre-et-instituts-de-recherche.html",
+      "in-memoriam.html"
+    ].indexOf(name) !== -1;
   }
 
   function meaningfulUrl(url, fallback) {
@@ -908,6 +943,32 @@
     document.querySelectorAll(".section-entities .ent-item").forEach(function (card) {
       makeCardLink(card, "/contact.html");
     });
+  }
+
+  function hydrateStaticListLinks() {
+    var fallback = currentListPage();
+    var fallbackUrl = publicUrl(fallback);
+    document.querySelectorAll(".dyn-card").forEach(function (card) {
+      card.querySelectorAll("a").forEach(function (link) {
+        link.href = fallbackUrl;
+      });
+      makeCardLink(card, fallback);
+    });
+
+    document.querySelectorAll('.dyn-search-form[action="#"], .dyn-search-form:not([action])').forEach(function (form) {
+      form.action = fallbackUrl;
+    });
+
+    document.querySelectorAll('.pagination a[href="#"], .pagination a[href=""]').forEach(function (link) {
+      link.href = fallbackUrl;
+    });
+  }
+
+  function currentListPage() {
+    if (fileName === "actualites.html" || fileName === "news.html") return "/actualites.html";
+    if (fileName === "diplomes.html") return "/diplomes.html";
+    if (isPublicationPage(fileName)) return currentPublicationPage();
+    return "/" + fileName;
   }
 
   function sectionUrl(section) {
@@ -1010,6 +1071,7 @@
   function normalizeSiteLinks() {
     document.querySelectorAll('a[href="publications.html"]').forEach(function (link) { link.href = publicUrl("/articles.html"); });
     document.querySelectorAll('a[href="les-revues.html"]').forEach(function (link) { link.href = publicUrl("/articles.html"); });
+    setHrefForText(["ressources"], "/ressources.html");
     document.querySelectorAll('a[href="conseil-de-faculte.html"]').forEach(function (link) { link.href = publicUrl("/conseil-de-section.html"); });
     document.querySelectorAll(".news-view-all a").forEach(function (link) { link.href = publicUrl("/actualites.html"); });
     setHrefByText(["presentation de l'isc kindu", "presentation de l’isc kindu", "présentation de l'isc kindu", "présentation de l’isc kindu"], "/presentation-de-lisc-kindu.html");
@@ -1025,6 +1087,15 @@
     document.querySelectorAll('a[href="#"], a[href=""]').forEach(function (link) {
       var text = (link.textContent || "").trim().toLowerCase();
       if (patterns.some(function (pattern) { return text.indexOf(pattern) !== -1; })) {
+        link.href = publicUrl(href);
+      }
+    });
+  }
+
+  function setHrefForText(patterns, href) {
+    document.querySelectorAll("a").forEach(function (link) {
+      var text = (link.textContent || "").trim().toLowerCase();
+      if (patterns.some(function (pattern) { return text === pattern || text.indexOf(pattern) !== -1; })) {
         link.href = publicUrl(href);
       }
     });
