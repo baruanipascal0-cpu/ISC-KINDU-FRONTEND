@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from www.isig.ac.cd/etudiant/mot-de-passe-oublie by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 04 Aug 2026 13:43:23 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="t8sn0u7wCeuQLf01dKrTRQ1ATC9FPa5Acd2Kmh2h">
+    <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+                <link rel="icon" type="image/png" href="https://www.isig.ac.cd/storage/site-settings/gZFmqgOPENOLyRwiFZ0ngguzXutjkxVqjSGDGNeH.jpg">
+        <title>ISIG-GOMA - Mot de passe oublié</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+                            background: url('https://www.isig.ac.cd/storage/site-settings/uhs1KPcsyR0tzSZPhpSG28TcMiKdMCi8oATgWSvN.jpg') no-repeat center center fixed;
+                        background-size: cover;
+            position: relative;
+            color: #111827;
+        }
+        body::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,.54); z-index: 0; }
+        .container { display: flex; width: 100%; max-width: 1400px; margin: auto; position: relative; z-index: 1; padding: 20px; gap: 28px; }
+        .left-section { flex: 1; padding: 60px; color: #fff; display: flex; flex-direction: column; justify-content: center; }
+        .left-section h1 { font-size: 46px; margin-bottom: 22px; font-weight: 800; letter-spacing: .2px; }
+        .left-section h2 { font-size: 26px; margin-bottom: 18px; color: #4A90E2; }
+        .left-section p { font-size: 18px; line-height: 1.8; margin-bottom: 15px; max-width: 760px; }
+        .steps { margin-top: 26px; }
+        .step-item { display: flex; align-items: center; margin-bottom: 14px; font-size: 16px; opacity: .65; }
+        .step-item.active { opacity: 1; font-weight: 600; }
+        .step-item .num {
+            background: #4A90E2; color: #fff; border-radius: 50%; width: 28px; height: 28px;
+            display: flex; align-items: center; justify-content: center; margin-right: 14px; font-weight: bold; flex: 0 0 auto;
+        }
+        .step-item.done .num { background: #16a34a; }
+        .right-section {
+            flex: 0 0 470px; background: #fff; border-radius: 20px; padding: 44px 46px;
+            box-shadow: 0 10px 40px rgba(0,0,0,.3); display: flex; flex-direction: column; justify-content: center;
+        }
+        .top-links { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .back-home { color: #4A90E2; font-weight: 600; font-size: 14px; text-decoration: none; }
+        .back-home:hover { text-decoration: underline; }
+        .logo { text-align: center; margin-bottom: 22px; }
+        .logo h2 { color: #333; font-size: 26px; margin-bottom: 6px; }
+        .logo p { color: #666; font-size: 14px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 7px; color: #333; font-weight: 500; font-size: 14px; }
+        .form-group input {
+            width: 100%; padding: 12px 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; transition: border-color .3s;
+        }
+        .form-group input:focus { outline: none; border-color: #4A90E2; }
+        .hint { font-size: 12px; color: #6b7280; margin-top: 5px; }
+        .password-wrapper { position: relative; display: flex; align-items: center; }
+        .password-wrapper input { padding-right: 45px; }
+        .toggle-password {
+            position: absolute; right: 12px; background: none; border: none; cursor: pointer;
+            color: #666; font-size: 18px; padding: 5px; display: flex; align-items: center; justify-content: center;
+        }
+        .toggle-password:hover { color: #4A90E2; }
+        .btn {
+            width: 100%; padding: 14px; background: #4A90E2; color: #fff; border: none; border-radius: 8px;
+            font-size: 16px; font-weight: 600; cursor: pointer; transition: background .3s; margin-top: 4px;
+        }
+        .btn:hover { background: #357ABD; }
+        .btn-ghost { background: #f1f5f9; color: #1e3a8a; }
+        .btn-ghost:hover { background: #e2e8f0; }
+        .alert { padding: 12px; border-radius: 8px; margin-bottom: 18px; font-size: 14px; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-info { background: #e0edff; color: #1e3a8a; border: 1px solid #bcd4ff; }
+        .choose-cards { display: flex; flex-direction: column; gap: 14px; }
+        .choose-card { border: 2px solid #e2e8f0; border-radius: 12px; padding: 16px; }
+        .choose-card h3 { font-size: 15px; color: #1e3a8a; margin-bottom: 6px; }
+        .choose-card p { font-size: 13px; color: #475569; margin-bottom: 12px; line-height: 1.5; }
+        .masked { font-weight: 700; color: #111827; letter-spacing: .5px; }
+        .divider { display: flex; align-items: center; text-align: center; color: #94a3b8; font-size: 12px; margin: 6px 0; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e2e8f0; }
+        .divider:not(:empty)::before { margin-right: .6em; }
+        .divider:not(:empty)::after { margin-left: .6em; }
+        .code-input {
+            letter-spacing: 12px; text-align: center; font-size: 26px; font-weight: 700; padding: 12px; font-family: monospace;
+        }
+        .link-line { text-align: center; margin-top: 16px; }
+        .link-line a, .link-line button {
+            color: #4A90E2; text-decoration: none; font-size: 14px; background: none; border: none; cursor: pointer;
+        }
+        .link-line a:hover, .link-line button:hover { text-decoration: underline; }
+        .inline-form { display: inline; }
+        @media (max-width: 968px) {
+            .container { flex-direction: column; }
+            .left-section { padding: 30px; }
+            .left-section h1 { font-size: 34px; }
+            .right-section { flex: 1; margin-top: 20px; }
+        }
+        @media (max-width: 520px) {
+            .container { padding: 14px; }
+            .left-section { padding: 18px 10px; }
+            .left-section h1 { font-size: 28px; }
+            .right-section { padding: 28px; border-radius: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <h1>ISIG-GOMA</h1>
+            <h2>Mot de passe oublié</h2>
+            <p>Réinitialisez votre mot de passe en quelques étapes, par email ou par téléphone.</p>
+            <div class="steps">
+                <div class="step-item active"><span class="num">1</span><span>Votre matricule</span></div>
+                <div class="step-item "><span class="num">2</span><span>Méthode de vérification</span></div>
+                <div class="step-item "><span class="num">3</span><span>Vérification</span></div>
+                <div class="step-item "><span class="num">4</span><span>Nouveau mot de passe</span></div>
+            </div>
+        </div>
+
+        <div class="right-section">
+            <div class="top-links">
+                <a class="back-home" href="https://www.isig.ac.cd/login">← Connexion</a>
+            </div>
+            <div class="logo">
+                <h2>Réinitialisation</h2>
+                <p>Espace étudiant</p>
+            </div>
+
+                        
+            
+                            <form method="POST" action="https://www.isig.ac.cd/etudiant/mot-de-passe/identifier">
+                    <input type="hidden" name="_token" value="t8sn0u7wCeuQLf01dKrTRQ1ATC9FPa5Acd2Kmh2h" autocomplete="off">                    <div class="form-group">
+                        <label for="matricule">Matricule</label>
+                        <input type="text" id="matricule" name="matricule" value="" required autofocus placeholder="Ex : 01EDD20001">
+                        <div class="hint">Saisissez le matricule du compte à réinitialiser.</div>
+                    </div>
+                    <button type="submit" class="btn">Continuer</button>
+                </form>
+
+            
+                    </div>
+    </div>
+
+    <script>
+        function togglePassword(id, btn) {
+            const input = document.getElementById(id);
+            if (!input) return;
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+    </script>
+<script src="../js/isc-kindu.js"></script>
+</body>
+
+<!-- Mirrored from www.isig.ac.cd/etudiant/mot-de-passe-oublie by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 04 Aug 2026 13:43:23 GMT -->
+</html>

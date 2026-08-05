@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from www.isig.ac.cd/staff by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 04 Aug 2026 13:43:32 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="t8sn0u7wCeuQLf01dKrTRQ1ATC9FPa5Acd2Kmh2h">
+    <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+                <link rel="icon" type="image/png" href="https://www.isig.ac.cd/storage/site-settings/gZFmqgOPENOLyRwiFZ0ngguzXutjkxVqjSGDGNeH.jpg">
+        <title>ISIG-GOMA - Connexion</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+                            background: url('https://www.isig.ac.cd/storage/site-settings/uhs1KPcsyR0tzSZPhpSG28TcMiKdMCi8oATgWSvN.jpg') no-repeat center center fixed;
+                        background-size: cover;
+            position: relative;
+            color: #111827;
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.54);
+            z-index: 0;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1400px;
+            margin: auto;
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            gap: 28px;
+        }
+        .left-section {
+            flex: 1;
+            padding: 60px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .left-section h1 { font-size: 48px; margin-bottom: 30px; font-weight: 800; letter-spacing: .2px; }
+        .left-section h2 { font-size: 28px; margin-bottom: 20px; color: #4A90E2; }
+        .left-section p { font-size: 18px; line-height: 1.8; margin-bottom: 15px; max-width: 760px; }
+        .features { margin-top: 30px; }
+        .feature-item { display: flex; align-items: center; margin-bottom: 15px; font-size: 16px; }
+        .feature-item::before {
+            content: '✓';
+            background: #4A90E2;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            flex: 0 0 auto;
+        }
+        .right-section {
+            flex: 0 0 450px;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .top-links { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+        .back-home { color: #4A90E2; font-weight: 600; font-size: 14px; text-decoration: none; }
+        .back-home:hover { text-decoration: underline; }
+        .logo { text-align: center; margin-bottom: 30px; }
+        .logo h2 { color: #333; font-size: 32px; margin-bottom: 10px; }
+        .logo p { color: #666; font-size: 14px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #333; font-weight: 500; }
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus { outline: none; border-color: #4A90E2; }
+        .password-wrapper { position: relative; display: flex; align-items: center; }
+        .password-wrapper input { padding-right: 45px; }
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            font-size: 18px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .toggle-password:hover { color: #4A90E2; }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #4A90E2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn:hover { background: #357ABD; }
+        .forgot-password { text-align: center; margin-top: 20px; }
+        .forgot-password a { color: #4A90E2; text-decoration: none; font-size: 14px; }
+        .forgot-password a:hover { text-decoration: underline; }
+        .captcha-container { margin-bottom: 20px; }
+        .captcha-wrapper { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; }
+        .captcha-question {
+            background: #f3f6ff;
+            border: 2px solid #d9e2ff;
+            color: #2c3e50;
+            border-radius: 8px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            min-width: 110px;
+            height: 45px;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            user-select: none;
+            flex: 0 0 auto;
+        }
+        .captcha-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            height: 45px;
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        .captcha-input:focus { outline: none; border-color: #4A90E2; }
+        .captcha-refresh {
+            width: 45px;
+            height: 45px;
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        .captcha-refresh:hover { background: #4A90E2; border-color: #4A90E2; transform: rotate(180deg); }
+        .alert { padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .remember { display: flex; align-items: center; gap: 8px; color: #555; font-size: 14px; margin: -4px 0 20px; }
+        .remember input { width: 16px; height: 16px; }
+        @media (max-width: 968px) {
+            .container { flex-direction: column; }
+            .left-section { padding: 30px; }
+            .left-section h1 { font-size: 36px; }
+            .right-section { flex: 1; margin-top: 20px; }
+        }
+        @media (max-width: 520px) {
+            body { min-height: auto; }
+            .container { padding: 14px; }
+            .left-section { padding: 18px 10px; }
+            .left-section h1 { font-size: 30px; margin-bottom: 14px; }
+            .left-section h2 { font-size: 20px; }
+            .left-section p { font-size: 15px; }
+            .right-section { padding: 28px; border-radius: 16px; }
+            .captcha-question { min-width: 92px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section">
+            <h1>ISIG-GOMA</h1>
+            <h2>Plateforme pedagogique et academique</h2>
+            <p>La plateforme aide les equipes administratives, enseignants et etudiants a travailler dans un espace commun, structure et securise.</p>
+            <div class="features">
+                                    <div class="feature-item"><span>Gestion des cours, enseignements et supports pedagogiques.</span></div>
+                                    <div class="feature-item"><span>Suivi des stages, projets tutores et encadrements.</span></div>
+                                    <div class="feature-item"><span>Pilotage des sections, departements et parcours academiques.</span></div>
+                                    <div class="feature-item"><span>Espaces dedies pour enseignants, etudiants et administration.</span></div>
+                                    <div class="feature-item"><span>Enseignement a distance et coordination pedagogique centralisee.</span></div>
+                            </div>
+        </div>
+
+        <div class="right-section">
+            <div class="top-links">
+                <a class="back-home" href="https://www.isig.ac.cd/">← Accueil</a>
+                <a class="back-home" href="https://www.isig.ac.cd/login" style="font-size:13px;color:#6b7280;">Espace étudiant →</a>
+            </div>
+            <div class="logo">
+                <h2>Connexion staff</h2>
+                <p>Accedez a votre espace</p>
+            </div>
+
+            
+                        
+            <form method="POST" action="https://www.isig.ac.cd/access/login">
+                <input type="hidden" name="_token" value="t8sn0u7wCeuQLf01dKrTRQ1ATC9FPa5Acd2Kmh2h" autocomplete="off">                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" required autocomplete="current-password">
+                        <button type="button" class="toggle-password" onclick="togglePassword()" title="Afficher/masquer le mot de passe">
+                            <span id="toggleIcon">
+                                <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24"><path stroke="#666" stroke-width="2" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z"/><circle cx="12" cy="12" r="3" stroke="#666" stroke-width="2"/></svg>
+                                <svg id="eyeClosed" style="display:none" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24"><path stroke="#666" stroke-width="2" d="M3 3l18 18M1 12s4-7 11-7c2.21 0 4.21.5 6 1.36M23 12s-4 7-11 7c-2.21 0-4.21-.5-6-1.36"/><circle cx="12" cy="12" r="3" stroke="#666" stroke-width="2"/></svg>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <input type="hidden" name="access_type" value="staff">
+
+                <div class="form-group captcha-container">
+                    <label for="captcha">Etes-vous humain ?</label>
+                    <div class="captcha-wrapper">
+                        <div class="captcha-question" id="captchaQuestion" title="Cliquer sur 🔄 pour changer">4 + 8</div>
+                        <input type="number" id="captcha" name="captcha" class="captcha-input" placeholder="Somme" inputmode="numeric" maxlength="3" required>
+                        <button type="button" class="captcha-refresh" onclick="refreshCaptcha()" title="Changer l'operation">🔄</button>
+                    </div>
+                </div>
+
+                <label class="remember">
+                    <input type="checkbox" name="remember" value="1" >
+                    <span>Se souvenir de moi</span>
+                </label>
+
+                <button type="submit" class="btn">Se connecter</button>
+            </form>
+
+            <div class="forgot-password">
+                <a href="https://www.isig.ac.cd/forgot-password">Mot de passe oublie ?</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeOpen = document.getElementById('eyeOpen');
+            const eyeClosed = document.getElementById('eyeClosed');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeOpen.style.display = 'none';
+                eyeClosed.style.display = '';
+            } else {
+                passwordInput.type = 'password';
+                eyeOpen.style.display = '';
+                eyeClosed.style.display = 'none';
+            }
+        }
+
+        async function refreshCaptcha() {
+            try {
+                const response = await fetch('https://www.isig.ac.cd/captcha/refresh');
+                const data = await response.json();
+                if (data && typeof data.a !== 'undefined' && typeof data.b !== 'undefined') {
+                    document.getElementById('captchaQuestion').textContent = `${data.a} + ${data.b}`;
+                    document.getElementById('captcha').value = '';
+                }
+            } catch (error) {
+                console.error('Erreur lors du rechargement du captcha:', error);
+            }
+        }
+    </script>
+<script src="js/isc-kindu.js"></script>
+</body>
+
+<!-- Mirrored from www.isig.ac.cd/staff by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 04 Aug 2026 13:43:32 GMT -->
+</html>
