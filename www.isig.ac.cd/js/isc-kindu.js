@@ -1141,11 +1141,20 @@
     }
 
     function formRoute(form) {
-        if (form.hasAttribute('data-inscription-form')) return '';
         if (form.getAttribute('data-backend-route')) return form.getAttribute('data-backend-route');
+        if (form.hasAttribute('data-inscription-form') || form.hasAttribute('data-pins-form')) return '/inscriptions/public';
         if (form.classList.contains('newsletter')) return '/newsletter';
         if (form.closest('.contact-form')) return '/contact/messages';
         return '';
+    }
+
+    function relaxInscriptionFormUploads() {
+        document.querySelectorAll('input[type="file"][name="formulaire"]').forEach(function (input) {
+            input.required = false;
+            input.removeAttribute('required');
+            var label = input.id ? document.querySelector('label[for="' + input.id + '"]') : null;
+            if (label) label.textContent = label.textContent.replace(/\s*\*$/, '');
+        });
     }
 
     function formMessage(form, text, isError) {
@@ -1324,6 +1333,7 @@
         renderFeesPage();
         renderTeachersPage();
         renderWorkOffers();
+        relaxInscriptionFormUploads();
         connectBackendRouteLinks();
         connectBackendForms();
         syncSiteSettings();

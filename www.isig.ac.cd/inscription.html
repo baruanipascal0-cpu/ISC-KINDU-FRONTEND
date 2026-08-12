@@ -353,7 +353,7 @@
                     </p>
                 </div>
                     
-                <form action="https://www.isc-kindu.ac.cd/inscription" method="POST" class="request-drawer__form" enctype="multipart/form-data" data-inscription-form>
+                <form action="https://www.isc-kindu.ac.cd/inscription" method="POST" class="request-drawer__form" enctype="multipart/form-data" data-inscription-form data-backend-route="/inscriptions/public">
             <input type="hidden" name="_token" value="t8sn0u7wCeuQLf01dKrTRQ1ATC9FPa5Acd2Kmh2h" autocomplete="off">            <input type="hidden" name="_form" value="inscription">
 
             <div class="field field--framed field--select">
@@ -440,8 +440,8 @@
             </div>
 
             <div class="field field--framed">
-                <label for="ins_formulaire">Formulaire d&#039;inscription complété (PDF ou image : jpg, png, webp) *</label>
-                <input id="ins_formulaire" type="file" name="formulaire" accept=".pdf,.jpg,.jpeg,.png,.webp" required>
+                <label for="ins_formulaire">Formulaire d&#039;inscription complété (PDF ou image : jpg, png, webp)</label>
+                <input id="ins_formulaire" type="file" name="formulaire" accept=".pdf,.jpg,.jpeg,.png,.webp">
                 <p class="field__hint">À télécharger dans l&#039;onglet « Conditions d&#039;admission », à compléter, puis à joindre ici (PDF, ou photo/scan).</p>
             </div>
 
@@ -820,7 +820,7 @@
 
         
         <section class="ins-pane " data-ins-pane="form">
-                            <form action="https://www.isc-kindu.ac.cd/inscription" method="POST" enctype="multipart/form-data" class="ins-form" data-pins-form>
+                            <form action="https://www.isc-kindu.ac.cd/inscription" method="POST" enctype="multipart/form-data" class="ins-form" data-pins-form data-backend-route="/inscriptions/public">
                     <input type="hidden" name="_token" value="t8sn0u7wCeuQLf01dKrTRQ1ATC9FPa5Acd2Kmh2h" autocomplete="off">                    <input type="hidden" name="_form" value="inscription">
 
                     <div class="ins-grid">
@@ -890,8 +890,8 @@
                             <input id="pins_dossier" type="file" name="dossier" accept=".pdf">
                         </div>
                         <div class="ins-field ins-field--wide">
-                            <label for="pins_formulaire">Formulaire d’inscription complété (PDF ou image : jpg, png, webp) *</label>
-                            <input id="pins_formulaire" type="file" name="formulaire" accept=".pdf,.jpg,.jpeg,.png,.webp" required>
+                            <label for="pins_formulaire">Formulaire d’inscription complété (PDF ou image : jpg, png, webp)</label>
+                            <input id="pins_formulaire" type="file" name="formulaire" accept=".pdf,.jpg,.jpeg,.png,.webp">
                             <p class="ins-hint">À télécharger dans l’onglet « Présentation » / « Conditions d’admission », à compléter, puis à joindre ici.
                                 <a href="#" data-backend-route="/documents/bulletin-licence">⬇ Bulletin Licence</a>                                <a href="#" data-backend-route="/documents/bulletin-master">⬇ Bulletin Master</a>                            </p>
                         </div>
