@@ -1533,6 +1533,121 @@
         });
     }
 
+    function enhanceHeaderBrand() {
+        document.querySelectorAll('.site-header__brand').forEach(function (brandLink) {
+            if (brandLink.querySelector('.site-header__wordmark')) return;
+            var wordmark = createEl('span', 'site-header__wordmark', 'ISC KINDU');
+            brandLink.appendChild(wordmark);
+        });
+    }
+
+    function enhanceMobileHeaderSearch() {
+        var header = document.querySelector('.site-header__inner');
+        var source = document.getElementById('siteSearchOpen');
+        if (!header || !source || header.querySelector('[data-mobile-search-open]')) return;
+
+        var button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'site-header__search-toggle';
+        button.setAttribute('data-mobile-search-open', '1');
+        button.setAttribute('aria-label', source.getAttribute('aria-label') || 'Rechercher');
+        button.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.2" y2="16.2"></line></svg>';
+        button.addEventListener('click', function () {
+            source.click();
+        });
+        header.appendChild(button);
+    }
+
+    function setTranslationCookie(language) {
+        var value = language === 'en' ? '/fr/en' : '';
+        var expires = value ? '; expires=Fri, 31 Dec 9999 23:59:59 GMT' : '; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        document.cookie = 'googtrans=' + value + expires + '; path=/';
+        document.cookie = 'googtrans=' + value + expires + '; path=/; domain=' + window.location.hostname;
+    }
+
+    function currentLanguageUrl(language) {
+        var url = new URL(window.location.href);
+        if (language === 'en') {
+            url.searchParams.set('lang', 'en');
+        } else {
+            url.searchParams.delete('lang');
+        }
+        return url.pathname + url.search + url.hash;
+    }
+
+    function loadGoogleTranslate(callback) {
+        if (window.google && window.google.translate) {
+            callback();
+            return;
+        }
+
+        window.googleTranslateElementInit = function () {
+            if (!window.google || !google.translate) return;
+            if (!document.getElementById('google_translate_element')) {
+                var mount = document.createElement('div');
+                mount.id = 'google_translate_element';
+                mount.style.display = 'none';
+                document.body.appendChild(mount);
+            }
+            new google.translate.TranslateElement({
+                pageLanguage: 'fr',
+                includedLanguages: 'en,fr',
+                autoDisplay: false
+            }, 'google_translate_element');
+            callback();
+        };
+
+        if (document.querySelector('script[data-isc-google-translate]')) return;
+        var script = document.createElement('script');
+        script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+        script.async = true;
+        script.setAttribute('data-isc-google-translate', '1');
+        document.head.appendChild(script);
+    }
+
+    function applyGoogleLanguage(language) {
+        setTranslationCookie(language);
+
+        if (language !== 'en') {
+            window.location.href = currentLanguageUrl('fr');
+            return;
+        }
+
+        if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, '', currentLanguageUrl('en'));
+        }
+
+        loadGoogleTranslate(function () {
+            window.setTimeout(function () {
+                var select = document.querySelector('.goog-te-combo');
+                if (!select) return;
+                select.value = 'en';
+                select.dispatchEvent(new Event('change'));
+            }, 350);
+        });
+    }
+
+    function fixLanguageSwitcher() {
+        var params = new URLSearchParams(window.location.search);
+        var activeLanguage = params.get('lang') === 'en' ? 'en' : 'fr';
+
+        document.querySelectorAll('.site-header__lang').forEach(function (switcher) {
+            var links = switcher.querySelectorAll('a');
+            if (!links.length) return;
+            links.forEach(function (link) {
+                var language = /^\s*EN\s*$/i.test(link.textContent || '') ? 'en' : 'fr';
+                link.href = currentLanguageUrl(language);
+                link.classList.toggle('is-active', language === activeLanguage);
+                link.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    applyGoogleLanguage(language);
+                });
+            });
+        });
+
+        if (activeLanguage === 'en') applyGoogleLanguage('en');
+    }
+
     function enhanceSearchWithBackend() {
         var input = document.getElementById('siteSearchInput');
         var results = document.getElementById('siteSearchResults');
@@ -1615,6 +1730,10 @@
         var style = document.createElement('style');
         style.textContent = [
             '.site-header__brand img{max-height:52px;border-radius:4px;}',
+            '.site-header__brand{align-items:center!important;gap:10px!important;text-decoration:none!important;}',
+            '.site-header__wordmark{display:inline-block;color:#b91c1c!important;font-family:var(--font-display,serif);font-size:1.46rem;font-weight:900;line-height:1;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;}',
+            '.site-header__search-toggle{display:none;border:0;background:transparent;color:#0f172a;width:40px;height:40px;align-items:center;justify-content:center;cursor:pointer;padding:0;flex:0 0 40px;}',
+            '.site-header__search-toggle svg{width:20px;height:20px;}',
             '.site-nav__panel .site-nav__col-body a{white-space:normal;}',
             '.hero__slide{background-position:center!important;}',
             '.svc-head-feature__photo{object-fit:contain;background:#fff;}',
@@ -1693,10 +1812,15 @@
             ':root{--header-h:68px!important;}',
             '.site-header{height:var(--header-h)!important;}',
             '.site-header__inner{gap:8px;min-width:0;}',
+            '.site-header__brand{gap:7px!important;min-width:0;flex:1 1 auto;}',
             '.site-header__brand img{max-height:42px!important;}',
+            '.site-header__wordmark{font-size:1.08rem!important;letter-spacing:.02em;max-width:42vw;overflow:hidden;text-overflow:ellipsis;}',
             '.site-header__lang{margin-left:auto;font-size:.68rem;gap:0;}',
             '.site-header__lang a{padding:4px 6px;}',
-            '.site-header__toggle{display:flex!important;width:40px;height:40px;margin-left:4px;flex:0 0 40px;}',
+            '.site-topbar__search{display:none!important;}',
+            '.site-header__toggle{display:flex!important;width:40px;height:40px;margin-left:0;flex:0 0 40px;order:3;align-items:center;justify-content:center;flex-direction:column;}',
+            '.site-header__toggle span{width:24px!important;height:2px!important;margin:3px auto!important;}',
+            '.site-header__search-toggle{display:flex!important;order:4;}',
             '.site-nav{top:var(--header-h)!important;padding:12px 14px!important;max-height:calc(100dvh - var(--header-h))!important;}',
             '.site-nav__link{padding:11px 6px!important;font-size:.75rem!important;letter-spacing:.07em!important;}',
             '.site-nav__panel a,.site-nav__subpanel a,.site-nav__col-body a{padding:8px 10px!important;font-size:.84rem!important;line-height:1.35!important;}',
@@ -1720,10 +1844,14 @@
             '.about-hero h1{font-size:clamp(1.75rem,8vw,2.25rem)!important;}',
             '.about-hero p,.about-rich,.prose p{font-size:.94rem!important;line-height:1.65!important;}',
             '.about-hero__scroll{margin-top:22px;font-size:.62rem;letter-spacing:.12em;}',
-            '.about-keyfacts,.about-values,.about-dgs,.cards,.cards--2,.cards--4,.soc-hacks,.work-form__grid{grid-template-columns:1fr!important;gap:14px!important;}',
+            '.about-keyfacts,.about-values,.cards,.cards--2,.cards--4,.soc-hacks,.work-form__grid{grid-template-columns:1fr!important;gap:14px!important;}',
+            '.about-dgs{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;margin-top:26px!important;}',
             '.about-keyfact,.about-value,.card,.work-offer{padding:16px!important;}',
-            '.about-dg-card__portrait{max-width:124px!important;margin-bottom:12px!important;}',
-            '.about-dg-card p{margin-top:8px!important;}',
+            '.about-dg-card{min-width:0!important;}',
+            '.about-dg-card__portrait{max-width:86px!important;margin-bottom:9px!important;border-width:2px!important;}',
+            '.about-dg-card h3{font-size:.82rem!important;line-height:1.2!important;margin-bottom:5px!important;}',
+            '.about-dg-card__period{font-size:.58rem!important;line-height:1.25!important;padding:3px 6px!important;letter-spacing:.02em!important;}',
+            '.about-dg-card p{margin-top:7px!important;font-size:.68rem!important;line-height:1.35!important;}',
             '.about-dg__photo{max-width:210px!important;margin:0 auto;}',
             '.about-dg__body{padding-left:14px!important;}',
             '.about-split,.about-dg,.blog-layout,.contact-grid,.rs-actu{grid-template-columns:1fr!important;gap:24px!important;}',
@@ -1811,6 +1939,7 @@
             '.hero h1{font-size:1.6rem!important;}',
             '.hero__lede{font-size:.88rem!important;}',
             '.hero-thumbs__grid{grid-template-columns:1fr!important;}',
+            '.site-header__wordmark{font-size:.95rem!important;max-width:36vw;}',
             '.world-card{width:150px!important;height:232px!important;}',
             '.clean-links{font-size:11px!important;}',
             '.clean-card{min-height:96px!important;}',
@@ -1842,6 +1971,9 @@
     addAdminShortcut();
     updateMetadata();
     updateLogo();
+    enhanceHeaderBrand();
+    enhanceMobileHeaderSearch();
+    fixLanguageSwitcher();
     updateAttributes();
     updateTextNodes(document.body);
     localizeExternalLinks();
