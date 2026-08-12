@@ -1196,6 +1196,65 @@
         });
     }
 
+    function firstSetting(settings, keys) {
+        for (var i = 0; i < keys.length; i += 1) {
+            var value = plain(settings && settings[keys[i]]);
+            if (value) return value;
+        }
+        return '';
+    }
+
+    function phoneHref(phone) {
+        var clean = String(phone || '').replace(/[^\d+]/g, '');
+        clean = clean.replace(/(?!^)\+/g, '');
+        return clean ? 'tel:' + clean : '';
+    }
+
+    function updateContactCards(label, value) {
+        if (!value) return;
+        document.querySelectorAll('.contact-item').forEach(function (item) {
+            var title = plain(item.querySelector('strong') && item.querySelector('strong').textContent).toLowerCase();
+            if (title.indexOf(label) === -1) return;
+            var target = item.querySelector('p') || item.querySelector('div:last-child');
+            if (target && !target.querySelector('a')) target.textContent = value;
+        });
+    }
+
+    function applySiteSettings(settings) {
+        settings = settings || {};
+        var email = firstSetting(settings, ['institution.email', 'social.email']);
+        var phone = firstSetting(settings, ['institution.phone']);
+        var address = firstSetting(settings, ['institution.address']);
+
+        if (email) {
+            document.querySelectorAll('a[href^="mailto:"]').forEach(function (link) {
+                link.href = 'mailto:' + email;
+                link.textContent = email;
+            });
+        }
+
+        if (phone) {
+            document.querySelectorAll('a[href^="tel:"]').forEach(function (link) {
+                link.href = phoneHref(phone);
+                link.textContent = phone;
+            });
+            updateContactCards('telephone', phone);
+        }
+
+        if (address) {
+            document.querySelectorAll('.site-footer__contact .is-addr, [data-institution-address]').forEach(function (el) {
+                el.textContent = address;
+            });
+            updateContactCards('adresse', address);
+        }
+    }
+
+    function syncSiteSettings() {
+        apiGet('/site/settings').then(function (settings) {
+            applySiteSettings(settings || {});
+        });
+    }
+
     function enhanceSearchWithBackend() {
         var input = document.getElementById('siteSearchInput');
         var results = document.getElementById('siteSearchResults');
@@ -1267,6 +1326,7 @@
         renderWorkOffers();
         connectBackendRouteLinks();
         connectBackendForms();
+        syncSiteSettings();
         enhanceSearchWithBackend();
     }
 
