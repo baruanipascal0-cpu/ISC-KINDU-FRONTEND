@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
+    <link rel="icon" type="image/png" href="storage/isc-kindu/logo.jpg">
+    <title>ISC-KINDU - Interface etudiant</title>
+    <style>
+        :root {
+            --blue: #0f4c81;
+            --blue-dark: #0b355d;
+            --gold: #bf8a2a;
+            --ink: #0f172a;
+            --muted: #64748b;
+            --line: #dbe3ef;
+            --soft: #f5f8fc;
+            --white: #ffffff;
+            --danger: #b42318;
+            --success: #087443;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--soft);
+            color: var(--ink);
+            letter-spacing: 0;
+        }
+
+        a { color: inherit; }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(255, 255, 255, .96);
+            border-bottom: 1px solid var(--line);
+            backdrop-filter: blur(10px);
+        }
+
+        .topbar__inner {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            min-height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            min-width: 0;
+        }
+
+        .brand img {
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            object-fit: contain;
+            background: var(--white);
+        }
+
+        .brand strong,
+        .brand span {
+            display: block;
+            line-height: 1.15;
+        }
+
+        .brand span {
+            color: var(--muted);
+            font-size: .8rem;
+        }
+
+        .topbar__actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            appearance: none;
+            border: 1px solid var(--line);
+            background: var(--white);
+            color: var(--ink);
+            border-radius: 6px;
+            min-height: 38px;
+            padding: 0 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: .88rem;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn:hover { border-color: var(--blue); color: var(--blue); }
+        .btn--primary { background: var(--blue); border-color: var(--blue); color: var(--white); }
+        .btn--primary:hover { background: var(--blue-dark); color: var(--white); }
+        .btn--gold { background: var(--gold); border-color: var(--gold); color: var(--white); }
+        .btn--danger { color: var(--danger); }
+        .btn:disabled { opacity: .65; cursor: wait; }
+
+        .shell {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 28px 0 54px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            gap: 20px;
+            align-items: stretch;
+            margin-bottom: 22px;
+        }
+
+        .hero__main {
+            background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+            color: var(--white);
+            border-radius: 8px;
+            padding: 28px;
+            min-height: 178px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .eyebrow {
+            margin: 0 0 8px;
+            font-size: .78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0;
+            opacity: .85;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.25rem;
+            line-height: 1.08;
+            letter-spacing: 0;
+        }
+
+        .hero__main p:last-child {
+            margin: 12px 0 0;
+            max-width: 720px;
+            color: rgba(255, 255, 255, .84);
+            line-height: 1.58;
+        }
+
+        .identity {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 20px;
+            display: grid;
+            gap: 12px;
+            align-content: center;
+        }
+
+        .identity__logo {
+            width: 58px;
+            height: 58px;
+            border-radius: 8px;
+            object-fit: contain;
+            background: var(--soft);
+        }
+
+        .identity strong { font-size: 1.05rem; }
+        .identity span { color: var(--muted); font-size: .9rem; overflow-wrap: anywhere; }
+
+        .notice {
+            margin-bottom: 18px;
+            padding: 14px 16px;
+            border-radius: 8px;
+            border: 1px solid #bfdbfe;
+            background: #eff6ff;
+            color: #1e3a8a;
+        }
+
+        .notice.is-error {
+            border-color: #fecaca;
+            background: #fff1f2;
+            color: var(--danger);
+        }
+
+        .notice[hidden] { display: none; }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .summary__item {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 18px;
+            min-height: 104px;
+        }
+
+        .summary__item span {
+            display: block;
+            color: var(--muted);
+            font-size: .82rem;
+            font-weight: 700;
+        }
+
+        .summary__item strong {
+            display: block;
+            margin-top: 8px;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 360px;
+            gap: 18px;
+            align-items: start;
+        }
+
+        .stack { display: grid; gap: 18px; }
+
+        .panel {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .panel__head {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .panel__head h2 {
+            margin: 0;
+            font-size: 1.05rem;
+            letter-spacing: 0;
+        }
+
+        .panel__body { padding: 18px 20px; }
+
+        .facts {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px 18px;
+        }
+
+        .fact {
+            min-width: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .fact span {
+            display: block;
+            color: var(--muted);
+            font-size: .78rem;
+            font-weight: 700;
+        }
+
+        .fact strong {
+            display: block;
+            margin-top: 4px;
+            font-size: .96rem;
+            overflow-wrap: anywhere;
+        }
+
+        .list {
+            display: grid;
+            gap: 0;
+        }
+
+        .row {
+            display: grid;
+            gap: 8px;
+            padding: 14px 0;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .row:first-child { padding-top: 0; }
+        .row:last-child { padding-bottom: 0; border-bottom: 0; }
+
+        .row__top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .row__title {
+            margin: 0;
+            font-size: .96rem;
+            line-height: 1.35;
+            overflow-wrap: anywhere;
+        }
+
+        .row__meta {
+            margin: 0;
+            color: var(--muted);
+            font-size: .84rem;
+            line-height: 1.5;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 24px;
+            border-radius: 6px;
+            padding: 0 8px;
+            background: #e0f2fe;
+            color: #075985;
+            font-size: .74rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .badge.is-success { background: #dcfce7; color: var(--success); }
+        .badge.is-warning { background: #fef3c7; color: #92400e; }
+        .badge.is-danger { background: #fee2e2; color: var(--danger); }
+
+        .empty {
+            margin: 0;
+            color: var(--muted);
+            font-size: .92rem;
+            line-height: 1.55;
+        }
+
+        .form {
+            display: grid;
+            gap: 12px;
+        }
+
+        .form label {
+            display: grid;
+            gap: 6px;
+            color: var(--muted);
+            font-size: .82rem;
+            font-weight: 700;
+        }
+
+        .form input,
+        .form textarea,
+        .form select {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            min-height: 40px;
+            padding: 9px 10px;
+            font: inherit;
+            color: var(--ink);
+            background: var(--white);
+        }
+
+        .form textarea {
+            min-height: 104px;
+            resize: vertical;
+        }
+
+        .form input:focus,
+        .form textarea:focus,
+        .form select:focus {
+            outline: 2px solid rgba(15, 76, 129, .18);
+            border-color: var(--blue);
+        }
+
+        .form__message {
+            min-height: 20px;
+            color: var(--success);
+            font-size: .86rem;
+        }
+
+        .form__message.is-error { color: var(--danger); }
+
+        .proof-form {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 8px;
+            align-items: center;
+            margin-top: 4px;
+        }
+
+        .proof-form input {
+            min-width: 0;
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 8px;
+        }
+
+        .comments-list {
+            margin-top: 16px;
+        }
+
+        .loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .loading::before {
+            content: "";
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid #cbd5e1;
+            border-top-color: var(--blue);
+            animation: spin .8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 900px) {
+            .hero,
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .summary {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .topbar__inner,
+            .shell {
+                width: min(100% - 24px, 1180px);
+            }
+
+            .topbar__inner {
+                min-height: auto;
+                padding: 10px 0;
+                align-items: flex-start;
+            }
+
+            .brand img {
+                width: 36px;
+                height: 36px;
+            }
+
+            .brand strong { font-size: .92rem; }
+            .brand span { font-size: .72rem; }
+
+            .topbar__actions {
+                gap: 6px;
+            }
+
+            .btn {
+                min-height: 34px;
+                padding: 0 9px;
+                font-size: .78rem;
+            }
+
+            .shell { padding-top: 18px; }
+            .hero__main { padding: 20px; min-height: auto; }
+            h1 { font-size: 1.65rem; }
+            .hero__main p:last-child { font-size: .92rem; }
+            .identity { padding: 16px; }
+            .summary { grid-template-columns: 1fr; gap: 10px; }
+            .summary__item { min-height: 84px; padding: 14px; }
+            .summary__item strong { font-size: 1.55rem; }
+            .panel__head,
+            .panel__body { padding: 15px; }
+            .facts { grid-template-columns: 1fr; gap: 10px; }
+            .row__top { display: grid; }
+            .badge { width: max-content; max-width: 100%; }
+            .proof-form { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar__inner">
+            <a class="brand" href="index.html">
+                <img src="storage/isc-kindu/logo.jpg" alt="ISC-KINDU">
+                <span>
+                    <strong>ISC-KINDU</strong>
+                    <span>Interface etudiant</span>
+                </span>
+            </a>
+            <div class="topbar__actions">
+                <a class="btn" href="inscription.html">Inscription</a>
+                <a class="btn" href="contact.html">Contact</a>
+                <button class="btn btn--danger" type="button" data-logout>Quitter</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="shell">
+        <div class="notice" data-student-notice>
+            <span class="loading">Chargement de votre espace etudiant</span>
+        </div>
+
+        <section class="hero">
+            <div class="hero__main">
+                <p class="eyebrow">Tableau de bord etudiant</p>
+                <h1 data-student-name>Bienvenue</h1>
+                <p>Vos informations academiques, documents, paiements et messages administratifs sont regroupes ici.</p>
+            </div>
+            <aside class="identity">
+                <img class="identity__logo" src="storage/isc-kindu/logo.jpg" alt="ISC-KINDU">
+                <strong data-identity-name>Etudiant ISC-KINDU</strong>
+                <span data-identity-matricule>Matricule en cours de chargement</span>
+                <span data-identity-email></span>
+            </aside>
+        </section>
+
+        <section class="summary" aria-label="Resume">
+            <div class="summary__item">
+                <span>Paiements en attente</span>
+                <strong data-summary-payments>0</strong>
+            </div>
+            <div class="summary__item">
+                <span>Documents disponibles</span>
+                <strong data-summary-documents>0</strong>
+            </div>
+            <div class="summary__item">
+                <span>Commentaires ouverts</span>
+                <strong data-summary-comments>0</strong>
+            </div>
+        </section>
+
+        <div class="layout">
+            <div class="stack">
+                <section class="panel">
+                    <div class="panel__head">
+                        <h2>Dossier academique</h2>
+                        <button class="btn" type="button" data-refresh>Actualiser</button>
+                    </div>
+                    <div class="panel__body">
+                        <div class="facts" data-academic-facts></div>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="panel__head">
+                        <h2>Paiements</h2>
+                    </div>
+                    <div class="panel__body">
+                        <div class="list" data-payments-list></div>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="panel__head">
+                        <h2>Documents</h2>
+                    </div>
+                    <div class="panel__body">
+                        <div class="list" data-documents-list></div>
+                    </div>
+                </section>
+            </div>
+
+            <aside class="stack">
+                <section class="panel">
+                    <div class="panel__head">
+                        <h2>Envoyer un document</h2>
+                    </div>
+                    <div class="panel__body">
+                        <form class="form" data-document-form>
+                            <label>
+                                Nom du document
+                                <input type="text" name="name" required placeholder="Ex : Releve, attestation, fiche">
+                            </label>
+                            <label>
+                                Type
+                                <select name="type">
+                                    <option value="document">Document</option>
+                                    <option value="inscription">Inscription</option>
+                                    <option value="paiement">Paiement</option>
+                                    <option value="academique">Academique</option>
+                                </select>
+                            </label>
+                            <label>
+                                Fichier
+                                <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                            </label>
+                            <button class="btn btn--primary" type="submit">Envoyer</button>
+                            <div class="form__message" data-document-message></div>
+                        </form>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="panel__head">
+                        <h2>Notifications</h2>
+                    </div>
+                    <div class="panel__body">
+                        <div class="list" data-notifications-list></div>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="panel__head">
+                        <h2>Commentaires</h2>
+                    </div>
+                    <div class="panel__body">
+                        <form class="form" data-comment-form>
+                            <label>
+                                Sujet
+                                <input type="text" name="subject" required>
+                            </label>
+                            <label>
+                                Message
+                                <textarea name="message" required></textarea>
+                            </label>
+                            <button class="btn btn--gold" type="submit">Envoyer</button>
+                            <div class="form__message" data-comment-message></div>
+                        </form>
+                        <div class="list comments-list" data-comments-list></div>
+                    </div>
+                </section>
+            </aside>
+        </div>
+    </main>
+
+    <script src="js/isc-student.js?v=20260812-student-space"></script>
+</body>
+</html>

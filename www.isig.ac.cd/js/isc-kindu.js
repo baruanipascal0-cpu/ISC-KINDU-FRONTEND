@@ -1205,12 +1205,19 @@
 
     function apiSuccessMessage(route, payload) {
         if (/^\/?auth\/login$/i.test(route || '')) {
-            return 'Connexion reussie. Votre session etudiant est activee.';
+            return 'Connexion reussie. Ouverture de votre espace etudiant...';
         }
         if (/^\/?auth\/register$/i.test(route || '')) {
-            return 'Compte etudiant active. Vous pouvez maintenant vous connecter avec votre matricule.';
+            return 'Compte etudiant active. Ouverture de votre espace etudiant...';
         }
         return (payload && payload.message) || 'Votre demande a ete envoyee.';
+    }
+
+    function openStudentSpace(route) {
+        if (!/^\/?auth\/(?:login|register)$/i.test(route || '')) return;
+        window.setTimeout(function () {
+            window.location.href = rel('etudiant.html');
+        }, 650);
     }
 
     function connectBackendForms() {
@@ -1227,6 +1234,7 @@
                 apiPost(route, new FormData(form)).then(function (payload) {
                     rememberStudentSession(route, payload);
                     formMessage(form, apiSuccessMessage(route, payload), false);
+                    openStudentSpace(route);
                     form.reset();
                 }).catch(function (error) {
                     formMessage(form, apiErrorMessage(error), true);
