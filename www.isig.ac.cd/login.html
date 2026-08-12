@@ -179,7 +179,7 @@
 
         <div class="right-section">
             <div class="top-links">
-                <a class="back-home" href="https://www.isc-kindu.ac.cd/">← Accueil</a>
+                <a class="back-home" href="index.html">← Accueil</a>
             </div>
             <div class="logo">
                 <h2>Espace étudiant</h2>
@@ -195,7 +195,7 @@
 
             
             <div class="panel active" data-panel="login">
-                <form method="POST" action="https://www.isc-kindu.ac.cd/login">
+                <form method="POST" action="#" data-backend-route="/auth/login">
                     <input type="hidden" name="_token" value="t8sn0u7wCeuQLf01dKrTRQ1ATC9FPa5Acd2Kmh2h" autocomplete="off">                    <div class="form-group">
                         <label for="login_matricule">Matricule</label>
                         <input type="text" id="login_matricule" name="matricule" value="" required autocomplete="username" placeholder="Ex : 01EDD20001">
@@ -226,13 +226,13 @@
                     <button type="submit" class="btn">Se connecter</button>
                 </form>
                 <div class="forgot-password">
-                    <a href="https://www.isc-kindu.ac.cd/etudiant/mot-de-passe-oublie">Mot de passe oublié ?</a>
+                    <a href="contact.html">Mot de passe oublié ?</a>
                 </div>
             </div>
 
             
             <div class="panel " data-panel="register">
-                <form method="POST" action="https://www.isc-kindu.ac.cd/etudiant/register">
+                <form method="POST" action="#" data-backend-route="/auth/register">
                     <input type="hidden" name="_token" value="t8sn0u7wCeuQLf01dKrTRQ1ATC9FPa5Acd2Kmh2h" autocomplete="off">                    <input type="hidden" name="_tab" value="register">
                     <div class="form-group">
                         <label for="reg_matricule">Matricule</label>
@@ -295,18 +295,12 @@
         });
 
         async function refreshCaptcha() {
-            try {
-                const response = await fetch('https://www.isc-kindu.ac.cd/etudiant/captcha');
-                const data = await response.json();
-                if (data && typeof data.a !== 'undefined' && typeof data.b !== 'undefined') {
-                    document.querySelectorAll('[data-captcha-question]').forEach(function (el) {
-                        el.textContent = `${data.a} + ${data.b}`;
-                    });
-                    document.querySelectorAll('.captcha-input').forEach(el => el.value = '');
-                }
-            } catch (error) {
-                console.error('Erreur captcha:', error);
-            }
+            const a = Math.floor(Math.random() * 8) + 1;
+            const b = Math.floor(Math.random() * 8) + 1;
+            document.querySelectorAll('[data-captcha-question]').forEach(function (el) {
+                el.textContent = `${a} + ${b}`;
+            });
+            document.querySelectorAll('.captcha-input').forEach(el => el.value = '');
         }
     </script>
 <script src="js/isc-kindu.js"></script>

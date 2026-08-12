@@ -260,10 +260,15 @@
     }
 
     function localizeExternalLinks() {
-        document.querySelectorAll('a[href]').forEach(function (a) {
+        document.querySelectorAll('a[href], area[href]').forEach(function (a) {
             if (a.getAttribute('data-amg-link') === '1') return;
             var next = localUrlForSite(a.getAttribute('href'));
             if (next) a.setAttribute('href', next);
+        });
+
+        document.querySelectorAll('button[formaction], input[formaction]').forEach(function (button) {
+            var next = localUrlForSite(button.getAttribute('formaction'));
+            if (next) button.setAttribute('formaction', next);
         });
 
         if (Array.isArray(window.pages)) {
@@ -298,7 +303,7 @@
     function protectForms() {
         document.querySelectorAll('form[action]').forEach(function (form) {
             var action = form.getAttribute('action') || '';
-            var next = replaceBrandText(action);
+            var next = localUrlForSite(action) || replaceBrandText(action);
             if (next !== action) form.setAttribute('action', next);
         });
     }
