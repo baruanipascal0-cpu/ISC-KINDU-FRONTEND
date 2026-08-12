@@ -280,6 +280,65 @@
         });
     }
 
+    function findRegistrationSheet(data) {
+        if (data && data.registration_sheet && data.registration_sheet.file_url) return data.registration_sheet;
+
+        var enrollment = data && data.enrollment;
+        if (enrollment && enrollment.fiche_url) {
+            return {
+                name: 'Fiche d inscription',
+                type: 'fiche-inscription',
+                status: enrollment.status || 'available',
+                issued_at: enrollment.enrolled_on,
+                file_url: enrollment.fiche_url
+            };
+        }
+
+        var documents = data && data.documents;
+        if (!Array.isArray(documents)) return null;
+        for (var i = 0; i < documents.length; i += 1) {
+            var documentItem = documents[i];
+            var type = plain(documentItem && documentItem.type, '').toLowerCase();
+            var name = plain(documentItem && documentItem.name, '').toLowerCase();
+            if (documentItem && documentItem.file_url && (type.indexOf('fiche-inscription') !== -1 || name.indexOf('fiche') !== -1)) {
+                return documentItem;
+            }
+        }
+        return null;
+    }
+
+    function renderRegistrationSheet(data) {
+        var target = $('[data-registration-sheet]');
+        if (!target) return;
+        clear(target);
+
+        var sheet = findRegistrationSheet(data || {});
+        if (!sheet) {
+            target.appendChild(create('p', 'empty', 'La fiche d inscription sera disponible ici apres validation du dossier par l administration.'));
+            return;
+        }
+
+        var card = create('article', 'sheet-card');
+        card.appendChild(create('h3', '', plain(sheet.name, 'Fiche d inscription')));
+        card.appendChild(create('p', '', 'Document officiel genere apres validation de votre inscription. Statut : ' + statusText(sheet.status) + '.'));
+
+        var actions = create('div', 'sheet-card__actions');
+        var open = create('a', 'btn btn--primary', 'Ouvrir la fiche');
+        open.href = sheet.file_url;
+        open.target = '_blank';
+        open.rel = 'noopener';
+        actions.appendChild(open);
+
+        var print = create('a', 'btn', 'Imprimer');
+        print.href = sheet.file_url;
+        print.target = '_blank';
+        print.rel = 'noopener';
+        actions.appendChild(print);
+
+        card.appendChild(actions);
+        target.appendChild(card);
+    }
+
     function renderComments(list) {
         var target = $('[data-comments-list]');
         if (!target) return;
@@ -318,6 +377,7 @@
 
         renderIdentity(state.dashboard);
         renderAcademicFacts(state.dashboard);
+        renderRegistrationSheet(state.dashboard);
         renderPayments(state.payments);
         renderDocuments(state.documents);
         renderComments(state.comments);

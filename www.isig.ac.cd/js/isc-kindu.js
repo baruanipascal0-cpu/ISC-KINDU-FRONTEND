@@ -920,6 +920,110 @@
         });
     }
 
+    function feedSortValue(item) {
+        var value = item && (item.published_at || item.created_at || item.updated_at || item.issued_at);
+        var time = value ? new Date(value).getTime() : 0;
+        return isNaN(time) ? 0 : time;
+    }
+
+    function cloneFeedItem(item, source, fallbackUrl) {
+        var copy = {};
+        Object.keys(item || {}).forEach(function (key) {
+            copy[key] = item[key];
+        });
+        copy.__feedSource = source;
+        copy.__fallbackUrl = fallbackUrl;
+        return copy;
+    }
+
+    function createFeedItem(item) {
+        var article = createEl('article', 'isc-feed-item');
+        var image = item && (item.image_url || item.url);
+        var link = itemLink(item, item.__fallbackUrl);
+
+        if (image && !/\.pdf($|\?)/i.test(image)) {
+            var media = createEl(link ? 'a' : 'div', 'isc-feed-item__media');
+            if (link) media.href = link;
+            media.style.backgroundImage = 'url("' + image + '")';
+            media.setAttribute('aria-label', itemTitle(item, 'Publication ISC Kindu'));
+            article.appendChild(media);
+        }
+
+        var body = createEl('div', 'isc-feed-item__body');
+        body.appendChild(createEl('div', 'isc-feed-item__meta', [plain(item.__feedSource), plain(item.type || item.category), itemDate(item)].filter(Boolean).join(' - ')));
+        body.appendChild(createEl('h3', '', itemTitle(item, 'Publication ISC Kindu')));
+        var summary = itemSummary(item);
+        if (summary) body.appendChild(createEl('p', '', summary));
+
+        if (link) {
+            var action = createEl('a', 'isc-feed-item__link', item && item.file_url ? 'Ouvrir' : 'Lire');
+            action.href = link;
+            if (/^https?:\/\//i.test(link)) {
+                action.target = '_blank';
+                action.rel = 'noopener';
+            }
+            body.appendChild(action);
+        }
+
+        article.appendChild(body);
+        return article;
+    }
+
+    function renderHomeNewsFeed() {
+        if (!isHomePage() || document.querySelector('[data-home-news-feed]')) return;
+        var anchor = document.querySelector('.media-center-mirror') || document.querySelector('.site-footer');
+        if (!anchor || !anchor.parentNode) return;
+
+        var section = createEl('section', 'section isc-home-feed');
+        section.setAttribute('data-home-news-feed', '1');
+        var container = createEl('div', 'container');
+        var head = createEl('div', 'isc-home-feed__head');
+        var intro = createEl('div');
+        intro.appendChild(createEl('span', 'section-head__eyebrow', 'Fil d actualite'));
+        intro.appendChild(createEl('h2', '', 'Dernieres publications'));
+        intro.appendChild(createEl('p', '', 'Les actualites et publications publiees depuis l administration apparaissent automatiquement ici.'));
+        head.appendChild(intro);
+        var allLink = createEl('a', 'isc-home-feed__all', 'Tout voir');
+        allLink.href = rel('blog.html');
+        head.appendChild(allLink);
+        container.appendChild(head);
+
+        var grid = createEl('div', 'isc-home-feed__grid');
+        grid.appendChild(createEmptyState('Chargement des dernieres publications...'));
+        container.appendChild(grid);
+        section.appendChild(container);
+        anchor.parentNode.insertBefore(section, anchor);
+
+        Promise.all([
+            apiGet('/news?per_page=8'),
+            apiGet('/publications?per_page=8')
+        ]).then(function (responses) {
+            var items = [];
+            asList(responses[0]).forEach(function (item) {
+                items.push(cloneFeedItem(item, 'Actualite', 'blog.html'));
+            });
+            asList(responses[1]).forEach(function (item) {
+                items.push(cloneFeedItem(item, 'Publication', 'documents.html'));
+            });
+
+            items = items.filter(function (item) {
+                return itemTitle(item, '') || itemSummary(item) || (item && (item.file_url || item.image_url));
+            }).sort(function (a, b) {
+                return feedSortValue(b) - feedSortValue(a);
+            });
+
+            clearElement(grid);
+            if (!items.length) {
+                grid.appendChild(createEmptyState('Aucune publication publiee pour le moment.'));
+                return;
+            }
+
+            items.slice(0, 6).forEach(function (item) {
+                grid.appendChild(createFeedItem(item));
+            });
+        });
+    }
+
     function renderInstitutionBlocks(section) {
         var grid = section && section.querySelector('.grid');
         if (!grid) return;
@@ -1371,6 +1475,7 @@
         });
 
         renderFeesPage();
+        renderHomeNewsFeed();
         renderTeachersPage();
         renderWorkOffers();
         relaxInscriptionFormUploads();
@@ -1409,6 +1514,19 @@
             '.clean-card__link{margin-top:auto;display:inline-flex;width:max-content;max-width:100%;align-items:center;color:#0369a1;font-weight:800;text-decoration:none;border-bottom:1px solid rgba(3,105,161,.35);}',
             '.isc-api-grid{margin-top:18px;}',
             '.isc-empty-state{padding:28px 18px;text-align:center;color:#64748b;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:8px;}',
+            '.isc-home-feed{background:#f8fafc;}',
+            '.isc-home-feed__head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:22px;}',
+            '.isc-home-feed__head h2{margin:0;color:#0f172a;font-size:2rem;line-height:1.12;}',
+            '.isc-home-feed__head p{margin:.45rem 0 0;color:#64748b;max-width:680px;line-height:1.6;}',
+            '.isc-home-feed__all{display:inline-flex;align-items:center;justify-content:center;min-height:38px;border:1px solid #cbd5e1;border-radius:6px;padding:0 13px;color:#0f4c81;font-weight:800;text-decoration:none;background:#fff;}',
+            '.isc-home-feed__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}',
+            '.isc-feed-item{min-width:0;border:1px solid #dbe3ef;border-radius:8px;background:#fff;overflow:hidden;box-shadow:0 12px 26px rgba(15,23,42,.08);display:flex;flex-direction:column;}',
+            '.isc-feed-item__media{display:block;aspect-ratio:16/9;background-size:cover;background-position:center;background-color:#e2e8f0;}',
+            '.isc-feed-item__body{padding:16px;display:flex;flex:1;flex-direction:column;gap:10px;}',
+            '.isc-feed-item__meta{font-size:.7rem;font-weight:900;text-transform:uppercase;color:#0369a1;}',
+            '.isc-feed-item h3{margin:0;font-size:1.02rem;line-height:1.3;color:#0f172a;}',
+            '.isc-feed-item p{margin:0;color:#475569;font-size:.9rem;line-height:1.55;}',
+            '.isc-feed-item__link{margin-top:auto;width:max-content;max-width:100%;color:#0369a1;font-weight:900;text-decoration:none;border-bottom:1px solid rgba(3,105,161,.35);}',
             '.work-offer--live .work-offer__more{white-space:nowrap;}',
             '.isc-teacher-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;}',
             '.isc-teacher-card{min-width:0!important;max-width:none!important;}',
@@ -1519,6 +1637,12 @@
             '.clean-empty{grid-template-columns:1fr!important;gap:10px!important;margin-top:24px!important;}',
             '.clean-card{min-height:118px!important;}',
             '.clean-empty.is-live,.isc-api-grid,.isc-teacher-grid{grid-template-columns:1fr!important;gap:12px!important;}',
+            '.isc-home-feed__head{align-items:flex-start!important;flex-direction:column!important;margin-bottom:16px!important;}',
+            '.isc-home-feed__head h2{font-size:1.45rem!important;}',
+            '.isc-home-feed__head p{font-size:.9rem!important;}',
+            '.isc-home-feed__grid{grid-template-columns:1fr!important;gap:12px!important;}',
+            '.isc-feed-item__body{padding:14px!important;}',
+            '.isc-feed-item h3{font-size:.98rem!important;}',
             '.clean-card__body{padding:14px!important;}',
             '.clean-card__title{font-size:.98rem!important;}',
             '.clean-card__text{font-size:.86rem!important;line-height:1.55!important;}',

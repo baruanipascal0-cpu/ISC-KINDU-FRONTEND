@@ -291,6 +291,33 @@
             gap: 0;
         }
 
+        .sheet-card {
+            display: grid;
+            gap: 12px;
+            padding: 16px;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            background: #eff6ff;
+        }
+
+        .sheet-card h3 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .sheet-card p {
+            margin: 0;
+            color: #1e3a8a;
+            line-height: 1.55;
+            font-size: .92rem;
+        }
+
+        .sheet-card__actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
         .row {
             display: grid;
             gap: 8px;
@@ -557,6 +584,17 @@
 
                 <section class="panel">
                     <div class="panel__head">
+                        <h2>Fiche d'inscription</h2>
+                    </div>
+                    <div class="panel__body">
+                        <div data-registration-sheet>
+                            <p class="empty">La fiche d'inscription sera disponible ici apres validation du dossier par l'administration.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="panel__head">
                         <h2>Paiements</h2>
                     </div>
                     <div class="panel__body">
@@ -637,6 +675,6 @@
         </div>
     </main>
 
-    <script src="js/isc-student.js?v=20260812-student-space"></script>
+    <script src="js/isc-student.js?v=20260812-feed-fiche"></script>
 </body>
 </html>
