@@ -1176,6 +1176,10 @@
     }
 
     function apiErrorMessage(error) {
+        if (error && /failed to fetch|networkerror|load failed/i.test(error.message || '')) {
+            return 'Impossible de joindre le serveur ISC Kindu. Verifiez votre connexion puis rechargez la page.';
+        }
+
         var payload = error && error.payload;
         if (payload && payload.errors) {
             var messages = [];
