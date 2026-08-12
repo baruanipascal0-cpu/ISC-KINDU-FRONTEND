@@ -752,14 +752,14 @@
 <script>
 (function () {
     // Hero slider
-    var slides = document.querySelectorAll('[data-hero-slides] .hero__slide');
-    var dots   = document.querySelectorAll('[data-hero-dots] .hero__dot');
+    var slides = Array.prototype.slice.call(document.querySelectorAll('[data-hero-slides] .hero__slide'));
+    var dots   = Array.prototype.slice.call(document.querySelectorAll('[data-hero-dots] .hero__dot'));
     var prev   = document.querySelector('[data-hero-prev]');
     var next   = document.querySelector('[data-hero-next]');
     var idx = 0, timer = null, delay = 7000;
 
     // Légendes « à la une » (mises à jour du texte du hero par slide)
-    var captions = [{"title":"Bienvenue a l\u0027ISC Kindu","lede":"Une institution superieure au service de la formation, de la gestion et du numerique au Maniema.","subtitle":"Institut Superieur de Commerce de Kindu","href":"aboutus.html"},{"title":"Former des cadres utiles a leur milieu","lede":"Des enseignements orientes vers la pratique professionnelle, l\u0027entrepreneuriat et la rigueur academique.","subtitle":"Vie academique","href":"inscription.html"},{"title":"Des filieres adaptees aux besoins du marche","lede":"Informatique de gestion, Comptabilite, Douane et Accises, Administration reseau, Marketing, Genie Logiciel, Systeme informatique.","subtitle":"Formations","href":"formation/licence.html"},{"title":"Une communaute scientifique vivante","lede":"Etudiants, enseignants et partenaires avancent ensemble autour de la competence et de la reussite.","subtitle":"Campus","href":"media-center.html"},{"title":"Votre avenir commence a l\u0027ISC Kindu","lede":"Inscrivez-vous et preparez un parcours solide dans les metiers de la gestion et de l\u0027informatique.","subtitle":"Inscriptions","href":"inscription.html"}];
+    var captions = window.iscHeroCaptions || [{"title":"Bienvenue a l\u0027ISC Kindu","lede":"Une institution superieure au service de la formation, de la gestion et du numerique au Maniema.","subtitle":"Institut Superieur de Commerce de Kindu","href":"aboutus.html","label":"Decouvrir"},{"title":"Former des cadres utiles a leur milieu","lede":"Des enseignements orientes vers la pratique professionnelle, l\u0027entrepreneuriat et la rigueur academique.","subtitle":"Vie academique","href":"inscription.html","label":"S'inscrire"},{"title":"Des filieres adaptees aux besoins du marche","lede":"Informatique de gestion, Comptabilite, Douane et Accises, Administration reseau, Marketing, Genie Logiciel, Systeme informatique.","subtitle":"Formations","href":"formation/licence.html","label":"Voir les formations"},{"title":"Une communaute scientifique vivante","lede":"Etudiants, enseignants et partenaires avancent ensemble autour de la competence et de la reussite.","subtitle":"Campus","href":"media-center.html","label":"Voir les medias"},{"title":"Votre avenir commence a l\u0027ISC Kindu","lede":"Inscrivez-vous et preparez un parcours solide dans les metiers de la gestion et de l\u0027informatique.","subtitle":"Inscriptions","href":"inscription.html","label":"S'inscrire"}];
     var elTitle    = document.querySelector('[data-hero-title]');
     var elLede     = document.querySelector('[data-hero-lede]');
     var elCta      = document.querySelector('[data-hero-cta]');
@@ -772,16 +772,36 @@
         if (elLede)     elLede.textContent = c.lede || '';
         if (elSubtitle) elSubtitle.textContent = c.subtitle || '';
         if (elCta && c.href) elCta.setAttribute('href', c.href);
+        if (elCta && c.label) elCta.textContent = c.label;
+    }
+
+    function activeCount() {
+        return Math.max(1, Math.min(slides.length || captions.length, captions.length || slides.length));
+    }
+
+    function syncVisibility() {
+        var count = activeCount();
+        slides.forEach(function (s, k) {
+            s.hidden = k >= count;
+            if (k >= count) s.classList.remove('is-active');
+        });
+        dots.forEach(function (d, k) {
+            d.hidden = k >= count;
+            if (k >= count) d.classList.remove('is-active');
+        });
+        if (prev) prev.hidden = count < 2;
+        if (next) next.hidden = count < 2;
     }
 
     function go(i) {
         if (!slides.length) return;
-        idx = (i + slides.length) % slides.length;
-        slides.forEach(function (s, k) { s.classList.toggle('is-active', k === idx); });
-        dots.forEach(function (d, k) { d.classList.toggle('is-active', k === idx); });
+        var count = activeCount();
+        idx = (i + count) % count;
+        slides.forEach(function (s, k) { s.classList.toggle('is-active', k === idx && k < count); });
+        dots.forEach(function (d, k) { d.classList.toggle('is-active', k === idx && k < count); });
         paint(idx);
     }
-    function play()  { stop(); timer = setInterval(function () { go(idx + 1); }, delay); }
+    function play()  { stop(); if (activeCount() > 1) timer = setInterval(function () { go(idx + 1); }, delay); }
     function stop()  { if (timer) { clearInterval(timer); timer = null; } }
 
     if (prev) prev.addEventListener('click', function () { go(idx - 1); play(); });
@@ -789,7 +809,18 @@
     dots.forEach(function (d) {
         d.addEventListener('click', function () { go(parseInt(d.getAttribute('data-hero-go'), 10) || 0); play(); });
     });
-    if (slides.length > 1) play();
+    window.iscSetHeroCaptions = function (nextCaptions) {
+        if (!Array.isArray(nextCaptions) || !nextCaptions.length) return;
+        captions = nextCaptions.slice(0, slides.length || nextCaptions.length);
+        window.iscHeroCaptions = captions;
+        syncVisibility();
+        go(0);
+        play();
+    };
+
+    syncVisibility();
+    go(0);
+    play();
 
 })();
 </script>
@@ -1439,7 +1470,7 @@
         document.head.appendChild(script);
     })();
 </script>
-<script src="js/isc-kindu.js?v=20260812-home-feed-spacing"></script>
+<script src="js/isc-kindu.js?v=20260812-admin-editable"></script>
 </body>
 
 <!-- Mirrored from www.isc-kindu.ac.cd/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 04 Aug 2026 13:42:48 GMT -->

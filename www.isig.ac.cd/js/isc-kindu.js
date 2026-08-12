@@ -155,6 +155,13 @@
         el.setAttribute('aria-label', brand);
     }
 
+    function setBackgroundUrl(el, url, alt) {
+        if (!el || !url) return;
+        el.style.backgroundImage = 'url("' + String(url).replace(/"/g, '%22') + '")';
+        el.setAttribute('role', el.getAttribute('role') || 'img');
+        el.setAttribute('aria-label', alt || brand);
+    }
+
     function replaceBrandText(value) {
         if (!value) return value;
         return value
@@ -323,50 +330,93 @@
     function updateHero() {
         var slides = document.querySelectorAll('[data-hero-slides] .hero__slide');
         if (!slides.length) return;
-        var captions = [
+        var fallbackCaptions = [
             {
                 title: 'Bienvenue \u00e0 l\'ISC Kindu',
                 lede: 'Une institution sup\u00e9rieure au service de la formation, de la gestion et du num\u00e9rique au Maniema.',
                 subtitle: 'Institut Sup\u00e9rieur de Commerce de Kindu',
-                href: rel('aboutus.html')
+                href: rel('aboutus.html'),
+                label: 'D\u00e9couvrir l\'ISC Kindu'
             },
             {
                 title: 'Former des cadres utiles \u00e0 leur milieu',
                 lede: 'Des enseignements orient\u00e9s vers la pratique professionnelle, l\'entrepreneuriat et la rigueur acad\u00e9mique.',
                 subtitle: 'Vie acad\u00e9mique',
-                href: rel('inscription.html')
+                href: rel('inscription.html'),
+                label: 'S\'inscrire'
             },
             {
                 title: 'Des fili\u00e8res adapt\u00e9es aux besoins du march\u00e9',
                 lede: filieres.join(', ') + '.',
                 subtitle: 'Formations',
-                href: rel('formation/licence.html')
+                href: rel('formation/licence.html'),
+                label: 'Voir les formations'
             },
             {
                 title: 'Une communaut\u00e9 scientifique vivante',
                 lede: 'Etudiants, enseignants et partenaires avancent ensemble autour de la comp\u00e9tence et de la r\u00e9ussite.',
                 subtitle: 'Campus',
-                href: rel('media-center.html')
+                href: rel('media-center.html'),
+                label: 'Voir les m\u00e9dias'
             },
             {
                 title: 'Votre avenir commence \u00e0 l\'ISC Kindu',
                 lede: 'Inscrivez-vous et pr\u00e9parez un parcours solide dans les m\u00e9tiers de la gestion et de l\'informatique.',
                 subtitle: 'Inscriptions',
-                href: rel('inscription.html')
+                href: rel('inscription.html'),
+                label: 'S\'inscrire'
             }
         ];
-        window.captions = captions;
-        slides.forEach(function (slide, index) {
-            setBackground(slide, photos[index % photos.length]);
-        });
-        setText(document.querySelector('[data-hero-title]'), captions[0].title);
-        setText(document.querySelector('[data-hero-lede]'), captions[0].lede);
-        setText(document.querySelector('[data-hero-subtitle]'), captions[0].subtitle);
-        var cta = document.querySelector('[data-hero-cta]');
-        if (cta) {
-            cta.textContent = 'D\u00e9couvrir l\'ISC Kindu';
-            cta.setAttribute('href', captions[0].href);
+
+        function normalizedCaption(item, index) {
+            var fallback = fallbackCaptions[index % fallbackCaptions.length];
+            var image = item && (item.image_url || item.image || item.url);
+            var href = item && (item.link_url || item.public_url || item.href || item.file_url);
+
+            return {
+                title: itemTitle(item, fallback.title),
+                lede: trimText(item && (item.body || item.summary || item.description || item.subtitle), 210) || fallback.lede,
+                subtitle: plain(item && (item.subtitle_label || item.badge || item.eyebrow || item.type)) || fallback.subtitle,
+                href: localUrlForSite(href) || href || fallback.href,
+                label: plain(item && item.link_label) || fallback.label,
+                image: image
+            };
         }
+
+        function applyCaptions(captions) {
+            captions = (captions || []).filter(function (caption) {
+                return caption && (caption.title || caption.lede || caption.image);
+            });
+            if (!captions.length) return;
+
+            window.iscHeroCaptions = captions;
+            slides.forEach(function (slide, index) {
+                if (captions[index] && captions[index].image) {
+                    setBackgroundUrl(slide, captions[index].image, captions[index].title);
+                } else {
+                    setBackground(slide, photos[index % photos.length]);
+                }
+            });
+
+            if (typeof window.iscSetHeroCaptions === 'function') {
+                window.iscSetHeroCaptions(captions);
+            } else {
+                setText(document.querySelector('[data-hero-title]'), captions[0].title);
+                setText(document.querySelector('[data-hero-lede]'), captions[0].lede);
+                setText(document.querySelector('[data-hero-subtitle]'), captions[0].subtitle);
+                var cta = document.querySelector('[data-hero-cta]');
+                if (cta) {
+                    cta.textContent = captions[0].label || 'D\u00e9couvrir';
+                    cta.setAttribute('href', captions[0].href || rel('index.html'));
+                }
+            }
+        }
+
+        applyCaptions(fallbackCaptions);
+        apiGet('/home/slides').then(function (payload) {
+            var captions = asList(payload).map(normalizedCaption);
+            applyCaptions(captions);
+        });
     }
 
     function updateHomeImagesAndCourses() {
@@ -1404,6 +1454,79 @@
         }
     }
 
+    function pageSlugForCurrentPath() {
+        if (isHomePage()) return 'accueil';
+
+        var path = localPath()
+            .replace(/\/index\.html$/i, '')
+            .replace(/\.html$/i, '')
+            .replace(/^\/+|\/+$/g, '')
+            .toLowerCase();
+
+        var map = {
+            'aboutus': 'institution',
+            'services': 'services',
+            'bourse-isc-kindu': 'bourse-isc-kindu',
+            'formation/licence': 'licence',
+            'formation/master': 'master',
+            'formation/centre-de-formation': 'centre-de-formation',
+            'formation/cisco-academie': 'cisco-academie',
+            'inscription': 'inscription',
+            'documents': 'documents',
+            'nos-diplomes': 'diplomes',
+            'nos-palmares': 'palmares',
+            'nos-frais': 'frais',
+            'media-center': 'medias',
+            'blog': 'blog',
+            'nos-enseignants': 'enseignants',
+            'page/new-isigien': 'nouveau-etudiant',
+            'page/college': 'college',
+            'page/alumni': 'alumni',
+            'travailler-a-isc/opportunites': 'opportunites',
+            'travailler-a-isc/offres': 'offres-emploi',
+            'services-a-la-societe': 'recherche-societe',
+            'recherche-societe/travaux-licence': 'travaux-licence',
+            'recherche-societe/travaux-master': 'travaux-master',
+            'recherche-societe/stage-academique': 'stage-academique',
+            'recherche-societe/publications-enseignants': 'publications-enseignants',
+            'recherche-societe/formation-enseignants': 'formation-enseignants',
+            'recherche-societe/seminaires-conferences': 'seminaires-conferences',
+            'recherche-societe/nos-projets': 'nos-projets',
+            'recherche-societe/hackathon': 'hackathon',
+            'recherche-societe/realisations': 'realisations',
+            'contact': 'contact',
+            'politique-de-confidentialite': 'politique-de-confidentialite',
+            'cookies': 'cookies'
+        };
+
+        return map[path] || '';
+    }
+
+    function syncCurrentPageContent() {
+        var pageSlug = pageSlugForCurrentPath();
+        if (!pageSlug || pageSlug === 'accueil') return;
+
+        apiGet('/pages/' + encodeURIComponent(pageSlug)).then(function (page) {
+            if (!page) return;
+
+            var title = itemTitle(page, '');
+            var summary = itemSummary(page);
+            var header = document.querySelector('.page-header, .about-hero');
+            var main = document.querySelector('.clean-main');
+
+            if (header) {
+                if (page.image_url) setBackgroundUrl(header, page.image_url, title || page.image_alt);
+                if (title) setText(header.querySelector('h1'), title);
+                if (summary) setText(header.querySelector('p'), summary);
+            }
+
+            if (main) {
+                if (title) setText(main.querySelector('h1, .clean-title'), title);
+                if (summary) setText(main.querySelector('.clean-lede, .lead'), summary);
+            }
+        });
+    }
+
     function syncSiteSettings() {
         apiGet('/site/settings').then(function (settings) {
             applySiteSettings(settings || {});
@@ -1483,6 +1606,7 @@
         relaxInscriptionFormUploads();
         connectBackendRouteLinks();
         connectBackendForms();
+        syncCurrentPageContent();
         syncSiteSettings();
         enhanceSearchWithBackend();
     }
