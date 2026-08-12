@@ -4,6 +4,7 @@
     var brand = 'ISC Kindu';
     var brandShort = 'ISC-KINDU';
     var assetBase = 'storage/isc-kindu/';
+    var apiBase = (window.ISC_API_BASE || 'https://isc-kindu-backend.onrender.com/api').replace(/\/+$/, '');
     var photos = [
         '1785445859858.jpg',
         '1785445878531.jpg',
@@ -42,6 +43,12 @@
     function isHomePage() {
         var path = localPath();
         return path === 'index.html' || path === '';
+    }
+
+    function isLocalPage(name) {
+        var path = localPath().replace(/\/+$/, '');
+        var cleanName = String(name || '').replace(/\.html$/i, '');
+        return path === name || path === cleanName || path === cleanName + '/index.html';
     }
 
     function prefix() {
@@ -721,6 +728,548 @@
         });
     }
 
+    function apiUrl(path) {
+        return apiBase + '/' + String(path || '').replace(/^\/+/, '');
+    }
+
+    function unwrapApi(payload) {
+        if (payload && typeof payload === 'object' && Object.prototype.hasOwnProperty.call(payload, 'data')) {
+            return payload.data;
+        }
+        return payload;
+    }
+
+    function apiGet(path) {
+        if (!window.fetch) return Promise.resolve(null);
+        return fetch(apiUrl(path), {
+            headers: { Accept: 'application/json' },
+            credentials: 'omit'
+        }).then(function (response) {
+            if (!response.ok) throw new Error('API ' + response.status);
+            return response.json();
+        }).then(unwrapApi).catch(function () {
+            return null;
+        });
+    }
+
+    function apiPost(path, body) {
+        if (!window.fetch) return Promise.reject(new Error('Fetch indisponible'));
+        return fetch(apiUrl(path), {
+            method: 'POST',
+            body: body,
+            headers: { Accept: 'application/json' },
+            credentials: 'omit'
+        }).then(function (response) {
+            return response.json().catch(function () {
+                return {};
+            }).then(function (payload) {
+                if (!response.ok) {
+                    var error = new Error(payload.message || 'La demande n a pas ete acceptee.');
+                    error.payload = payload;
+                    throw error;
+                }
+                return payload;
+            });
+        });
+    }
+
+    function asList(payload, key) {
+        if (Array.isArray(payload)) return payload;
+        if (payload && key && Array.isArray(payload[key])) return payload[key];
+        if (payload && Array.isArray(payload.items)) return payload.items;
+        return [];
+    }
+
+    function plain(value) {
+        if (value === null || value === undefined) return '';
+        if (typeof value === 'object') {
+            value = value.name || value.title || value.label || '';
+        }
+        value = String(value).replace(/<[^>]*>/g, ' ');
+        value = replaceBrandText(value);
+        return value.replace(/\s+/g, ' ').trim();
+    }
+
+    function trimText(value, size) {
+        value = plain(value);
+        size = size || 160;
+        return value.length > size ? value.slice(0, size - 1).trim() + '...' : value;
+    }
+
+    function dateLabel(value) {
+        if (!value) return '';
+        try {
+            return new Date(value).toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        } catch (e) {
+            return plain(value);
+        }
+    }
+
+    function itemTitle(item, fallback) {
+        return plain(item && (item.title || item.name || item.caption || item.alt_text)) || (fallback !== undefined ? fallback : 'ISC Kindu');
+    }
+
+    function itemSummary(item) {
+        if (!item) return '';
+        return trimText(item.excerpt || item.summary || item.description || item.body || item.biography || item.caption, 180);
+    }
+
+    function itemDate(item) {
+        return dateLabel(item && (item.published_at || item.decision_date || item.created_at || item.updated_at));
+    }
+
+    function itemLink(item, fallback) {
+        if (!item) return '';
+        var url = item.file_url || item.url || item.link_url || item.public_url || '';
+        if (!url && item.slug && fallback) url = fallback + '#' + item.slug;
+        if (!url) return '';
+        if (/^\/api\//i.test(url)) return '';
+        return localUrlForSite(url) || url;
+    }
+
+    function clearElement(el) {
+        if (!el) return;
+        while (el.firstChild) el.removeChild(el.firstChild);
+    }
+
+    function setStatus(el, message) {
+        if (!el || !message) return;
+        el.textContent = message;
+    }
+
+    function createEl(tag, className, text) {
+        var el = document.createElement(tag);
+        if (className) el.className = className;
+        if (text !== undefined && text !== null) el.textContent = text;
+        return el;
+    }
+
+    function createCleanCard(item, options) {
+        options = options || {};
+        var article = createEl('article', 'clean-card clean-card--live');
+        var image = item && (item.image_url || item.url);
+        var title = itemTitle(item, options.fallbackTitle);
+        var summary = itemSummary(item);
+        var meta = options.meta || plain(item && (item.type || item.collection || item.cycle || item.role));
+        var link = itemLink(item, options.fallbackUrl);
+
+        if (options.mediaOnly && image) {
+            article.className += ' clean-card--media';
+        }
+
+        if (image && !/\.pdf($|\?)/i.test(image)) {
+            var media = createEl('div', 'clean-card__media');
+            media.style.backgroundImage = 'url("' + image + '")';
+            media.setAttribute('role', 'img');
+            media.setAttribute('aria-label', title);
+            article.appendChild(media);
+        }
+
+        var body = createEl('div', 'clean-card__body');
+        var metaLine = [meta, itemDate(item)].filter(Boolean).join(' - ');
+        if (metaLine) body.appendChild(createEl('div', 'clean-card__meta', metaLine));
+        body.appendChild(createEl('h2', 'clean-card__title', title));
+        if (summary) body.appendChild(createEl('p', 'clean-card__text', summary));
+
+        if (item && item.graduates_count !== undefined && item.graduates_count !== null) {
+            body.appendChild(createEl('p', 'clean-card__text clean-card__text--strong', item.graduates_count + ' laureat(s)'));
+        }
+
+        if (link && link !== '#') {
+            var a = createEl('a', 'clean-card__link', item && item.file_url ? 'Ouvrir le fichier' : 'Consulter');
+            a.href = link;
+            if (/^https?:\/\//i.test(link)) {
+                a.target = '_blank';
+                a.rel = 'noopener';
+            }
+            body.appendChild(a);
+        }
+
+        article.appendChild(body);
+        return article;
+    }
+
+    function renderCleanSection(section, path, options) {
+        var grid = section && section.querySelector('.clean-empty');
+        if (!grid) return;
+        options = options || {};
+        apiGet(path).then(function (payload) {
+            var items = asList(payload, options.listKey).filter(function (item) {
+                return itemTitle(item, '') || itemSummary(item) || (item && (item.image_url || item.url || item.file_url));
+            });
+            if (!items.length) return;
+
+            grid.classList.add('is-live');
+            grid.setAttribute('aria-hidden', 'false');
+            clearElement(grid);
+            items.slice(0, options.limit || 12).forEach(function (item) {
+                grid.appendChild(createCleanCard(item, options));
+            });
+
+            setStatus(section.querySelector('.clean-lede'), options.loadedText || 'Les contenus publies depuis le backend sont disponibles.');
+            setStatus(section.querySelector('.clean-note'), 'Source : backend ISC Kindu.');
+        });
+    }
+
+    function renderInstitutionBlocks(section) {
+        var grid = section && section.querySelector('.grid');
+        if (!grid) return;
+        apiGet('/institution/blocks').then(function (payload) {
+            var items = asList(payload).filter(function (item) {
+                var hasEditorialContent = plain(item && (item.subtitle || item.summary || item.body || item.image_url));
+                return item && item.group === 'institution_block' && (itemTitle(item, '') || hasEditorialContent);
+            });
+            if (!items.length) return;
+
+            clearElement(grid);
+            items.slice(0, 9).forEach(function (item) {
+                var card = createEl('article', 'ui-card p-5 min-h-[160px]');
+                var title = createEl('h3', 'font-semibold text-base text-black/90 dark:text-white/90', itemTitle(item, 'Bloc institution'));
+                var text = createEl('p', 'mt-2 text-sm leading-6 text-black/60 dark:text-white/65', itemSummary(item) || 'Contenu publie depuis le backend.');
+                card.appendChild(title);
+                card.appendChild(text);
+                var link = itemLink(item);
+                if (link) {
+                    var a = createEl('a', 'mt-4 inline-flex text-sm font-semibold brand-text', plain(item.link_label) || 'Consulter');
+                    a.href = link;
+                    card.appendChild(a);
+                }
+                grid.appendChild(card);
+            });
+        });
+    }
+
+    function renderFeesPage() {
+        if (!isLocalPage('nos-frais.html')) return;
+        var target = document.querySelector('.frais-empty');
+        if (!target) return;
+        apiGet('/fees?per_page=12').then(function (payload) {
+            var items = asList(payload).filter(function (item) {
+                return itemTitle(item, '') || itemSummary(item) || (item && item.file_url);
+            });
+            if (!items.length) return;
+            var grid = createEl('div', 'isc-api-grid');
+            items.forEach(function (item) {
+                grid.appendChild(createCleanCard(item, { meta: 'Frais', fallbackUrl: 'nos-frais.html' }));
+            });
+            target.parentNode.replaceChild(grid, target);
+        });
+    }
+
+    function createEmptyState(message) {
+        var empty = createEl('div', 'isc-empty-state', message);
+        empty.setAttribute('role', 'status');
+        return empty;
+    }
+
+    function parseDescriptionLine(description, label) {
+        description = String(description || '');
+        var lines = description.split(/\r?\n/);
+        label = label.toLowerCase();
+        for (var i = 0; i < lines.length; i += 1) {
+            var line = plain(lines[i]);
+            if (line.toLowerCase().indexOf(label) === 0) {
+                return line.replace(/^[^:]+:\s*/, '');
+            }
+        }
+        return '';
+    }
+
+    function createWorkOffer(item) {
+        var article = createEl('article', 'work-offer work-offer--live');
+        var body = createEl('div', 'work-offer__body');
+        var meta = createEl('div', 'work-offer__meta');
+        meta.appendChild(createEl('span', 'work-offer__ref', plain(item && item.type) || 'Opportunite'));
+        meta.appendChild(createEl('span', 'work-offer__state is-open', 'Publiee'));
+        body.appendChild(meta);
+
+        var h3 = createEl('h3');
+        var title = createEl('span', '', itemTitle(item, 'Opportunite ISC Kindu'));
+        h3.appendChild(title);
+        body.appendChild(h3);
+
+        var org = parseDescriptionLine(item && item.description, 'organisation:');
+        if (org) body.appendChild(createEl('p', 'work-offer__org', org));
+        body.appendChild(createEl('p', '', itemSummary(item) || 'Annonce publiee depuis le backend ISC Kindu.'));
+
+        var foot = createEl('div', 'work-offer__foot');
+        var deadline = parseDescriptionLine(item && item.description, 'date limite:') || itemDate(item) || 'A completer';
+        foot.appendChild(createEl('span', '', 'Cloture : ' + deadline));
+        var link = itemLink(item);
+        if (link) {
+            var a = createEl('a', 'work-offer__more', 'Ouvrir');
+            a.href = link;
+            if (/^https?:\/\//i.test(link)) {
+                a.target = '_blank';
+                a.rel = 'noopener';
+            }
+            foot.appendChild(a);
+        }
+        body.appendChild(foot);
+        article.appendChild(body);
+        return article;
+    }
+
+    function renderWorkOffers() {
+        document.querySelectorAll('[data-backend-source]').forEach(function (container) {
+            var source = container.getAttribute('data-backend-source') || '';
+            var path = source === 'offres-emploi' ? '/emplois?per_page=12' : '/opportunites?per_page=12';
+            clearElement(container);
+            container.appendChild(createEmptyState('Chargement des publications depuis le backend...'));
+
+            apiGet(path).then(function (payload) {
+                var items = asList(payload).filter(function (item) {
+                    var type = plain(item && item.type).toLowerCase();
+                    if (source === 'offres-emploi') return type === 'emploi' || type === 'offre';
+                    return itemTitle(item, '') || itemSummary(item);
+                });
+                clearElement(container);
+                if (!items.length) {
+                    container.appendChild(createEmptyState(source === 'offres-emploi'
+                        ? 'Aucune offre d emploi publiee pour le moment.'
+                        : 'Aucune opportunite publiee pour le moment.'));
+                    return;
+                }
+                items.forEach(function (item) {
+                    container.appendChild(createWorkOffer(item));
+                });
+            });
+        });
+    }
+
+    function createTeacherCard(item) {
+        var article = createEl('article', 'card ens-carousel__item isc-teacher-card');
+        var mediaWrap = createEl('div', 'card__media-wrap');
+        var media = createEl('div', 'card__media');
+        var image = item && item.image_url;
+        if (image) media.style.backgroundImage = 'url("' + image + '")';
+        mediaWrap.appendChild(media);
+        article.appendChild(mediaWrap);
+
+        var body = createEl('div', 'card__body');
+        body.appendChild(createEl('h3', 'ens-card__name', itemTitle(item, 'Enseignant')));
+        var grade = plain(item && (item.title || item.department || item.role)) || 'Enseignant a l ISC Kindu';
+        body.appendChild(createEl('p', 'ens-card__grade', grade));
+        var bio = itemSummary(item);
+        if (bio) body.appendChild(createEl('p', 'isc-teacher-card__bio', bio));
+        article.appendChild(body);
+        return article;
+    }
+
+    function renderTeachersPage() {
+        if (!isLocalPage('nos-enseignants.html')) return;
+        var container = document.querySelector('main .section--sm .container');
+        if (!container) return;
+        container.querySelectorAll('.ens-group').forEach(function (group) {
+            group.parentNode.removeChild(group);
+        });
+        var loading = createEmptyState('Chargement des enseignants depuis le backend...');
+        container.appendChild(loading);
+
+        apiGet('/teachers?role=enseignant&per_page=80').then(function (payload) {
+            var items = asList(payload).filter(function (item) {
+                return itemTitle(item, '') || itemSummary(item);
+            });
+            if (loading.parentNode) loading.parentNode.removeChild(loading);
+            if (!items.length) {
+                container.appendChild(createEmptyState('Aucun enseignant publie pour le moment.'));
+                return;
+            }
+
+            var group = createEl('div', 'ens-group ens-group--backend');
+            var head = createEl('div', 'ens-group__head');
+            head.appendChild(createEl('h2', 'ens-group__title', 'Enseignants publies'));
+            head.appendChild(createEl('span', 'ens-group__count', String(items.length)));
+            head.appendChild(createEl('span', 'ens-group__rule'));
+            group.appendChild(head);
+
+            var grid = createEl('div', 'isc-teacher-grid');
+            items.forEach(function (item) {
+                grid.appendChild(createTeacherCard(item));
+            });
+            group.appendChild(grid);
+            container.appendChild(group);
+        });
+    }
+
+    function normalizeBackendRoute(route) {
+        route = String(route || '').replace(/^\/+/, '');
+        if (route.indexOf('api/') === 0) route = route.slice(4);
+        return route;
+    }
+
+    function markBackendLinkPending(link, message) {
+        link.href = '#';
+        link.setAttribute('aria-disabled', 'true');
+        link.setAttribute('title', message);
+        link.setAttribute('data-backend-ready', '0');
+        if (link.getAttribute('data-backend-click-ready') !== '1') {
+            link.setAttribute('data-backend-click-ready', '1');
+            link.addEventListener('click', function (event) {
+                if (link.getAttribute('data-backend-ready') === '1') return;
+                event.preventDefault();
+                window.alert(link.getAttribute('title') || 'Fichier non encore publie depuis le backend.');
+            });
+        }
+    }
+
+    function connectBackendRouteLinks() {
+        var cache = {};
+        document.querySelectorAll('a[data-backend-route]').forEach(function (link) {
+            var route = normalizeBackendRoute(link.getAttribute('data-backend-route'));
+            if (!route) return;
+            markBackendLinkPending(link, 'Fichier non encore publie depuis le backend.');
+            if (!cache[route]) cache[route] = apiGet('/' + route);
+            cache[route].then(function (payload) {
+                var item = payload && !Array.isArray(payload) ? payload : null;
+                var url = item && (item.file_url || item.url || item.link_url);
+                if (!url) return;
+                link.href = localUrlForSite(url) || url;
+                link.removeAttribute('aria-disabled');
+                link.setAttribute('data-backend-ready', '1');
+                link.setAttribute('title', itemTitle(item, 'Ouvrir le fichier'));
+                if (/^https?:\/\//i.test(link.href)) {
+                    link.target = '_blank';
+                    link.rel = 'noopener';
+                }
+            });
+        });
+    }
+
+    function formRoute(form) {
+        if (form.hasAttribute('data-inscription-form')) return '';
+        if (form.getAttribute('data-backend-route')) return form.getAttribute('data-backend-route');
+        if (form.classList.contains('newsletter')) return '/newsletter';
+        if (form.closest('.contact-form')) return '/contact/messages';
+        return '';
+    }
+
+    function formMessage(form, text, isError) {
+        var message = form.querySelector('[data-api-form-message]');
+        if (!message) {
+            message = createEl('div', 'isc-form-message');
+            message.setAttribute('data-api-form-message', '1');
+            form.appendChild(message);
+        }
+        message.classList.toggle('is-error', !!isError);
+        message.textContent = text;
+    }
+
+    function apiErrorMessage(error) {
+        var payload = error && error.payload;
+        if (payload && payload.errors) {
+            var messages = [];
+            Object.keys(payload.errors).forEach(function (key) {
+                if (Array.isArray(payload.errors[key])) {
+                    messages = messages.concat(payload.errors[key]);
+                }
+            });
+            if (messages.length) return messages.join(' ');
+        }
+        return (payload && payload.message) || (error && error.message) || 'Envoi impossible pour le moment.';
+    }
+
+    function connectBackendForms() {
+        document.querySelectorAll('form').forEach(function (form) {
+            var route = formRoute(form);
+            if (!route || form.getAttribute('data-api-form-ready') === '1') return;
+            form.setAttribute('data-api-form-ready', '1');
+            form.setAttribute('action', apiUrl(route));
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                var submit = form.querySelector('[type="submit"]');
+                if (submit) submit.disabled = true;
+                formMessage(form, 'Envoi en cours...', false);
+                apiPost(route, new FormData(form)).then(function (payload) {
+                    formMessage(form, payload.message || 'Votre demande a ete envoyee.', false);
+                    form.reset();
+                }).catch(function (error) {
+                    formMessage(form, apiErrorMessage(error), true);
+                }).then(function () {
+                    if (submit) submit.disabled = false;
+                });
+            });
+        });
+    }
+
+    function enhanceSearchWithBackend() {
+        var input = document.getElementById('siteSearchInput');
+        var results = document.getElementById('siteSearchResults');
+        if (!input || !results || input.getAttribute('data-api-search-ready') === '1') return;
+        input.setAttribute('data-api-search-ready', '1');
+        var timer = null;
+
+        input.addEventListener('input', function () {
+            var q = (input.value || '').trim();
+            if (timer) clearTimeout(timer);
+            if (q.length < 2) return;
+            timer = setTimeout(function () {
+                apiGet('/site/search?q=' + encodeURIComponent(q) + '&limit=10').then(function (payload) {
+                    var items = asList(payload).filter(function (item) {
+                        return itemTitle(item, '') && item.url;
+                    });
+                    if (!items.length || input.value.trim() !== q) return;
+                    clearElement(results);
+                    items.forEach(function (item, index) {
+                        var a = createEl('a');
+                        a.href = localUrlForSite(item.url) || item.url || '#';
+                        if (index === 0) a.className = 'is-active';
+                        var crumb = createEl('span', 'crumb', plain(item.type || 'backend') + ' - ');
+                        var strong = createEl('strong', '', itemTitle(item));
+                        a.appendChild(crumb);
+                        a.appendChild(strong);
+                        results.appendChild(a);
+                    });
+                });
+            }, 220);
+        });
+    }
+
+    function connectBackendData() {
+        document.querySelectorAll('[data-backend-section]').forEach(function (section) {
+            var name = section.getAttribute('data-backend-section');
+            if (name === 'blog-posts') {
+                renderCleanSection(section, '/news?per_page=12', {
+                    meta: 'Actualite',
+                    fallbackUrl: 'blog.html',
+                    loadedText: 'Les actualites publiees depuis le backend sont disponibles.'
+                });
+            } else if (name === 'academic-documents') {
+                renderCleanSection(section, '/documents?per_page=12', {
+                    meta: 'Document',
+                    fallbackUrl: 'documents.html',
+                    loadedText: 'Les documents publies depuis le backend sont disponibles.'
+                });
+            } else if (name === 'media-gallery') {
+                renderCleanSection(section, '/gallery?per_page=24', {
+                    meta: 'Media',
+                    mediaOnly: true,
+                    fallbackUrl: 'media-center.html',
+                    loadedText: 'Les medias publies depuis le backend sont disponibles.'
+                });
+            } else if (name === 'palmares') {
+                renderCleanSection(section, '/palmares?per_page=12', {
+                    meta: 'Palmares',
+                    fallbackUrl: 'nos-palmares.html',
+                    loadedText: 'Les palmares publies depuis le backend sont disponibles.'
+                });
+            } else if (name === 'institution-blocks') {
+                renderInstitutionBlocks(section);
+            }
+        });
+
+        renderFeesPage();
+        renderTeachersPage();
+        renderWorkOffers();
+        connectBackendRouteLinks();
+        connectBackendForms();
+        enhanceSearchWithBackend();
+    }
+
     function addStyle() {
         var style = document.createElement('style');
         style.textContent = [
@@ -739,6 +1288,25 @@
             '.about-rich,.prose,.clean-lede,.media-card__body p,.card__excerpt{overflow-wrap:anywhere;}',
             '.site-nav a,.clean-links a,.btn,.ui-btn{white-space:normal;}',
             'table{max-width:100%;}',
+            '.clean-empty.is-live,.isc-api-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;align-items:stretch;}',
+            '.clean-card--live{aspect-ratio:auto!important;min-height:0!important;border:1px solid #e2e8f0!important;border-radius:8px;background:#fff;overflow:hidden;box-shadow:0 12px 26px rgba(15,23,42,.08);display:flex;flex-direction:column;}',
+            '.clean-card__media{aspect-ratio:16/9;background-size:cover;background-position:center;background-color:#e2e8f0;}',
+            '.clean-card__body{padding:16px;display:flex;flex:1;flex-direction:column;gap:10px;}',
+            '.clean-card__meta{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:#0369a1;}',
+            '.clean-card__title{margin:0!important;font-size:1.04rem!important;line-height:1.28!important;color:#0f172a;}',
+            '.clean-card__text{margin:0;color:#475569;font-size:.9rem;line-height:1.58;}',
+            '.clean-card__text--strong{font-weight:700;color:#0f172a;}',
+            '.clean-card__link{margin-top:auto;display:inline-flex;width:max-content;max-width:100%;align-items:center;color:#0369a1;font-weight:800;text-decoration:none;border-bottom:1px solid rgba(3,105,161,.35);}',
+            '.isc-api-grid{margin-top:18px;}',
+            '.isc-empty-state{padding:28px 18px;text-align:center;color:#64748b;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:8px;}',
+            '.work-offer--live .work-offer__more{white-space:nowrap;}',
+            '.isc-teacher-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;}',
+            '.isc-teacher-card{min-width:0!important;max-width:none!important;}',
+            '.isc-teacher-card .card__media-wrap{display:block;}',
+            '.isc-teacher-card .card__media{aspect-ratio:4/3;background-size:cover;background-position:center;background-color:#e5e7eb;}',
+            '.isc-teacher-card__bio{font-size:.86rem;line-height:1.55;color:var(--color-muted,#64748b);margin-top:.6rem;}',
+            '.isc-form-message{grid-column:1/-1;margin-top:10px;padding:10px 12px;border-radius:8px;background:#ecfdf5;color:#047857;font-weight:700;font-size:.88rem;}',
+            '.isc-form-message.is-error{background:#fef2f2;color:#b91c1c;}',
             '@media (max-width:640px){',
             'body{font-size:15px;}',
             '.container,.clean-container{width:100%;padding-left:14px!important;padding-right:14px!important;}',
@@ -840,6 +1408,11 @@
             '.clean-lede{font-size:.95rem!important;line-height:1.6!important;}',
             '.clean-empty{grid-template-columns:1fr!important;gap:10px!important;margin-top:24px!important;}',
             '.clean-card{min-height:118px!important;}',
+            '.clean-empty.is-live,.isc-api-grid,.isc-teacher-grid{grid-template-columns:1fr!important;gap:12px!important;}',
+            '.clean-card__body{padding:14px!important;}',
+            '.clean-card__title{font-size:.98rem!important;}',
+            '.clean-card__text{font-size:.86rem!important;line-height:1.55!important;}',
+            '.work-offer--live .work-offer__foot{gap:10px!important;}',
             'body>header .h-16{height:auto!important;min-height:58px!important;padding:.55rem 0!important;gap:.75rem!important;}',
             'body>header .leading-tight .text-xs{display:none!important;}',
             'body>header .ui-btn{height:2.35rem!important;padding:0 .7rem!important;font-size:.78rem!important;flex:0 0 auto;}',
@@ -908,6 +1481,7 @@
     updateServicePage();
     updateBoursePage();
     updateHomeGallery();
+    connectBackendData();
     updateAttributes();
     updateTextNodes(document.body);
     localizeExternalLinks();
