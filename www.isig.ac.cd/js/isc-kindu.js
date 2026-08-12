@@ -254,6 +254,7 @@
 
     function localizeExternalLinks() {
         document.querySelectorAll('a[href]').forEach(function (a) {
+            if (a.getAttribute('data-amg-link') === '1') return;
             var next = localUrlForSite(a.getAttribute('href'));
             if (next) a.setAttribute('href', next);
         });
@@ -729,6 +730,10 @@
             '.svc-head-feature__photo{object-fit:contain;background:#fff;}',
             '.about-dg-card__portrait img{object-fit:contain;background:#fff;}',
             '.about-dg-card h3:empty::after,.svc-head-feature__name:empty::after,.bk-card__nom:empty::after{content:"\\00a0";}',
+            '.site-amg-shortcut{position:fixed;right:14px;bottom:14px;z-index:920;display:inline-flex;align-items:center;justify-content:center;width:46px;height:34px;border-radius:6px;background:#0b1220;color:#fff;text-decoration:none;font-size:.72rem;font-weight:800;letter-spacing:.08em;box-shadow:0 12px 28px rgba(0,0,0,.18);border:1px solid rgba(191,138,42,.55);opacity:.92;transition:opacity .15s ease,transform .15s ease;}',
+            '.site-amg-shortcut:hover{opacity:1;transform:translateY(-1px);color:#fff;}',
+            '.site-topbar__links .site-amg-toplink{background:#bf8a2a;color:#fff!important;border-radius:4px;margin-left:2px;padding:5px 8px!important;}',
+            '.site-topbar__links .site-amg-toplink:hover{background:#d29a36;color:#fff!important;}',
             'html,body{max-width:100%;}',
             'img,video,iframe,object{max-width:100%;}',
             '.about-rich,.prose,.clean-lede,.media-card__body p,.card__excerpt{overflow-wrap:anywhere;}',
@@ -744,10 +749,13 @@
             '.section--sm{padding:36px 0!important;}',
             '.section-head{margin-bottom:30px!important;}',
             '.section-head__eyebrow{font-size:.68rem!important;letter-spacing:.14em!important;}',
+            '.site-topbar .container{padding-left:8px!important;padding-right:8px!important;}',
             '.site-topbar__inner{min-height:auto;padding:5px 0;justify-content:center;flex-wrap:nowrap;gap:3px;}',
             '.site-topbar__links{justify-content:center;flex-wrap:nowrap;width:auto;gap:0;min-width:0;}',
-            '.site-topbar__links a,.site-topbar__search{padding:5px 5px!important;font-size:.64rem!important;}',
+            '.site-topbar__links a,.site-topbar__search{padding:4px 4px!important;font-size:.6rem!important;}',
             '.site-topbar__search span{display:none!important;}',
+            '.site-topbar__links .site-amg-toplink{padding:4px 5px!important;}',
+            '.site-amg-shortcut{right:12px;bottom:72px;width:40px;height:31px;font-size:.66rem;}',
             ':root{--header-h:68px!important;}',
             '.site-header{height:var(--header-h)!important;}',
             '.site-header__inner{gap:8px;min-width:0;}',
@@ -865,7 +873,26 @@
         document.head.appendChild(style);
     }
 
+    function addAdminShortcut() {
+        if (document.querySelector('[data-amg-link]')) return;
+        document.querySelectorAll('.site-topbar__links a').forEach(function (item) {
+            if (/S['\u2019]inscrire/i.test(item.textContent || '')) {
+                item.textContent = 'S\'inscrire';
+            }
+        });
+        var topbar = document.querySelector('.site-topbar__links');
+        var link = document.createElement('a');
+        link.className = topbar ? 'site-amg-toplink' : 'site-amg-shortcut';
+        link.href = window.ISC_ADMIN_URL || '/admin/login';
+        link.textContent = 'AMG';
+        link.setAttribute('data-amg-link', '1');
+        link.setAttribute('aria-label', 'Ouvrir AMG');
+        link.setAttribute('title', 'AMG');
+        (topbar || document.body).appendChild(link);
+    }
+
     addStyle();
+    addAdminShortcut();
     updateMetadata();
     updateLogo();
     updateAttributes();
