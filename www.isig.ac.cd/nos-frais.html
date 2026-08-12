@@ -722,36 +722,19 @@
 
 <section class="section">
     <div class="container">
-                    <div class="frais-toolbar">
-                <div class="frais-toolbar__title">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                        <polyline points="14 2 14 8 20 8"></polyline>
-                    </svg>
-                    <span>Échéancier des frais académiques </span>
-                </div>
-                <a class="btn btn--small" href="storage/inscriptions/echeancier/tIkcXSYe6B9OzYEjXTpttBWzIDHvpfHK3NzVG7KV.pdf" download="echeancier-frais-isig.html">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px;vertical-align:-2px;margin-right:7px;">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="7 10 12 15 17 10"></polyline>
-                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>Télécharger le PDF
-                </a>
-            </div>
-
-            
-            <object class="frais-viewer" data="storage/inscriptions/echeancier/tIkcXSYe6B9OzYEjXTpttBWzIDHvpfHK3NzVG7KV.pdf#view=FitH" type="application/pdf">
-                <div class="frais-fallback">
-                    <p>Votre navigateur ne permet pas d&#039;afficher le document ici.</p>
-                    <a class="btn" href="storage/inscriptions/echeancier/tIkcXSYe6B9OzYEjXTpttBWzIDHvpfHK3NzVG7KV.pdf" download="echeancier-frais-isig.html">
-                        Télécharger l&#039;échéancier (PDF)
-                    </a>
-                </div>
-            </object>
+                    <div class="frais-empty">Aucun echeancier de frais n est publie pour le moment. Le fichier sera ajoute depuis le backend.</div>
             </div>
 </section>
 
 <style>
+    .frais-empty {
+        padding: 42px 20px;
+        text-align: center;
+        color: #4b5563;
+        background: #f8fafc;
+        border: 1px solid rgba(0,0,0,.08);
+        border-radius: 12px;
+    }
     .frais-toolbar {
         display: flex; align-items: center; justify-content: space-between;
         gap: 14px; flex-wrap: wrap; margin-bottom: 18px;
