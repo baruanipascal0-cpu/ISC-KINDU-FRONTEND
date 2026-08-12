@@ -883,7 +883,7 @@
         var topbar = document.querySelector('.site-topbar__links');
         var link = document.createElement('a');
         link.className = topbar ? 'site-amg-toplink' : 'site-amg-shortcut';
-        link.href = window.ISC_ADMIN_URL || '/admin/login';
+        link.href = window.ISC_ADMIN_URL || 'https://isc-kindu-backend.onrender.com/admin/login';
         link.textContent = 'AMG';
         link.setAttribute('data-amg-link', '1');
         link.setAttribute('aria-label', 'Ouvrir AMG');
