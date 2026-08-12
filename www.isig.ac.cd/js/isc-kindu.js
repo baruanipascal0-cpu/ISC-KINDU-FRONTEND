@@ -54,6 +54,64 @@
         return prefix() + path;
     }
 
+    function normalizeRoutePath(path) {
+        var next = (path || '').replace(/\\/g, '/').replace(/^\/+/, '');
+        next = next.replace(/^(?:\.\.\/)+/, '').replace(/^\.\//, '');
+        next = next.replace(/(^|\/)travailler-a-isig(\/|$)/g, '$1travailler-a-isc$2');
+        next = next.replace(/(^|\/)bourse-katulanya(\.html)?$/i, '$1bourse-isc-kindu.html');
+
+        if (!next || next === '/') return 'index.html';
+        if (!/\.[a-z0-9]{2,5}$/i.test(next)) next += '.html';
+        if (/^blog\//i.test(next)) return 'blog.html';
+        if (/^(galerie|gallery)\//i.test(next)) return 'media-center.html';
+
+        var aliases = {
+            'qui-sommes-nous.html': 'aboutus.html',
+            'projects.html': 'recherche-societe/nos-projets.html',
+            'webmail/index.html': 'login.html',
+            'ckfinder/userfiles/images/isig-organigramme.html': 'aboutus.html',
+            'filiere/las-as-assistance-sociale-animation-sociale.html': 'formation/licence.html',
+            'filiere/las-ss-assistance-sociale-service-social.html': 'formation/licence.html',
+            'filiere/ldah-developpement-et-actions-humanitaires.html': 'formation/licence.html',
+            'filiere/lgdd-genre-et-developpement-durable.html': 'formation/licence.html',
+            'filiere/lmg-management-general.html': 'formation/licence.html',
+            'filiere/lmss-management-des-services-de-sante.html': 'formation/licence.html',
+            'filiere/mdaci-douanes-accises-et-commerce-international.html': 'formation/master.html',
+            'filiere/mdah-developpement-et-actions-humanitaires.html': 'formation/master.html',
+            'filiere/megep-entrepreneuriat-gestion-et-evaluation-des-projets.html': 'formation/master.html',
+            'filiere/mf-fiscalite.html': 'formation/master.html',
+            'filiere/mgdd-genre-et-developpement-durable.html': 'formation/master.html',
+            'filiere/mia-intelligence-artificielle.html': 'formation/master.html',
+            'filiere/mlt-logistique-et-transport.html': 'formation/master.html',
+            'filiere/mm-marketing.html': 'formation/master.html',
+            'filiere/mmd-management-du-developpement.html': 'formation/master.html',
+            'filiere/mmss-management-des-services-de-sante.html': 'formation/master.html',
+            'filiere/mpas-maitrise-professionnel-en-assistance-sociale.html': 'formation/master.html',
+            'filiere/mr-ass-maitrise-recherche-action-sociale-et-societe.html': 'formation/master.html'
+        };
+
+        return aliases[next.toLowerCase()] || next;
+    }
+
+    function localUrlForSite(raw) {
+        if (!raw || /^(mailto|tel|javascript|data):/i.test(raw) || raw.charAt(0) === '#') return null;
+
+        if (!/^[a-z][a-z0-9+.-]*:/i.test(raw) && raw.indexOf('//') !== 0) {
+            var parts = String(raw).match(/^([^?#]*)([?#].*)?$/);
+            var path = normalizeRoutePath(parts ? parts[1] : raw);
+            return rel(path) + (parts && parts[2] ? parts[2] : '');
+        }
+
+        try {
+            var url = new URL(raw, window.location.href);
+            if (!/^(www\.)?(\x69sig|isc-kindu)\.ac\.cd$/i.test(url.hostname)) return null;
+            var normalized = normalizeRoutePath(url.pathname);
+            return rel(normalized) + (url.search || '') + (url.hash || '');
+        } catch (e) {
+            return null;
+        }
+    }
+
     function relImage(name) {
         return rel(assetBase + name);
     }
@@ -195,32 +253,37 @@
     }
 
     function localizeExternalLinks() {
-        function localUrl(raw) {
-            try {
-                var url = new URL(raw, window.location.href);
-                if (!/^(www\.)?(\x69sig|isc-kindu)\.ac\.cd$/i.test(url.hostname)) return null;
-                var path = url.pathname.replace(/^\/+/, '');
-                if (!path) return rel('index.html') + (url.hash || '');
-                if (/\.[a-z0-9]{2,5}$/i.test(path)) return rel(path) + (url.search || '') + (url.hash || '');
-                return rel(path + '.html') + (url.search || '') + (url.hash || '');
-            } catch (e) {
-                return null;
-            }
-        }
-
         document.querySelectorAll('a[href]').forEach(function (a) {
-            var next = localUrl(a.getAttribute('href'));
+            var next = localUrlForSite(a.getAttribute('href'));
             if (next) a.setAttribute('href', next);
         });
 
         if (Array.isArray(window.pages)) {
             window.pages = window.pages.map(function (page) {
-                var next = localUrl(page.url);
+                var next = localUrlForSite(page.url);
                 return {
                     label: replaceBrandText(page.label || ''),
                     url: next || page.url
                 };
             });
+        }
+    }
+
+    function bindSearchResultLinks() {
+        var results = document.getElementById('siteSearchResults');
+        if (!results || results.getAttribute('data-isc-search-ready') === '1') return;
+        results.setAttribute('data-isc-search-ready', '1');
+
+        function rewrite() {
+            results.querySelectorAll('a[href]').forEach(function (a) {
+                var next = localUrlForSite(a.getAttribute('href'));
+                if (next) a.setAttribute('href', next);
+            });
+        }
+
+        rewrite();
+        if (window.MutationObserver) {
+            new MutationObserver(rewrite).observe(results, { childList: true, subtree: true });
         }
     }
 
@@ -675,6 +738,7 @@
     updateAttributes();
     updateTextNodes(document.body);
     localizeExternalLinks();
+    bindSearchResultLinks();
     protectForms();
     updateInstitutionNav();
     bindNavigation();
