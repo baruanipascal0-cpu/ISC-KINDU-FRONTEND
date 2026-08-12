@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="storage/isc-kindu/logo.jpg">
+    <title>ISC-KINDU - Detail publication</title>
+    <style>
+        :root {
+            --blue: #0f4c81;
+            --gold: #bf8a2a;
+            --ink: #0f172a;
+            --muted: #64748b;
+            --line: #dbe3ef;
+            --soft: #f5f8fc;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--soft);
+            color: var(--ink);
+            letter-spacing: 0;
+        }
+
+        .topbar {
+            background: var(--white);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .topbar__inner,
+        .shell {
+            width: min(960px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .topbar__inner {
+            min-height: 66px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .brand,
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .brand { gap: 10px; color: var(--ink); font-weight: 800; }
+        .brand img { width: 40px; height: 40px; border-radius: 8px; object-fit: contain; }
+
+        .btn {
+            min-height: 38px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 0 12px;
+            color: var(--blue);
+            background: var(--white);
+            font-size: .88rem;
+            font-weight: 800;
+        }
+
+        .shell { padding: 28px 0 54px; }
+
+        .article {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 14px 30px rgba(15, 23, 42, .08);
+        }
+
+        .article__media {
+            min-height: 260px;
+            aspect-ratio: 16 / 7;
+            background: #e2e8f0 center / cover no-repeat;
+        }
+
+        .article__body { padding: 28px; }
+        .meta {
+            margin: 0 0 10px;
+            color: var(--blue);
+            font-size: .78rem;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(1.75rem, 4vw, 2.65rem);
+            line-height: 1.08;
+            letter-spacing: 0;
+        }
+
+        .excerpt {
+            margin: 14px 0 0;
+            color: var(--muted);
+            font-size: 1.05rem;
+            line-height: 1.65;
+            font-weight: 600;
+        }
+
+        .content {
+            margin-top: 22px;
+            color: #334155;
+            line-height: 1.75;
+            font-size: 1rem;
+        }
+
+        .content p { margin: 0 0 14px; }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .actions .btn {
+            background: var(--blue);
+            color: var(--white);
+            border-color: var(--blue);
+        }
+
+        .actions .btn.secondary {
+            background: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .notice {
+            padding: 18px;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            background: var(--white);
+            color: var(--muted);
+        }
+
+        @media (max-width: 640px) {
+            .topbar__inner,
+            .shell { width: min(100% - 24px, 960px); }
+            .topbar__inner { min-height: 58px; }
+            .brand img { width: 34px; height: 34px; }
+            .brand span { font-size: .9rem; }
+            .article__media { min-height: 170px; aspect-ratio: 16 / 9; }
+            .article__body { padding: 18px; }
+            .excerpt { font-size: .95rem; }
+            .content { font-size: .94rem; line-height: 1.68; }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar__inner">
+            <a class="brand" href="index.html">
+                <img src="storage/isc-kindu/logo.jpg" alt="ISC-KINDU">
+                <span>ISC-KINDU</span>
+            </a>
+            <a class="btn" href="index.html">Accueil</a>
+        </div>
+    </header>
+
+    <main class="shell">
+        <div class="notice" data-detail-status>Chargement de la publication...</div>
+        <article class="article" data-detail hidden>
+            <div class="article__media" data-detail-media hidden></div>
+            <div class="article__body">
+                <p class="meta" data-detail-meta></p>
+                <h1 data-detail-title></h1>
+                <p class="excerpt" data-detail-excerpt hidden></p>
+                <div class="content" data-detail-content></div>
+                <div class="actions" data-detail-actions></div>
+            </div>
+        </article>
+    </main>
+
+    <script src="js/isc-detail.js?v=20260812-home-news-detail"></script>
+</body>
+</html>
