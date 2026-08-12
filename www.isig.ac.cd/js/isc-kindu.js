@@ -1143,6 +1143,8 @@
     function formRoute(form) {
         if (form.getAttribute('data-backend-route')) return form.getAttribute('data-backend-route');
         if (form.hasAttribute('data-inscription-form') || form.hasAttribute('data-pins-form')) return '/inscriptions/public';
+        if (form.querySelector('[name="matricule"]') && form.querySelector('[name="password_confirmation"]')) return '/auth/register';
+        if (form.querySelector('[name="matricule"]') && form.querySelector('[name="password"]')) return '/auth/login';
         if (form.classList.contains('newsletter')) return '/newsletter';
         if (form.closest('.contact-form')) return '/contact/messages';
         return '';
@@ -1182,6 +1184,26 @@
         return (payload && payload.message) || (error && error.message) || 'Envoi impossible pour le moment.';
     }
 
+    function rememberStudentSession(route, payload) {
+        if (!/^\/?auth\/(?:login|register)$/i.test(route || '')) return;
+        var data = payload && payload.data;
+        if (!data || !data.token || !window.localStorage) return;
+        try {
+            window.localStorage.setItem('isc_student_token', data.token);
+            window.localStorage.setItem('isc_student_user', JSON.stringify(data.user || {}));
+        } catch (error) {}
+    }
+
+    function apiSuccessMessage(route, payload) {
+        if (/^\/?auth\/login$/i.test(route || '')) {
+            return 'Connexion reussie. Votre session etudiant est activee.';
+        }
+        if (/^\/?auth\/register$/i.test(route || '')) {
+            return 'Compte etudiant active. Vous pouvez maintenant vous connecter avec votre matricule.';
+        }
+        return (payload && payload.message) || 'Votre demande a ete envoyee.';
+    }
+
     function connectBackendForms() {
         document.querySelectorAll('form').forEach(function (form) {
             var route = formRoute(form);
@@ -1194,7 +1216,8 @@
                 if (submit) submit.disabled = true;
                 formMessage(form, 'Envoi en cours...', false);
                 apiPost(route, new FormData(form)).then(function (payload) {
-                    formMessage(form, payload.message || 'Votre demande a ete envoyee.', false);
+                    rememberStudentSession(route, payload);
+                    formMessage(form, apiSuccessMessage(route, payload), false);
                     form.reset();
                 }).catch(function (error) {
                     formMessage(form, apiErrorMessage(error), true);
