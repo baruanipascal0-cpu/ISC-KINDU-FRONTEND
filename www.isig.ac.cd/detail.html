@@ -107,15 +107,6 @@
             font-weight: 600;
         }
 
-        .content {
-            margin-top: 22px;
-            color: #334155;
-            line-height: 1.75;
-            font-size: 1rem;
-        }
-
-        .content p { margin: 0 0 14px; }
-
         .facts {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -127,10 +118,7 @@
             border-radius: 8px;
         }
 
-        .facts div {
-            min-width: 0;
-        }
-
+        .facts div { min-width: 0; }
         .facts dt {
             color: var(--muted);
             font-size: .72rem;
@@ -145,6 +133,15 @@
             font-weight: 700;
             overflow-wrap: anywhere;
         }
+
+        .content {
+            margin-top: 22px;
+            color: #334155;
+            line-height: 1.75;
+            font-size: 1rem;
+        }
+
+        .content p { margin: 0 0 14px; }
 
         .detail-table-wrap {
             margin-top: 22px;
@@ -228,7 +225,7 @@
     </header>
 
     <main class="shell">
-        <div class="notice" data-detail-status>Chargement de la publication...</div>
+        <div class="notice" data-detail-status>Chargement du contenu...</div>
         <article class="article" data-detail hidden>
             <div class="article__media" data-detail-media hidden></div>
             <div class="article__body">

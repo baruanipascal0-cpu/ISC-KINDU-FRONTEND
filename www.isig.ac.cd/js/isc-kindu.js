@@ -61,6 +61,11 @@
         return prefix() + path;
     }
 
+    function routeWithSuffix(path, suffix) {
+        if (!suffix) return rel(path);
+        return rel(path) + (path.indexOf('?') === -1 ? suffix : suffix.replace(/^\?/, '&'));
+    }
+
     function normalizeRoutePath(path) {
         var next = (path || '').replace(/\\/g, '/').replace(/^\/+/, '');
         next = next.replace(/^(?:\.\.\/)+/, '').replace(/^\.\//, '');
@@ -68,6 +73,8 @@
         next = next.replace(/(^|\/)bourse-katulanya(\.html)?$/i, '$1bourse-isc-kindu.html');
 
         if (!next || next === '/') return 'index.html';
+        var detail = detailPathFromRoute(next);
+        if (detail) return detail;
         if (!/\.[a-z0-9]{2,5}$/i.test(next)) next += '.html';
         if (/^blog\//i.test(next)) return 'blog.html';
         if (/^(galerie|gallery)\//i.test(next)) return 'media-center.html';
@@ -100,20 +107,49 @@
         return aliases[next.toLowerCase()] || next;
     }
 
+    function detailPath(type, slugValue) {
+        slugValue = String(slugValue || '').replace(/\.html$/i, '');
+        if (!slugValue) return '';
+        return 'detail.html?type=' + encodeURIComponent(type) + '&slug=' + encodeURIComponent(slugValue);
+    }
+
+    function detailPathFromRoute(path) {
+        var route = String(path || '').replace(/^\/+/, '').replace(/\\/g, '/');
+        var patterns = [
+            [/^(actualites?|news)\/([^/?#]+)(?:\.html)?$/i, 'news'],
+            [/^publications?\/([^/?#]+)(?:\.html)?$/i, 'publication'],
+            [/^documents\/([^/?#]+)(?:\.html)?$/i, 'document'],
+            [/^(frais|fees)\/([^/?#]+)(?:\.html)?$/i, 'fee'],
+            [/^(medias?|gallery|galerie)\/([^/?#]+)(?:\.html)?$/i, 'media'],
+            [/^(enseignants?|teachers|staff)\/([^/?#]+)(?:\.html)?$/i, 'teacher'],
+            [/^(palmares|graduation-lists)\/([^/?#]+)(?:\.html)?$/i, 'palmares'],
+            [/^diplomes\/([^/?#]+)(?:\.html)?$/i, 'publication'],
+            [/^(evenements?|events)\/([^/?#]+)(?:\.html)?$/i, 'event'],
+            [/^pages?\/([^/?#]+)(?:\.html)?$/i, 'page']
+        ];
+
+        for (var i = 0; i < patterns.length; i += 1) {
+            var match = route.match(patterns[i][0]);
+            if (match) return detailPath(patterns[i][1], match[2] || match[1]);
+        }
+
+        return '';
+    }
+
     function localUrlForSite(raw) {
         if (!raw || /^(mailto|tel|javascript|data):/i.test(raw) || raw.charAt(0) === '#') return null;
 
         if (!/^[a-z][a-z0-9+.-]*:/i.test(raw) && raw.indexOf('//') !== 0) {
             var parts = String(raw).match(/^([^?#]*)([?#].*)?$/);
             var path = normalizeRoutePath(parts ? parts[1] : raw);
-            return rel(path) + (parts && parts[2] ? parts[2] : '');
+            return routeWithSuffix(path, parts && parts[2] ? parts[2] : '');
         }
 
         try {
             var url = new URL(raw, window.location.href);
             if (!/^(www\.)?(\x69sig|isc-kindu)\.ac\.cd$/i.test(url.hostname)) return null;
             var normalized = normalizeRoutePath(url.pathname);
-            return rel(normalized) + (url.search || '') + (url.hash || '');
+            return routeWithSuffix(normalized, (url.search || '') + (url.hash || ''));
         } catch (e) {
             return null;
         }
@@ -886,6 +922,17 @@
         return dateLabel(item && (item.published_at || item.decision_date || item.created_at || item.updated_at));
     }
 
+    function isImageUrl(url) {
+        return /\.(png|jpe?g|webp|gif)($|\?)/i.test(url || '');
+    }
+
+    function itemImage(item) {
+        if (!item) return '';
+        if (item.image_url) return item.image_url;
+        if (item.url && isImageUrl(item.url)) return item.url;
+        return '';
+    }
+
     function itemLink(item, fallback) {
         if (!item) return '';
         var url = item.file_url || item.url || item.link_url || item.public_url || '';
@@ -893,6 +940,56 @@
         if (!url) return '';
         if (/^\/api\//i.test(url)) return '';
         return localUrlForSite(url) || url;
+    }
+
+    function detailTypeFromApiUrl(apiUrl) {
+        var match = String(apiUrl || '').match(/\/api\/([^/?#]+)\/([^/?#]+)/i);
+        if (!match) return null;
+        var endpoint = match[1].toLowerCase();
+        return {
+            news: 'news',
+            publications: 'publication',
+            documents: 'document',
+            fees: 'fee',
+            frais: 'fee',
+            gallery: 'media',
+            teachers: 'teacher',
+            'graduation-lists': 'palmares',
+            events: 'event',
+            pages: 'page'
+        }[endpoint] || null;
+    }
+
+    function detailUrlFromApiUrl(apiUrl) {
+        var match = String(apiUrl || '').match(/\/api\/([^/?#]+)\/([^/?#]+)/i);
+        var type = detailTypeFromApiUrl(apiUrl);
+        return match && type ? rel(detailPath(type, match[2])) : '';
+    }
+
+    function itemDetailType(item, explicitType) {
+        if (explicitType) return explicitType;
+        if (!item) return 'publication';
+        var apiType = detailTypeFromApiUrl(item.api_url);
+        if (apiType) return apiType;
+        if (/^actualite$/i.test(item.__feedSource || '')) return 'news';
+        if (item.graduates_count !== undefined || Array.isArray(item.graduates)) return 'palmares';
+        if (item.collection || item.mime_type) return 'media';
+        if (item.role || item.department || item.biography) return 'teacher';
+        if (item.category && !item.type) return 'news';
+
+        var type = plain(item.type).toLowerCase();
+        if (type === 'frais') return 'fee';
+        if (/bulletin|document|echeancier|ressource|bibliotheque/.test(type)) return 'document';
+
+        return 'publication';
+    }
+
+    function itemDetailLink(item, fallback, explicitType) {
+        if (!item) return '';
+        var fromApi = detailUrlFromApiUrl(item.api_url);
+        if (fromApi) return fromApi;
+        if (item.slug) return rel(detailPath(itemDetailType(item, explicitType), item.slug));
+        return itemLink(item, fallback);
     }
 
     function clearElement(el) {
@@ -915,11 +1012,11 @@
     function createCleanCard(item, options) {
         options = options || {};
         var article = createEl('article', 'clean-card clean-card--live');
-        var image = item && (item.image_url || item.url);
+        var image = itemImage(item);
         var title = itemTitle(item, options.fallbackTitle);
         var summary = itemSummary(item);
         var meta = options.meta || plain(item && (item.type || item.collection || item.cycle || item.role));
-        var link = itemLink(item, options.fallbackUrl);
+        var link = itemDetailLink(item, options.fallbackUrl, options.detailType);
 
         if (options.mediaOnly && image) {
             article.className += ' clean-card--media';
@@ -944,7 +1041,8 @@
         }
 
         if (link && link !== '#') {
-            var a = createEl('a', 'clean-card__link', item && item.file_url ? 'Ouvrir le fichier' : 'Consulter');
+            var directFile = item && item.file_url && link === (localUrlForSite(item.file_url) || item.file_url);
+            var a = createEl('a', 'clean-card__link', directFile ? 'Ouvrir le fichier' : 'Voir le detail');
             a.href = link;
             if (/^https?:\/\//i.test(link)) {
                 a.target = '_blank';
@@ -998,13 +1096,13 @@
     function feedDetailUrl(item) {
         if (!item || !item.slug) return itemLink(item, item && item.__fallbackUrl);
         var type = /^actualite$/i.test(item.__feedSource || '') ? 'news' : 'publication';
-        return rel('actualite.html?type=' + encodeURIComponent(type) + '&slug=' + encodeURIComponent(item.slug));
+        return rel(detailPath(type, item.slug));
     }
 
     function createFeedItem(item) {
         var link = feedDetailUrl(item);
         var article = createEl(link ? 'a' : 'article', 'isc-feed-item');
-        var image = item && (item.image_url || item.url);
+        var image = itemImage(item);
         if (link) article.href = link;
 
         if (image && !/\.pdf($|\?)/i.test(image)) {
@@ -1124,7 +1222,7 @@
             if (!items.length) return;
             var grid = createEl('div', 'isc-api-grid');
             items.forEach(function (item) {
-                grid.appendChild(createCleanCard(item, { meta: 'Frais', fallbackUrl: 'nos-frais.html' }));
+                grid.appendChild(createCleanCard(item, { meta: 'Frais', detailType: 'fee', fallbackUrl: 'nos-frais.html' }));
             });
             target.parentNode.replaceChild(grid, target);
         });
@@ -1169,9 +1267,9 @@
         var foot = createEl('div', 'work-offer__foot');
         var deadline = parseDescriptionLine(item && item.description, 'date limite:') || itemDate(item) || 'A completer';
         foot.appendChild(createEl('span', '', 'Cloture : ' + deadline));
-        var link = itemLink(item);
+        var link = itemDetailLink(item, null, 'publication');
         if (link) {
-            var a = createEl('a', 'work-offer__more', 'Ouvrir');
+            var a = createEl('a', 'work-offer__more', 'Voir le detail');
             a.href = link;
             if (/^https?:\/\//i.test(link)) {
                 a.target = '_blank';
@@ -1212,7 +1310,9 @@
     }
 
     function createTeacherCard(item) {
-        var article = createEl('article', 'card ens-carousel__item isc-teacher-card');
+        var link = itemDetailLink(item, null, 'teacher');
+        var article = createEl(link ? 'a' : 'article', 'card ens-carousel__item isc-teacher-card');
+        if (link) article.href = link;
         var mediaWrap = createEl('div', 'card__media-wrap');
         var media = createEl('div', 'card__media');
         var image = item && item.image_url;
@@ -1677,7 +1777,7 @@
                     clearElement(results);
                     items.forEach(function (item, index) {
                         var a = createEl('a');
-                        a.href = localUrlForSite(item.url) || item.url || '#';
+                        a.href = detailUrlFromApiUrl(item.api_url) || localUrlForSite(item.url) || item.url || '#';
                         if (index === 0) a.className = 'is-active';
                         var crumb = createEl('span', 'crumb', plain(item.type || 'backend') + ' - ');
                         var strong = createEl('strong', '', itemTitle(item));
@@ -1696,12 +1796,14 @@
             if (name === 'blog-posts') {
                 renderCleanSection(section, '/news?per_page=12', {
                     meta: 'Actualite',
+                    detailType: 'news',
                     fallbackUrl: 'blog.html',
                     loadedText: 'Les actualites publiees depuis le backend sont disponibles.'
                 });
             } else if (name === 'academic-documents') {
                 renderCleanSection(section, '/documents?per_page=12', {
                     meta: 'Document',
+                    detailType: 'document',
                     fallbackUrl: 'documents.html',
                     loadedText: 'Les documents publies depuis le backend sont disponibles.'
                 });
@@ -1709,14 +1811,23 @@
                 renderCleanSection(section, '/gallery?per_page=24', {
                     meta: 'Media',
                     mediaOnly: true,
+                    detailType: 'media',
                     fallbackUrl: 'media-center.html',
                     loadedText: 'Les medias publies depuis le backend sont disponibles.'
                 });
             } else if (name === 'palmares') {
                 renderCleanSection(section, '/palmares?per_page=12', {
                     meta: 'Palmares',
+                    detailType: 'palmares',
                     fallbackUrl: 'nos-palmares.html',
                     loadedText: 'Les palmares publies depuis le backend sont disponibles.'
+                });
+            } else if (name === 'graduates') {
+                renderCleanSection(section, '/publications?type=Diplome&per_page=12', {
+                    meta: 'Diplome',
+                    detailType: 'publication',
+                    fallbackUrl: 'nos-diplomes.html',
+                    loadedText: 'Les diplomes publies depuis le backend sont disponibles.'
                 });
             } else if (name === 'institution-blocks') {
                 renderInstitutionBlocks(section);
@@ -1793,13 +1904,14 @@
             '.isc-home-feed + .hero-thumbs{margin-top:0!important;padding-top:0!important;padding-bottom:42px!important;}',
             '.work-offer--live .work-offer__more{white-space:nowrap;}',
             '.isc-teacher-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;}',
-            '.isc-teacher-card{min-width:0!important;max-width:none!important;}',
+            '.isc-teacher-card{display:block!important;min-width:0!important;max-width:none!important;color:inherit!important;text-decoration:none!important;}',
             '.isc-teacher-card .card__media-wrap{display:block;}',
             '.isc-teacher-card .card__media{aspect-ratio:4/3;background-size:cover;background-position:center;background-color:#e5e7eb;}',
             '.isc-teacher-card__bio{font-size:.86rem;line-height:1.55;color:var(--color-muted,#64748b);margin-top:.6rem;}',
             '.isc-form-message{grid-column:1/-1;margin-top:10px;padding:10px 12px;border-radius:8px;background:#ecfdf5;color:#047857;font-weight:700;font-size:.88rem;}',
             '.isc-form-message.is-error{background:#fef2f2;color:#b91c1c;}',
             '@media (max-width:640px){',
+            'html,body{overflow-x:hidden!important;}',
             'body{font-size:15px;}',
             '.container,.clean-container{width:100%;padding-left:14px!important;padding-right:14px!important;}',
             'h1{font-size:clamp(1.85rem,8vw,2.45rem)!important;line-height:1.08!important;}',
@@ -1820,15 +1932,15 @@
             '.site-amg-shortcut{right:12px;bottom:72px;width:40px;height:31px;font-size:.66rem;}',
             ':root{--header-h:68px!important;}',
             '.site-header{height:var(--header-h)!important;}',
-            '.site-header__inner{gap:8px;min-width:0;}',
+            '.site-header__inner{display:grid!important;grid-template-columns:minmax(0,1fr) auto auto auto;align-items:center;gap:6px;min-width:0;overflow:hidden;}',
             '.site-header__brand{gap:7px!important;min-width:0;flex:1 1 auto;}',
             '.site-header__brand img{max-height:42px!important;}',
             '.site-header__wordmark{font-size:1.08rem!important;letter-spacing:.02em;max-width:42vw;overflow:hidden;text-overflow:ellipsis;}',
-            '.site-header__lang{margin-left:auto;font-size:.68rem;gap:0;}',
-            '.site-header__lang a{padding:4px 6px;}',
-            '.site-header__toggle{display:flex!important;width:40px;height:40px;margin-left:0;flex:0 0 40px;order:3;align-items:center;justify-content:center;flex-direction:column;}',
+            '.site-header__lang{margin-left:0!important;font-size:.66rem;gap:0;justify-self:end;}',
+            '.site-header__lang a{padding:4px 5px;}',
+            '.site-header__toggle{display:flex!important;width:38px;height:40px;margin-left:0;flex:0 0 38px;order:3;align-items:center;justify-content:center;flex-direction:column;}',
             '.site-header__toggle span{width:24px!important;height:2px!important;margin:3px auto!important;}',
-            '.site-header__search-toggle{display:flex!important;order:4;}',
+            '.site-header__search-toggle{display:flex!important;order:4;width:36px;height:40px;flex:0 0 36px;justify-self:end;}',
             '.site-nav{top:var(--header-h)!important;padding:12px 14px!important;max-height:calc(100dvh - var(--header-h))!important;z-index:960!important;box-shadow:0 18px 34px rgba(15,23,42,.16)!important;transform:translateY(-130%)!important;}',
             '.site-nav.is-open{transform:translateY(0)!important;}',
             '.site-nav__link{padding:11px 6px!important;font-size:.75rem!important;letter-spacing:.07em!important;}',
