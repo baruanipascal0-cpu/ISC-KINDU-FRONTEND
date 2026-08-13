@@ -253,6 +253,24 @@
                 item.appendChild(form);
             }
 
+            if (payment.proof_url) {
+                var proof = create('a', 'btn', 'Ouvrir preuve');
+                proof.href = payment.proof_url;
+                proof.target = '_blank';
+                proof.rel = 'noopener';
+                item.appendChild(proof);
+            }
+
+            var receipts = Array.isArray(payment.receipts) ? payment.receipts : [];
+            receipts.forEach(function (receipt) {
+                if (!receipt.file_url) return;
+                var link = create('a', 'btn btn--primary', 'Ouvrir recu');
+                link.href = receipt.file_url;
+                link.target = '_blank';
+                link.rel = 'noopener';
+                item.appendChild(link);
+            });
+
             target.appendChild(item);
         });
     }

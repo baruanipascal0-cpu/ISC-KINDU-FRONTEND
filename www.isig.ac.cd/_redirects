@@ -1,0 +1,5 @@
+/admin https://isc-kindu-backend.onrender.com/admin 302
+/admin/* https://isc-kindu-backend.onrender.com/admin/:splat 302
+/api/* https://isc-kindu-backend.onrender.com/api/:splat 200
+/travailler-a-isig/* /travailler-a-isc/:splat 301
+/webmail/* /login.html 301

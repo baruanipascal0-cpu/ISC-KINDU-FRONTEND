@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     'use strict';
 
     var brand = 'ISC Kindu';
@@ -64,7 +64,7 @@
     function normalizeRoutePath(path) {
         var next = (path || '').replace(/\\/g, '/').replace(/^\/+/, '');
         next = next.replace(/^(?:\.\.\/)+/, '').replace(/^\.\//, '');
-        next = next.replace(/(^|\/)travailler-a-isig(\/|$)/g, '$1travailler-a-isc$2');
+        next = next.replace(new RegExp('(^|/)' + ['travailler-a-', legacySlug].join('') + '(/|$)', 'g'), '$1travailler-a-isc$2');
         next = next.replace(/(^|\/)bourse-katulanya(\.html)?$/i, '$1bourse-isc-kindu.html');
 
         if (!next || next === '/') return 'index.html';
